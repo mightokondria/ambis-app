@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Ambis Kampus',
+      theme: ThemeData(fontFamily: 'OpenSans'),
       home: HomeScreen(),
     );
   }

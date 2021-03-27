@@ -1,105 +1,75 @@
-import 'package:ambis_app/constants/color_const.dart';
+import 'dart:html';
+
+import 'package:ambis_app/reuseable/NavElement.dart';
+import 'package:ambis_app/screen/Dashboard.dart';
+import 'package:ambis_app/screen/Tryout.dart';
+import 'package:ambis_app/screen/Update.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:ambis_app/constants/color_const.dart';
 
 class SideNavigationBar extends StatefulWidget {
+
   @override
   _SideNavigationBarState createState() => _SideNavigationBarState();
 }
 
 class _SideNavigationBarState extends State<SideNavigationBar> {
-  final List<String> menuItems = ["Dashboard", "Update", "Tryout"];
-  final List<String> menuIcons = [
-    "assets/dashboard-off.png",
-    "assets/Update-off.png",
-    "assets/tryout-off.png"
-  ];
-  int _selectedIndex = 0;
-  var _textstyle = GoogleFonts.inter(
-    fontSize: 12,
-    fontWeight: FontWeight.w300,
-  );
 
-  // void _onItemTapped(int index){
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
+  int selectedIndex = 0;
+  int navIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          Container(
-            color: mGreyColor,
-            height: MediaQuery.of(context).size.height,
-            width: 300.0,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 30.0, top: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Explore',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        child: Expanded(
-                          child: new ListView.builder(
-                              itemCount: menuItems.length,
-                              itemBuilder: (context, index) => Container(
-                                    child: Center(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 25,
-                                                  top: 10,
-                                                  bottom: 10,
-                                                  right: 10),
-                                              child: Image.asset(
-                                                menuIcons[index],
-                                                width: 15.5,
-                                              )),
-                                          Container(
-                                            padding: const EdgeInsets.only(
-                                                left: 0.0,
-                                                top: 0,
-                                                right: 8,
-                                                bottom: 0),
-                                            child: Text(
-                                              menuItems[index],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w100,
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
+    return Row(
+      children: [
+        Container(
+          child: Container(
+            child: Container(
+              height: _height,
+              width: 300,
+              decoration: BoxDecoration(
+                color: mGreyColor,
+                // borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  NavElement(selectedIndex, (int index){setState(() {selectedIndex = index;});}),
+                ],
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+        Expanded(
+          child: Container(
+            color: mGreyColor,
+            width: _width,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Container(
+              height: _height,
+              width: 400,
+                child: Builder(
+                    builder: (context){
+                      if (selectedIndex == 0){
+                        return Dashboard();}
+                      if (selectedIndex == 1){
+                        return Update();}
+                      if (selectedIndex == 2){
+                        return Tryout();}
+
+
+                      return Container();
+                      }
+                ),
+            ),)
+          ),
+        )
+      ],
     );
   }
 }
