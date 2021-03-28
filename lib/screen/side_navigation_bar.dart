@@ -4,6 +4,11 @@ import 'package:ambis_app/reuseable/NavElement.dart';
 import 'package:ambis_app/screen/Dashboard.dart';
 import 'package:ambis_app/screen/Tryout.dart';
 import 'package:ambis_app/screen/Update.dart';
+import 'package:ambis_app/screen/bedah_jurusan.dart';
+import 'package:ambis_app/screen/feedback.dart';
+import 'package:ambis_app/screen/histori_tryout.dart';
+import 'package:ambis_app/screen/pengaturan.dart';
+import 'package:ambis_app/screen/rangkuman.dart';
 import 'package:flutter/material.dart';
 import 'package:ambis_app/constants/color_const.dart';
 
@@ -55,12 +60,31 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
               width: 400,
                 child: Builder(
                     builder: (context){
+                      //DASHBOARD == 0
                       if (selectedIndex == 0){
                         return Dashboard();}
+                      //UPDATE == 1
                       if (selectedIndex == 1){
                         return Update();}
+                      //TRYOUT == 2
                       if (selectedIndex == 2){
                         return Tryout();}
+                      //HISTORI TRYOUT == 3
+                      if (selectedIndex == 3){
+                        return HistoriTryout();}
+                      //RANGKUMAN == 4
+                      if (selectedIndex == 4){
+                        return Rangkuman();}
+                      //BEDAH JURUSAN == 5
+                      if (selectedIndex == 5){
+                        return BedahJurusan();}
+                      //PENGATURAN
+                      if (selectedIndex == 6){
+                        return Pengaturan();}
+                      //FeedBack
+                      if (selectedIndex == 7){
+                        return feedBack();}
+
 
 
                       return Container();

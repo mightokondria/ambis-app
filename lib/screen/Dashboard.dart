@@ -9,7 +9,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Selamat dan sukses Calista Sekar Pamaja ",),
+      child: Text("<h1>LESS GOOO</h1>",),
     );
   }
 }
