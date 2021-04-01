@@ -1,14 +1,12 @@
-import 'dart:html';
-
 import 'package:ambis_app/reuseable/sidebar-navigation/DesktopSidebar.dart';
-import 'package:ambis_app/screen/Dashboard.dart';
-import 'package:ambis_app/screen/Tryout.dart';
-import 'package:ambis_app/screen/Update.dart';
-import 'package:ambis_app/screen/bedah_jurusan.dart';
-import 'package:ambis_app/screen/feedback.dart';
-import 'package:ambis_app/screen/histori_tryout.dart';
-import 'package:ambis_app/screen/pengaturan.dart';
-import 'package:ambis_app/screen/rangkuman.dart';
+import 'package:ambis_app/components/desktop/screens/Dashboard.dart';
+import 'package:ambis_app/components/desktop/screens/Tryout.dart';
+import 'package:ambis_app/components/desktop/screens/Update.dart';
+import 'package:ambis_app/components/desktop/screens/bedah_jurusan.dart';
+import 'package:ambis_app/components/desktop/screens/feedback.dart';
+import 'package:ambis_app/components/desktop/screens/histori_tryout.dart';
+import 'package:ambis_app/components/desktop/screens/pengaturan.dart';
+import 'package:ambis_app/components/desktop/screens/rangkuman.dart';
 import 'package:flutter/material.dart';
 import 'package:ambis_app/constants/color_const.dart';
 
