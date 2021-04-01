@@ -103,8 +103,6 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                       if (selectedIndex == 7){
                         return feedBack();}
 
-
-
                       return Container();
                       }
                 ),
