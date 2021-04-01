@@ -1,16 +1,14 @@
-import 'dart:html';
-
-import 'package:ambis_app/reuseable/NavElement.dart';
-import 'package:ambis_app/screen/Dashboard.dart';
-import 'package:ambis_app/screen/Tryout.dart';
-import 'package:ambis_app/screen/Update.dart';
-import 'package:ambis_app/screen/bedah_jurusan.dart';
-import 'package:ambis_app/screen/feedback.dart';
-import 'package:ambis_app/screen/histori_tryout.dart';
-import 'package:ambis_app/screen/pengaturan.dart';
-import 'package:ambis_app/screen/rangkuman.dart';
+import 'package:mentoring_id/reuseable/sidebar-navigation/DesktopSidebar.dart';
+import 'package:mentoring_id/components/desktop/screens/Dashboard.dart';
+import 'package:mentoring_id/components/desktop/screens/Tryout.dart';
+import 'package:mentoring_id/components/desktop/screens/Update.dart';
+import 'package:mentoring_id/components/desktop/screens/bedah_jurusan.dart';
+import 'package:mentoring_id/components/desktop/screens/feedback.dart';
+import 'package:mentoring_id/components/desktop/screens/histori_tryout.dart';
+import 'package:mentoring_id/components/desktop/screens/pengaturan.dart';
+import 'package:mentoring_id/components/desktop/screens/rangkuman.dart';
 import 'package:flutter/material.dart';
-import 'package:ambis_app/constants/color_const.dart';
+import 'package:mentoring_id/constants/color_const.dart';
 
 class SideNavigationBar extends StatefulWidget {
 
@@ -23,10 +21,17 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
   int selectedIndex = 0;
   int navIndex = 0;
 
+  void changeIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+    ScrollController sidebarNavigationScroll = ScrollController();
 
     return Row(
       children: [
@@ -39,12 +44,23 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                 color: mGreyColor,
                 // borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  NavElement(selectedIndex, (int index){setState(() {selectedIndex = index;});}),
-                ],
+              child: Scrollbar(
+                controller: sidebarNavigationScroll,
+                child: SingleChildScrollView(
+                  controller: sidebarNavigationScroll,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 25, top: 25),
+                        child: Text("Explore", style: TextStyle(fontSize: 21, color: Colors.blueGrey, fontWeight: FontWeight.bold),),
+                      ),
+                      Divider(color: Colors.transparent,),
+                      DesktopSidebar(selectedIndex, changeIndex),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -57,7 +73,7 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
               padding: EdgeInsets.all(8),
               child: Container(
               height: _height,
-              width: 400,
+              margin: EdgeInsets.only(right: 30),
                 child: Builder(
                     builder: (context){
                       //DASHBOARD == 0
@@ -84,8 +100,6 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                       //FeedBack
                       if (selectedIndex == 7){
                         return feedBack();}
-
-
 
                       return Container();
                       }

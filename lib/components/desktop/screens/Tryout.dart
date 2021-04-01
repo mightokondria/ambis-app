@@ -1,3 +1,4 @@
+import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:flutter/material.dart';
 
 class Tryout extends StatefulWidget {
@@ -10,7 +11,7 @@ class _UpdateState extends State<Tryout> {
   Widget build(BuildContext context) {
     return Container(
 
-      child: Text("tryout"),
+      child: SearchBar(),
     );
   }
 }
