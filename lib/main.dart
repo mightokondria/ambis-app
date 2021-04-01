@@ -1,4 +1,4 @@
-import 'package:ambis_app/components/home_screen.dart';
+import 'package:mentoring_id/components/home_screen.dart';
 import 'package:flutter/material.dart';
 
 // MENGGOKIL

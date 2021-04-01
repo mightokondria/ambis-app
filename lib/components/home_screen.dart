@@ -1,7 +1,7 @@
 
-import 'package:ambis_app/components/desktop/navigation/AppBarCustombyMe.dart';
-import 'package:ambis_app/components/desktop/navigation/side_navigation_bar.dart';
-import 'package:ambis_app/components/mobile/Body.dart';
+import 'package:mentoring_id/components/desktop/navigation/AppBarCustombyMe.dart';
+import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.dart';
+import 'package:mentoring_id/components/mobile/Body.dart';
 import 'package:flutter/material.dart';
 
 import 'desktop/navigation/AppBarCustombyMe.dart';

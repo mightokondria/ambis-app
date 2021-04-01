@@ -1,14 +1,14 @@
-import 'package:ambis_app/reuseable/sidebar-navigation/DesktopSidebar.dart';
-import 'package:ambis_app/components/desktop/screens/Dashboard.dart';
-import 'package:ambis_app/components/desktop/screens/Tryout.dart';
-import 'package:ambis_app/components/desktop/screens/Update.dart';
-import 'package:ambis_app/components/desktop/screens/bedah_jurusan.dart';
-import 'package:ambis_app/components/desktop/screens/feedback.dart';
-import 'package:ambis_app/components/desktop/screens/histori_tryout.dart';
-import 'package:ambis_app/components/desktop/screens/pengaturan.dart';
-import 'package:ambis_app/components/desktop/screens/rangkuman.dart';
+import 'package:mentoring_id/reuseable/sidebar-navigation/DesktopSidebar.dart';
+import 'package:mentoring_id/components/desktop/screens/Dashboard.dart';
+import 'package:mentoring_id/components/desktop/screens/Tryout.dart';
+import 'package:mentoring_id/components/desktop/screens/Update.dart';
+import 'package:mentoring_id/components/desktop/screens/bedah_jurusan.dart';
+import 'package:mentoring_id/components/desktop/screens/feedback.dart';
+import 'package:mentoring_id/components/desktop/screens/histori_tryout.dart';
+import 'package:mentoring_id/components/desktop/screens/pengaturan.dart';
+import 'package:mentoring_id/components/desktop/screens/rangkuman.dart';
 import 'package:flutter/material.dart';
-import 'package:ambis_app/constants/color_const.dart';
+import 'package:mentoring_id/constants/color_const.dart';
 
 class SideNavigationBar extends StatefulWidget {
 

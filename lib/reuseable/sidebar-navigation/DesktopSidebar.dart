@@ -1,5 +1,5 @@
-import 'package:ambis_app/constants/color_const.dart';
-import 'package:ambis_app/reuseable/sidebar-navigation/menu-list.dart';
+import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/sidebar-navigation/menu-list.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSidebar extends StatelessWidget {
