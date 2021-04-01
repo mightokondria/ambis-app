@@ -26,6 +26,10 @@ dependencies:
   flutter_svg: ^0.17.4
   google_fonts: ^1.0.0
   flutter_swiper: ^1.1.6
+  fl_chart: ^0.30.0
+  loading: ^1.0.2
+  fsearch: ^1.0.1
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,6 +49,8 @@ flutter:
   assets:
     - assets/
     - assets/1x/
+    - assets/icons/
+    - assets/search.png
 
 #  fonts:
 #    - family: OpenSans
