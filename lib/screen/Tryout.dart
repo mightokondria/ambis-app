@@ -1,4 +1,4 @@
-import 'package:ambis_app/reuseable/sidebar-navigation/SearchBar.dart';
+import 'package:ambis_app/reuseable/SearchBar.dart';
 import 'package:flutter/material.dart';
 
 class Tryout extends StatefulWidget {
