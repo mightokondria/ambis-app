@@ -96,7 +96,7 @@ class NavElement extends StatelessWidget {
                   transform: Matrix4.translationValues(-20, 0.0, 0.0),
                   child: selectedIndex == 3 ? Text("Histori Tryout", style: TextStyle(fontSize: 14,color: Colors.grey[500],letterSpacing: 2.0)) : Text("Tryout", style: TextStyle(fontSize: 14,color: Colors.grey[600])),
                 ),
-                leading: selectedIndex == 3 ? Image.asset("assets/icons/histori-tryout-on.png") : Image.asset("assets/icons/histori-tryout-off.png"),
+                leading: selectedIndex == 3 ? Image.asset("assets/histori-tryout-on.png") : Image.asset("assets/histori-tryout-off.png"),
                 onTap: () {
                   onIndexChanged(3);
                 },
@@ -115,7 +115,7 @@ class NavElement extends StatelessWidget {
                   transform: Matrix4.translationValues(-20, 0.0, 0.0),
                   child: selectedIndex == 4 ? Text("Rangkuman", style: TextStyle(fontSize: 14,color: Colors.grey[500],letterSpacing: 2.0)) : Text("Rangkuman", style: TextStyle(fontSize: 14,color: Colors.grey[600])),
                 ),
-                leading: selectedIndex == 4 ? Image.asset("assets/icons/rangkuman-on.png") : Image.asset("assets/icons/rangkuman-off.png"),
+                leading: selectedIndex == 4 ? Image.asset("assets/rangkuman-on.png") : Image.asset("assets/rangkuman-off.png"),
                 onTap: () {
                   onIndexChanged(4);
                 },
@@ -134,7 +134,7 @@ class NavElement extends StatelessWidget {
                   transform: Matrix4.translationValues(-20, 0.0, 0.0),
                   child: selectedIndex == 5 ? Text("Bedah Jurusan", style: TextStyle(fontSize: 14,color: Colors.grey[500],letterSpacing: 2.0)) : Text("Bedah Jurusan", style: TextStyle(fontSize: 14,color: Colors.grey[600])),
                 ),
-                leading: selectedIndex == 5 ? Image.asset("assets/icons/bejur-on.png") : Image.asset("assets/icons/bejur-off.png"),
+                leading: selectedIndex == 5 ? Image.asset("assets/bejur-on.png") : Image.asset("assets/bejur-off.png"),
                 onTap: () {
                   onIndexChanged(5);
                 },
