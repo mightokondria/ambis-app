@@ -1,6 +1,7 @@
 
 import 'package:ambis_app/components/desktop/navigation/AppBarCustombyMe.dart';
 import 'package:ambis_app/components/desktop/navigation/side_navigation_bar.dart';
+import 'package:ambis_app/components/mobile/Body.dart';
 import 'package:flutter/material.dart';
 
 import 'desktop/navigation/AppBarCustombyMe.dart';
@@ -14,9 +15,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int desktopResolution = 768;
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isDesktop = screenWidth >= desktopResolution;
+
+    // THIS IS FOR DESKTOP
+    if(isDesktop)
+      return Scaffold(
+        appBar: AppBarCustombyMe(),
+        body: SideNavigationBar(),
+      );
+
     return Scaffold(
-      appBar: AppBarCustombyMe(),
-      body: SideNavigationBar(),
+      body: MobileBody(),
     );
   }
 }
