@@ -10,3 +10,9 @@ const mSecondaryYellowColor = Color(0xFFE9B4);
 const mSecondaryGreenColor = Color(0xC7E4CA);
 const mSecondaryRedColor = Color(0xFBD4DA);
 const mSecondaryBlueColor = Color(0xC8EAF5);
+
+Map<String, Color> featureColors = {
+  "bejur": Color(0x7677B8),
+  "history": Color(0x55CAF5),
+  "rangkuman": Color(0x5E9ED4),
+};

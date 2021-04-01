@@ -46,16 +46,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
-    - assets/1x/
-    - assets/icons
+    - assets/img/
+    - assets/img/icons/
+    - assets/img/navigation/
+    - assets/img/menu/
 
-#  fonts:
-#    - family: OpenSans
-#      fonts:
-#        - asset: fonts/open-sans/OpenSans-Regular.ttf
-#        - asset: fonts/open-sans/OpenSans-Italic.ttf
-#          style: italic
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/open_sans/OpenSans-Regular.ttf
+        - asset: assets/fonts/open_sans/OpenSans-Italic.ttf
+          style: italic
 
   #
   # For details regarding fonts from package dependencies,
