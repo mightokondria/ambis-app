@@ -68,12 +68,11 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
         Expanded(
           child: Container(
             color: mGreyColor,
-            width: _width,
             child: Padding(
               padding: EdgeInsets.all(8),
               child: Container(
               height: _height,
-              margin: EdgeInsets.only(right: 30),
+              margin: EdgeInsets.only( left: 30, right: _width - (_width * .9)),
                 child: Builder(
                     builder: (context){
                       //DASHBOARD == 0
