@@ -9,7 +9,4 @@ class Session {
   final API handler;
   Session(this.handler);
   
-  test() {
-    print("UHAH CROT");
-  }
 }

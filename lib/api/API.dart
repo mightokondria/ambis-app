@@ -18,6 +18,11 @@ class API {
   String token;
   SharedPreferences prefs;
 
+  // INITAL STATE CONTAINS
+  // ALL REQUIRED STATE AT THE BEGINNING
+  // SUCH AS BOOLEAN WHETHER A USER IS LOGGED IN
+  Map<String, dynamic> initialState = {};
+
   // LOGGED IN USER DATA
   Siswa data;
 
@@ -64,9 +69,6 @@ class API {
   }
 
   Future<Map<String, dynamic>> init() async {
-    // RETURN VALUES
-    Map<String, dynamic> returnValue = {};
-
     // INITIALIZATION
     // GET TOKEN
     await get(Uri.https(defaultAPI, "frontend/req_token/index")).then((value) {
@@ -75,11 +77,11 @@ class API {
     });
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
-    await isLoggedIn().then((status) => returnValue["isLoggedIn"] = status);
+    await isLoggedIn().then((status) => initialState["isLoggedIn"] = status);
 
-    returnValue["siswa"] = data;
+    initialState["tidakPunyaKelasLangganan"] = (data != null)? data.akun.length < 1 : true;
 
-    return returnValue;
+    return initialState;
   }
 
   Future checkKelasLangganan() async {

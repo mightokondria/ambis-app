@@ -1,5 +1,5 @@
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/components/home_screen.dart';
+import 'package:mentoring_id/components/Device.dart';
 import 'package:flutter/material.dart';
 
 import 'components/Splash.dart';
@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
         future: api.init(),
         builder: (context, snapshot) {
+          print(snapshot);
           if(!snapshot.hasData) return Splash();
-
-          return HomeScreen();
+          return Device(api);
         },
       ),
     );
