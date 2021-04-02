@@ -1,12 +1,12 @@
-import '../Handler.dart';
-
 // THIS HANDLER HANDLES : 
 // LOGIN, LOGOUT, REGISTER, AND 
 // PASSWORD RECOVERY SYSTEM
 
+import 'package:mentoring_id/api/API.dart';
+
 class Session {
 
-  final Handler handler;
+  final API handler;
   Session(this.handler);
   
   test() {

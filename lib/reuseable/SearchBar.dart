@@ -47,7 +47,7 @@ class _SearchBarState extends State<SearchBar> {
                    child: GestureDetector(
                      onTap: (){
                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                         content: Text('cari...'),
+                         content: Text('cari...\n\n\n\n\n\n\n\nddu ddu ddudududu'),
                        )
                        );
                      },

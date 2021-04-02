@@ -17,7 +17,5 @@ class Siswa {
     raw.forEach((val) {
       akun.add(Akun(val));
     });
-    
-    print(akun.length);
   }
 }

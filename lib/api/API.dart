@@ -7,13 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mentoring_id/api/models/Siswa.dart';
 
 // HANDLERS
-import 'package:mentoring_id/api/handler/Session.dart';
+import 'package:mentoring_id/api/handlers/Session.dart';
 
 // THIS IS THE CORE HANDLER
 // THIS INITIALIZES THE APPLICATION 
 // UNTIL IT IS READY TO USE
 
-class Handler {
+class API {
   
   String token;
   SharedPreferences prefs;
@@ -27,7 +27,7 @@ class Handler {
   // HANDLERS
   Session session;
 
-  Handler() {
+  API() {
     session = Session(this);
   }
 
@@ -36,12 +36,11 @@ class Handler {
     String path, 
     bool frontend: true,
     String method: "GET", 
-    Map<String, String> headers,
-    Map<String, dynamic> body,
+    Map<String, String> headers: const <String, String> {},
+    Map<String, dynamic> body: const <String, dynamic> {},
     }) {
       Uri uri = Uri.https(defaultAPI, (frontend? "frontend/" + path : path));
       String parsedBody = "";
-      if(headers == null) headers = {};
 
       body.forEach((key, value) {
         parsedBody += "$key=$value&";

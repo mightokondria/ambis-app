@@ -1,4 +1,4 @@
-import 'package:mentoring_id/api/Handler.dart';
+import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Handler api = Handler();
+    API api = API();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
