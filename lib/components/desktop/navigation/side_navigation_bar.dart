@@ -18,7 +18,7 @@ class SideNavigationBar extends StatefulWidget {
 
 class _SideNavigationBarState extends State<SideNavigationBar> {
 
-  int selectedIndex = 0;
+  int selectedIndex = 2;
   int navIndex = 0;
 
   void changeIndex(int index) {
@@ -45,6 +45,7 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                 // borderRadius: BorderRadius.circular(20),
               ),
               child: Scrollbar(
+                isAlwaysShown: true,
                 controller: sidebarNavigationScroll,
                 child: SingleChildScrollView(
                   controller: sidebarNavigationScroll,

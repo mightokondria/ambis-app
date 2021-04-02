@@ -30,7 +30,6 @@ class AppBarCustombyMe extends StatelessWidget implements PreferredSizeWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Image.asset('assets/img/logo-ambis-kampus.png',width: 30.5,),
-              Image.asset('assets/1x/notif.png'),
             ],),
         )
     );

@@ -41,7 +41,7 @@ class _TryoutListState extends State {
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(
-              blurRadius: clicked? 3 : 8,
+              blurRadius: clicked? 1 : 8,
               offset: Offset(0, clicked? 0 : 3),
               color: Colors.black.withOpacity(clicked? .08 : .05),
             )
@@ -53,10 +53,7 @@ class _TryoutListState extends State {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Positioned(
-              top: 20,
-              child: XPWidget("+" + data['xp']),
-            ),
+            XPWidget("+" + data['xp']),
             SizedBox(height: 15),
 
             // NAMA/JUDUL TRYOUT

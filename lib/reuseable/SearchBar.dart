@@ -51,7 +51,7 @@ class _SearchBarState extends State<SearchBar> {
                        )
                        );
                      },
-                       child: Image.asset("assets/img/icons/search.png",)
+                       child: Image.asset("assets/img/icons/search.png", width: 20,)
                    ),
                  ),
                ],
