@@ -17,7 +17,11 @@ class _DashboardState extends State<Dashboard> {
         spacing: 10,
         runSpacing: 10,
         children: [
-          TryoutList(),
+          TryoutList({
+            "nm_tryout": "mentoring 1",
+            "xp": "43",
+            "nm_akun": "mentoring"
+          }),
          ]
       ),
     );

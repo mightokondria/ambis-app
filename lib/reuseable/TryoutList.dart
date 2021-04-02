@@ -8,12 +8,19 @@ TextStyle description = TextStyle(
 );
 
 class TryoutList extends StatefulWidget {
+  final Map<String, String> data;
+
+  TryoutList(this.data);
+
   @override
-  _TryoutListState createState() => _TryoutListState();
+  _TryoutListState createState() => _TryoutListState(data);
 }
 
 class _TryoutListState extends State {
   bool clicked = false;
+  final Map<String, String> data;
+
+  _TryoutListState(this.data);
 
   void toggle() {
     setState(() {
@@ -28,16 +35,15 @@ class _TryoutListState extends State {
       onTapUp: (TapUpDetails e) { toggle(); },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        height: 160,
         width: 250,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(
-              blurRadius: clicked? 5 : 8,
-              offset: Offset(0, 3),
-              color: Colors.black.withOpacity(clicked? .1 : .05),
+              blurRadius: clicked? 3 : 8,
+              offset: Offset(0, clicked? 0 : 3),
+              color: Colors.black.withOpacity(clicked? .08 : .05),
             )
           ]
         ),
@@ -45,14 +51,16 @@ class _TryoutListState extends State {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Positioned(
               top: 20,
-              child: XPWidget("+69"),
+              child: XPWidget("+" + data['xp']),
             ),
             SizedBox(height: 15),
-            // TODO SIMPLIFY THIS TO REUSEABLE COMPONENT
-            Text("MENTORING 1", style: TextStyle(
+
+            // NAMA/JUDUL TRYOUT
+            Text(data['nm_tryout'].toUpperCase(), style: TextStyle(
               color: Colors.black.withOpacity(.5).withBlue(50).withGreen(20),
               fontWeight: FontWeight.w900,
               fontSize: 25,
@@ -61,7 +69,9 @@ class _TryoutListState extends State {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("SBMPTN", style: description,),
+                // KELAS TRYOUT
+                Text(data['nm_akun'].toUpperCase(), style: description,),
+                // DESKRIPSI TRYOUT
                 Text("100 soal 90 menit", style: description),
               ],
             ),
