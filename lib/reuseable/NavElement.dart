@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ambis_app/constants/color_const.dart';
 
 class NavElement extends StatelessWidget {
 
