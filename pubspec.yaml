@@ -49,7 +49,8 @@ flutter:
     - assets/img/
     - assets/img/icons/
     - assets/img/navigation/
-    - assets/img/menu/
+    - assets/img/mobile/
+    - assets/img/mobile/navigation/
 
   fonts:
     - family: OpenSans
