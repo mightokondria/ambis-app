@@ -1,54 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/components/LoginForm.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-import 'package:mentoring_id/reuseable/CustomCard.dart';
-import 'package:mentoring_id/reuseable/input/InputText.dart';
 
-class Login extends StatelessWidget {
-  
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool login = true;
+
+  toggle() => setState(() {
+        login = !login;
+      });
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-  
+    ScrollController scrollController = ScrollController();
+
     return Container(
       color: Colors.white,
       child: Row(
         children: [
           Flexible(
-            flex: 3,
-            child: Container(
-            )
-          ),
+              flex: 2,
+              child: Container(
+                  color: mSemiPrimary.withOpacity(.5),
+                  child: Center(
+                      child: Image.asset(
+                    "assets/img/msg/tryout.png",
+                    width: 200,
+                  )))),
           Flexible(
-            flex: 2,
-            child: Container(
-              color: mSemiPrimary,
-              padding: EdgeInsets.all(30),
-              child: Column(
-                children: [
-                  InputText(
-                    textField: TextFormField(
-                      decoration: InputText.defaultStyle(hint: "Email"),
-                    ),
+              flex: 1,
+              child: Scrollbar(
+                isAlwaysShown: true,
+                controller: scrollController,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(50),
+                    child: Center(
+                        child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: login
+                          ? LoginForm.loginForm(toggle)
+                          : LoginForm.registerForm(toggle),
+                    )),
                   ),
-
-                  SizedBox(height: 30),
-
-                  InputText(
-                    textField: TextFormField(
-                      decoration: InputText.defaultStyle(hint: "Email"),
-                    ),
-                  ),
-
-                  SizedBox(height: 30),
-                  
-                  Container(
-                    decoration: CustomCard.decoration(),
-                    padding: EdgeInsets.all(20),
-                  )
-                ]
-              ),
-            )
-          )
+                ),
+              ))
         ],
       ),
     );

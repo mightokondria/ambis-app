@@ -11,6 +11,9 @@ const mSecondaryGreenColor = Color(0xC7E4CA);
 const mSecondaryRedColor = Color(0xFBD4DA);
 const mSecondaryBlueColor = Color(0xC8EAF5);
 const mSemiPrimary = Color(0xFFFCEABD);
+const mPrimary = Color(0xFFFAAA42);
+
+Color mHeadingText = Colors.black.withBlue(50).withGreen(30).withOpacity(.6);
 
 Map<String, Color> featureColors = {
   "bejur": Color(0x7677B8),
