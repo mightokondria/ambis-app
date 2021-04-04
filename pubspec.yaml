@@ -24,12 +24,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^0.17.4
-  google_fonts: ^1.0.0
-  flutter_swiper: ^1.1.6
   fl_chart: ^0.30.0
-  loading: ^1.0.2
-  material_floating_search_bar: ^0.3.3
-
+  http: ^0.13.1
+  shared_preferences: ^2.0.5
+# google_fonts: ^1.0.0
+# flutter_swiper: ^1.1.6
+# loading: ^1.0.2
+# material_floating_search_bar: ^0.3.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -49,8 +50,9 @@ flutter:
     - assets/img/
     - assets/img/icons/
     - assets/img/navigation/
-    - assets/img/mobile/
-    - assets/img/mobile/navigation/
+    - assets/img/menu/
+    - assets/img/animation/
+    - assets/img/msg/
 
   fonts:
     - family: OpenSans

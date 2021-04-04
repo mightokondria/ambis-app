@@ -12,9 +12,6 @@ class SidebarMenuList {
     bool active = selectedIndex == index;
     String icon = title.toLowerCase().replaceAll(" ", "-") + "-on";
 
-    print(index);
-    print(selectedIndex);
-
     return MouseRegion(
       cursor: SystemMouseCursors.move,
       child: GestureDetector(
