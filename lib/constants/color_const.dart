@@ -10,6 +10,7 @@ const mSecondaryYellowColor = Color(0xFFE9B4);
 const mSecondaryGreenColor = Color(0xC7E4CA);
 const mSecondaryRedColor = Color(0xFBD4DA);
 const mSecondaryBlueColor = Color(0xC8EAF5);
+const mSemiPrimary = Color(0xFFFCEABD);
 
 Map<String, Color> featureColors = {
   "bejur": Color(0x7677B8),

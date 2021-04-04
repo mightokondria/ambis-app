@@ -53,6 +53,7 @@ flutter:
     - assets/img/menu/
     - assets/img/animation/
     - assets/img/msg/
+    - assets/img/fancies/
 
   fonts:
     - family: OpenSans
