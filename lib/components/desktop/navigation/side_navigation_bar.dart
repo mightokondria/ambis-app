@@ -41,7 +41,7 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
               height: _height,
               width: 300,
               decoration: BoxDecoration(
-                color: mGreyColor,
+                color: Colors.blue[100],//mGreyColor,//UBAH WARNA KE SEMULA
                 // borderRadius: BorderRadius.circular(20),
               ),
               child: Scrollbar(

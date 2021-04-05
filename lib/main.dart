@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Ambis Kampus',
+      title: 'Mentoring',
       theme: ThemeData(fontFamily: 'OpenSans'),
       home: FutureBuilder(
         future: api.init(),

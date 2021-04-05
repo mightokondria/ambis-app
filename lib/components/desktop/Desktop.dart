@@ -13,8 +13,8 @@ class Desktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> init = _api.initialState;
-    bool isLoggedIn = init["isLoggedIn"];
-    bool noKelas = init["tidakPunyaKelasLangganan"];
+    bool isLoggedIn = true; //init["isLoggedIn"];
+    bool noKelas = false; //init["tidakPunyaKelasLangganan"];
 
     return Scaffold(
       appBar: (isLoggedIn || !noKelas) ? AppBarCustombyMe() : null,

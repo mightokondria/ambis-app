@@ -10,11 +10,14 @@ class Tryout extends StatefulWidget {
 class _UpdateState extends State<Tryout> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SearchBar(),
-        ScreenBanner(),
-      ]
+    return Stack(
+      children: <Widget>[
+        Column(
+            children: [
+              ScreenBanner(),
+            ]
+        ),
+      ],
     );
   }
 }
