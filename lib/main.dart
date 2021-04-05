@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/Device.dart';
-import 'package:flutter/material.dart';
+import 'package:mentoring_id/components/Disconnected.dart';
 
 import 'components/Splash.dart';
-import 'components/desktop/screens/Dashboard.dart';
 
 // MENGGOKIL
 
@@ -17,17 +17,27 @@ class MyApp extends StatelessWidget {
     API api = API();
 
     return MaterialApp(
+      color: Colors.white,
       debugShowCheckedModeBanner: false,
-      title: 'Ambis Kampus',
+      title: 'Mentoring.id',
       theme: ThemeData(fontFamily: 'OpenSans'),
-      home: FutureBuilder(
-        future: api.init(),
-        builder: (context, snapshot) {
-          print(snapshot);
-          if(!snapshot.hasData) return Splash();
-          return Device(api);
-        },
-      ),
+      builder: (BuildContext context, Widget widget) {
+        double width = MediaQuery.of(context).size.width;
+
+        return FutureBuilder(
+          future: api.init(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Disconnected();
+            else if (!snapshot.hasData) return Splash();
+
+            return Device(
+              api: api,
+              width: width,
+            );
+          },
+        );
+      },
     );
   }
 }

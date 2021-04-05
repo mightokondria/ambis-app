@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
 
 // REUSABLE FOR DESKTOP AND MOBILE
 class LoginForm {
+  final API api;
+  final BuildContext context;
+  final Function toggler;
+
+  LoginForm({this.toggler, this.api, this.context});
+
   static String emailValidator(String v) {
     if (v.indexOf("@") < 0 || v.indexOf(".") < 0)
       return "Masukkan email dengan benar";
@@ -18,11 +25,11 @@ class LoginForm {
     return null;
   }
 
-  static Widget togglerText(String text, Function toggler) {
+  Widget togglerText(String text) {
     return GestureDetector(
       onTap: toggler,
       child: Text(
-        "Belum punya akun?",
+        text,
         textAlign: TextAlign.center,
         style: TextStyle(
           color: mHeadingText.withOpacity(.5),
@@ -32,8 +39,16 @@ class LoginForm {
     );
   }
 
-  static Form loginForm(Function toggler) {
+  Form loginForm() {
+    List<TextEditingController> controllers = [];
+    final formKey = GlobalKey<FormState>();
+
+    for (int i = 1; i <= 2; i++) {
+      controllers.add(TextEditingController());
+    }
+
     return Form(
+      key: formKey,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -62,6 +77,7 @@ class LoginForm {
               textField: TextFormField(
                 decoration: InputText.inputDecoration(hint: "Email"),
                 validator: emailValidator,
+                controller: controllers[0],
               ),
             ),
             SizedBox(height: 20),
@@ -71,6 +87,7 @@ class LoginForm {
                 decoration: InputText.inputDecoration(hint: "Password"),
                 obscureText: true,
                 validator: passwordValidator,
+                controller: controllers[1],
               ),
             ),
             SizedBox(height: 20),
@@ -78,14 +95,24 @@ class LoginForm {
                 color: mPrimary,
                 textColor: Colors.white,
                 value: "masuk",
-                onTap: () => print("I'M RELIEVED")),
+                onTap: () {
+                  if (formKey.currentState.validate())
+                    api.session.masuk(controllers).then((value) {
+                      if (!value)
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text("Email atau password tidak tersedia.")));
+                      else
+                        api.session.save();
+                    });
+                }),
             SizedBox(height: 20),
-            togglerText("Belum punya akun?", toggler),
+            togglerText("Belum punya akun?"),
           ]),
     );
   }
 
-  static Form registerForm(Function toggler) {
+  Form registerForm() {
     final registerKey = GlobalKey<FormState>();
     final List<TextEditingController> controllers = [];
 
@@ -170,11 +197,11 @@ class LoginForm {
               textColor: Colors.white,
               value: "daftar",
               onTap: () {
-                registerKey.currentState.validate();
+                if (registerKey.currentState.validate()) api.loadingAnimation();
               },
             ),
             SizedBox(height: 20),
-            togglerText("Sudah punya akun?", toggler),
+            togglerText("Sudah punya akun?"),
           ]),
     );
   }

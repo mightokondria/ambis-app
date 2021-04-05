@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/reuseable/fancies/circle.dart';
 import 'package:mentoring_id/reuseable/fancies/xp.dart';
 
 import 'CustomCard.dart';

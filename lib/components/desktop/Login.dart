@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
 class Login extends StatefulWidget {
+  final API api;
+
+  const Login({Key key, this.api}) : super(key: key);
+
   @override
-  _LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState(api);
 }
 
 class _LoginState extends State<Login> {
   bool login = true;
+
+  final API api;
+
+  _LoginState(this.api);
 
   toggle() => setState(() {
         login = !login;
@@ -17,6 +26,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     ScrollController scrollController = ScrollController();
+    LoginForm forms = LoginForm(api: api, context: context, toggler: toggle);
 
     return Container(
       color: Colors.white,
@@ -45,8 +55,8 @@ class _LoginState extends State<Login> {
                         child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 500),
                       child: login
-                          ? LoginForm.loginForm(toggle)
-                          : LoginForm.registerForm(toggle),
+                          ? forms.loginForm()
+                          : forms.registerForm(),
                     )),
                   ),
                 ),
