@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/reuseable/fancies/circle.dart';
 import 'package:mentoring_id/reuseable/fancies/xp.dart';
+
+import 'CustomCard.dart';
 
 TextStyle description = TextStyle(
   color: Colors.black.withOpacity(.3),
@@ -36,17 +37,7 @@ class _TryoutListState extends State {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         width: 250,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: clicked? 1 : 8,
-              offset: Offset(0, clicked? 0 : 3),
-              color: Colors.black.withOpacity(clicked? .08 : .05),
-            )
-          ]
-        ),
+        decoration: CustomCard.decoration(radius: 15),
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

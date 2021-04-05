@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class feedBack extends StatefulWidget {
+class FeedBack extends StatefulWidget {
   @override
-  _feedBackState createState() => _feedBackState();
+  _FeedBackState createState() => _FeedBackState();
 }
 
-class _feedBackState extends State<feedBack> {
+class _FeedBackState extends State<FeedBack> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text("feedback"),);
+    return Container(
+      child: Text("feedback"),
+    );
   }
 }
