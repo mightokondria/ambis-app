@@ -43,7 +43,8 @@ class API {
     parent.changeIndex(3);
   }
 
-  refresh() {
+  refresh() async {
+    await init();
     parent.changeIndex(2);
   }
 

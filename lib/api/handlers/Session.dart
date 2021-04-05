@@ -18,7 +18,6 @@ class Session {
 
     if (result != null) {
       api.prefs.setString("data", jsonEncode(result));
-      api.initialState["isLoggedIn"] = true;
       api.refresh();
     }
   }
@@ -32,7 +31,7 @@ class Session {
     });
 
     await api.request(
-      path: "dashboard/login",
+      path: "auth/login",
       frontend: true,
       method: "POST",
       body: {"email": values[0], "password": values[1]},
