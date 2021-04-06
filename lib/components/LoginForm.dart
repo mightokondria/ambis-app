@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
 
@@ -28,12 +29,14 @@ class LoginForm {
   Widget togglerText(String text) {
     return GestureDetector(
       onTap: toggler,
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: mHeadingText.withOpacity(.5),
-          fontWeight: FontWeight.w600,
+      child: Clickable(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: mHeadingText.withOpacity(.5),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

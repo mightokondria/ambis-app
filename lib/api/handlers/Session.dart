@@ -14,7 +14,7 @@ class Session {
   Map<String, dynamic> resultData;
 
   save() {
-    Map<String, dynamic> result = resultData["result"];
+    Map<String, dynamic> result = resultData["data"];
 
     if (result != null) {
       api.prefs.setString("data", jsonEncode(result));
@@ -38,7 +38,7 @@ class Session {
     ).then((value) {
       resultData = jsonDecode(value.body);
 
-      if (resultData["type"] == "warning")
+      if (resultData["data"] == null)
         success = false;
       else
         success = true;

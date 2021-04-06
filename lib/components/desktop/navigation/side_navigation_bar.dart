@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/desktop/screens/Dashboard.dart';
 import 'package:mentoring_id/components/desktop/screens/Tryout.dart';
@@ -42,15 +43,12 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
 
     return Row(
       children: [
-        Container(
+        Flexible(
+          flex: 1,
           child: Container(
             child: Container(
               height: _height,
               width: 300,
-              decoration: BoxDecoration(
-                color: Colors.blue[100],//mGreyColor,//UBAH WARNA KE SEMULA
-                // borderRadius: BorderRadius.circular(20),
-              ),
               child: Scrollbar(
                 isAlwaysShown: true,
                 controller: sidebarNavigationScroll,
@@ -81,7 +79,8 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
             ),
           ),
         ),
-        Expanded(
+        Flexible(
+          flex: 2,
           child: Container(
               color: mGreyColor,
               child: Padding(

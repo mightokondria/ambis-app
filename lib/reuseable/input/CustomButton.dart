@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 import '../CustomCard.dart';
 
@@ -50,18 +51,20 @@ class _CustomButtonState extends State<CustomButton> {
         onTap: onTap,
         child: Transform.scale(
           scale: pressed ? .99 : 1,
-          child: Container(
-            width: double.infinity,
-            decoration: (color != Colors.transparent)
-                ? CustomCard.decoration(radius: radius, color: color)
-                : null,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Text(
-              value.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: (textColor == null) ? mHeadingText : textColor,
+          child: Clickable(
+            child: Container(
+              width: double.infinity,
+              decoration: (color != Colors.transparent)
+                  ? CustomCard.decoration(radius: radius, color: color)
+                  : null,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Text(
+                value.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: (textColor == null) ? mHeadingText : textColor,
+                ),
               ),
             ),
           ),
