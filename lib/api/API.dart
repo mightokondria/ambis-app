@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
@@ -23,6 +24,9 @@ class API {
 
   // LOGGED IN USER DATA
   Siswa data;
+
+  // CONTEXT WITH NAVIGATOR
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   final String defaultAPI = "api.mentoring.web.id";
   final String suffix = "!==+=!==";
@@ -92,7 +96,6 @@ class API {
       } else
         await get(uri, headers: headers).then(appendResponse);
     } catch (e) {
-      print(e);
       clearOverlays();
       networkDisconnected();
     }
