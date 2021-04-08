@@ -1,7 +1,6 @@
 # ambis_app
 
 kesekian kalinyaaaa
-<h2>BUMP OF CHICKEN - アカシア</h2>
 
 ## Getting Started
 

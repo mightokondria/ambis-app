@@ -3,7 +3,6 @@ import 'package:mentoring_id/reuseable/sidebar-navigation/menu-list.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSidebar extends StatelessWidget {
-
   final int selectedIndex;
   final Function onIndexChanged;
   final double sectionSpace = 15;
@@ -17,23 +16,43 @@ class DesktopSidebar extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          menuList.sidebarMenuList(title: "Dashboard", activeColor: Colors.red, index: 0),
-          menuList.sidebarMenuList(title: "Update", activeColor: Colors.blue, index: 1),
-          menuList.sidebarMenuList(title: "Tryout", activeColor: Colors.orange, index: 2),
+          menuList.sidebarMenuList(
+              title: "Dashboard", activeColor: Colors.red, index: 0),
+          menuList.sidebarMenuList(
+              title: "Update", activeColor: Colors.blue, index: 1),
+          menuList.sidebarMenuList(
+              title: "Tryout", activeColor: Colors.orange, index: 2),
 
           // SPACER FOR SECTION
-          SizedBox(height: sectionSpace,),
+          SizedBox(
+            height: sectionSpace,
+          ),
 
-          menuList.sidebarMenuList(title: "History tryout", activeColor: featureColors["history"], index: 3),
-          menuList.sidebarMenuList(title: "Rangkuman", activeColor: featureColors["rangkuman"], index: 4),
-          menuList.sidebarMenuList(title: "Bedah jurusan", activeColor: featureColors["bejur"], index: 5),
-          
-          SizedBox(height: sectionSpace,),
+          menuList.sidebarMenuList(
+              title: "History tryout",
+              activeColor: featureColors["history"],
+              index: 3),
+          menuList.sidebarMenuList(
+              title: "Rangkuman",
+              activeColor: featureColors["rangkuman"],
+              index: 4),
+          menuList.sidebarMenuList(
+              title: "Bedah jurusan",
+              activeColor: featureColors["bejur"],
+              index: 5),
 
-          menuList.sidebarMenuList(title: "Settings", activeColor: Colors.blue, index: 6),
-          menuList.sidebarMenuList(title: "Feedback", activeColor: Colors.orange, index: 7),
+          SizedBox(
+            height: sectionSpace,
+          ),
 
-          SizedBox(height: sectionSpace,),
+          menuList.sidebarMenuList(
+              title: "Settings", activeColor: Colors.blue, index: 6),
+          menuList.sidebarMenuList(
+              title: "Feedback", activeColor: Colors.orange, index: 7),
+
+          SizedBox(
+            height: sectionSpace,
+          ),
         ],
       ),
     );
