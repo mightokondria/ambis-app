@@ -14,6 +14,7 @@ class _SearchBarState extends State<SearchBar> {
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(horizontal: KDefaultPadding),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      width: double.infinity,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(50),

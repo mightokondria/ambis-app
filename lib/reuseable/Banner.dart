@@ -15,7 +15,8 @@ class ScreenBanner extends StatelessWidget {
           Positioned(
             bottom: 80,
             child: Container(
-              padding: EdgeInsets.only(left: 50, right: 20, top: 30, bottom: 30),
+              padding:
+                  EdgeInsets.only(left: 50, right: 20, top: 30, bottom: 30),
               margin: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -28,10 +29,7 @@ class ScreenBanner extends StatelessWidget {
                 ],
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              constraints: BoxConstraints(
-                maxWidth: 700,
-                maxHeight: 250
-              ),
+              constraints: BoxConstraints(maxWidth: 700, maxHeight: 250),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -40,18 +38,34 @@ class ScreenBanner extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Tryout",style: TextStyle(color: Colors.pink,fontSize: 40,letterSpacing: 10,fontWeight: FontWeight.w800),),
-                        Text("Yuk kerjain tryout",style: TextStyle(color: Colors.blueGrey, letterSpacing: 2),),
+                        Text(
+                          "Tryout",
+                          style: TextStyle(
+                              color: Colors.pink,
+                              fontSize: 40,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        Text(
+                          "Yuk kerjain tryout",
+                          style: TextStyle(
+                              color: Colors.blueGrey),
+                        ),
                       ],
                     ),
                   ),
-                  Flexible(child: Container(margin: EdgeInsets.only(bottom: 20),child: Image.asset("assets/img/msg/tryout-icon.png", width: 250,))),
+                  Flexible(
+                      child: Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: Image.asset(
+                            "assets/img/msg/tryout-icon.png",
+                            width: 250,
+                          ))),
                 ],
               ),
             ),
           ),
-
-          Positioned(bottom: 50,
+          Positioned(
+            bottom: 50,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -61,8 +75,7 @@ class ScreenBanner extends StatelessWidget {
                   width: 140,
                   decoration: BoxDecoration(
                       color: Colors.green[700],
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
@@ -70,8 +83,7 @@ class ScreenBanner extends StatelessWidget {
                   width: 140,
                   decoration: BoxDecoration(
                       color: Colors.green[700],
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
@@ -79,8 +91,7 @@ class ScreenBanner extends StatelessWidget {
                   width: 140,
                   decoration: BoxDecoration(
                       color: Colors.green[700],
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
               ],
             ),

@@ -19,7 +19,6 @@ class Device extends StatefulWidget {
 class DeviceState extends State<Device> {
   final API api;
   final int desktopResolution = 768;
-  final double width;
 
   /*
   * INDEXES DETAIL
@@ -30,6 +29,7 @@ class DeviceState extends State<Device> {
   */
   int index = 0;
   Widget devices;
+  double width;
 
   DeviceState(this.api, this.width);
 
@@ -49,7 +49,7 @@ class DeviceState extends State<Device> {
   @override
   Widget build(BuildContext context) {
     api.parent = this;
-
+    
     return IndexedStack(index: (index < 3) ? index : 0, children: [
       Stack(
         children: [

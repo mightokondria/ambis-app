@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
@@ -91,6 +92,37 @@ class LoginForm {
                 obscureText: true,
                 validator: passwordValidator,
                 controller: controllers[1],
+              ),
+            ),
+            SizedBox(height: 10),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  showGeneralDialog(context: context, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> second) {
+                    return ScaleTransition(
+                      scale: animation,
+                      child: Dialog(
+                        child: Container(
+                          decoration: CustomCard.decoration(),
+                          child: CustomButton(value: "Close", onTap: () {
+                            Navigator.pop(context);
+                          },),
+                        ),
+                      ),
+                    );
+                  });
+                },
+                child: Clickable(
+                  child: Text(
+                    "Lupa password?",
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: mHeadingText.withOpacity(.5),
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
