@@ -1,7 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
 class Disconnected extends StatelessWidget {
+  final API api;
+
+  const Disconnected({Key key, this.api}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +35,24 @@ class Disconnected extends StatelessWidget {
             ),
             SizedBox(
               width: 200,
-              child: Text(
-                "Terjadi kesalahan jaringan atau server",
+              child: RichText(
                 textAlign: TextAlign.center,
-                style: TextStyle(color: mHeadingText.withOpacity(.3)),
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text:
+                          "Oops! Terjadi kesalahan jaringan atau server. Coba ",
+                      style: TextStyle(color: mHeadingText.withOpacity(.3)),
+                    ),
+                    TextSpan(
+                      text:
+                          "reload",
+                      style: TextStyle(color: Colors.blue.withOpacity(.7)),
+                      recognizer: TapGestureRecognizer()
+                      ..onTap = () => api.refresh()
+                    ),
+                  ],
+                ),
               ),
             )
           ],

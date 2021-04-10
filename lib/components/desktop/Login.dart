@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
                   color: mSemiPrimary.withOpacity(.5),
                   child: Center(
                       child: Image.asset(
-                    "assets/img/msg/tryout.png",
+                    "assets/img/msg/tryout-icon.png",
                     width: 200,
                   )))),
           Flexible(

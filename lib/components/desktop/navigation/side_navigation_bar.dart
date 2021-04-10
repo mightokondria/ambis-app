@@ -88,7 +88,7 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                 child: Container(
                   height: _height,
                   margin:
-                      EdgeInsets.only(left: 30, right: _width - (_width * .9)),
+                      EdgeInsets.only(left: 30, right: _width - (_width * .95)),
                   child: Builder(builder: (context) {
                     //DASHBOARD == 0
                     if (selectedIndex == 0) {

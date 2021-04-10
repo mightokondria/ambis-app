@@ -7,7 +7,10 @@ import 'package:mentoring_id/api/handlers/Session.dart';
 // MODELS
 import 'package:mentoring_id/api/models/Siswa.dart';
 import 'package:mentoring_id/components/Device.dart';
+import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'handlers/UI.dart';
 
 // THIS IS THE CORE HANDLER
 // THIS INITIALIZES THE APPLICATION
@@ -26,7 +29,7 @@ class API {
   Siswa data;
 
   // CONTEXT WITH NAVIGATOR
-  final navigatorKey = GlobalKey<NavigatorState>();
+  BuildContext context;
 
   final String defaultAPI = "api.mentoring.web.id";
   final String suffix = "!==+=!==";
@@ -34,25 +37,25 @@ class API {
   // HANDLERS
   DeviceState parent;
   Session session;
+  UI ui;
 
-  API() {
+  API(this.context);
+  
+  initHandlers() {
     session = Session(this);
+    ui = UI(this);
   }
 
   networkDisconnected() {
     parent.changeIndex(1);
   }
 
-  loadingAnimation() {
-    parent.changeIndex(3);
+  closeDialog(BuildContext dialogContext) {
+    Navigator.of(dialogContext).pop(dialogContext);
   }
 
   refresh() async {
     await init();
-    parent.changeIndex(2);
-  }
-
-  clearOverlays() {
     parent.changeIndex(0);
   }
 
@@ -68,10 +71,19 @@ class API {
     Uri uri = Uri.https(defaultAPI, (frontend ? "frontend/" + path : path));
     String parsedBody = "";
     Response response;
-
+    BuildContext loadingContext;
+    
     if (headers == null) headers = {};
 
-    if (animation) loadingAnimation();
+    if (animation)
+      showGeneralDialog(
+          context: context,
+          transitionDuration: Duration(seconds: 0),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            loadingContext = context;
+
+            return LoadingAnimation();
+          });
 
     body.forEach((key, value) {
       parsedBody += "$key=$value&";
@@ -82,7 +94,7 @@ class API {
     appendResponse(Response res) {
       response = res;
 
-      if (animation) clearOverlays();
+      if (animation) closeDialog(loadingContext);
     }
 
     try {
@@ -96,7 +108,7 @@ class API {
       } else
         await get(uri, headers: headers).then(appendResponse);
     } catch (e) {
-      clearOverlays();
+      closeDialog(loadingContext);
       networkDisconnected();
     }
 
@@ -127,6 +139,7 @@ class API {
             animation: false,
             body: {"no_siswa": data.noSiswa})
         .then((value) => data.registerKelasLangganan(jsonDecode(value.body)));
+        
   }
 
   // CHECK IF A USER IS ALREADY LOGGED IN

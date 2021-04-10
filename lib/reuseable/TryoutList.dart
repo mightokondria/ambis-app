@@ -50,7 +50,7 @@ class _TryoutListState extends State {
               SizedBox(height: 15),
 
               // NAMA/JUDUL TRYOUT
-              Text(data['nm_tryout'].toUpperCase(), style: TextStyle(
+              Text(data['nm_paket'].toUpperCase(), style: TextStyle(
                 color: Colors.black.withOpacity(.5).withBlue(50).withGreen(20),
                 fontWeight: FontWeight.w900,
                 fontSize: 25,
@@ -60,7 +60,7 @@ class _TryoutListState extends State {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // KELAS TRYOUT
-                  Text(data['nm_akun'].toUpperCase(), style: description,),
+                  // Text(data['nm_akun'].toUpperCase(), style: description,),
                   // DESKRIPSI TRYOUT
                   Text("100 soal 90 menit", style: description),
                 ],

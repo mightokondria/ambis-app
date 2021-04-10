@@ -6,6 +6,8 @@ import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
 
+import 'LoadingAnimation.dart';
+
 // REUSABLE FOR DESKTOP AND MOBILE
 class LoginForm {
   final API api;
@@ -75,7 +77,7 @@ class LoginForm {
                 color: Colors.black38,
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 10),
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(
@@ -99,19 +101,7 @@ class LoginForm {
               alignment: Alignment.topRight,
               child: GestureDetector(
                 onTap: () {
-                  showGeneralDialog(context: context, pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> second) {
-                    return ScaleTransition(
-                      scale: animation,
-                      child: Dialog(
-                        child: Container(
-                          decoration: CustomCard.decoration(),
-                          child: CustomButton(value: "Close", onTap: () {
-                            Navigator.pop(context);
-                          },),
-                        ),
-                      ),
-                    );
-                  });
+                  api.ui.showRecoveryDialog();
                 },
                 child: Clickable(
                   child: Text(
@@ -232,7 +222,7 @@ class LoginForm {
               textColor: Colors.white,
               value: "daftar",
               onTap: () {
-                if (registerKey.currentState.validate()) api.loadingAnimation();
+                //if (registerKey.currentState.validate()) api.loadingAnimation();
               },
             ),
             SizedBox(height: 20),
