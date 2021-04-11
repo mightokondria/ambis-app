@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/components/desktop/Desktop.dart';
 import 'package:mentoring_id/components/mobile/Mobile.dart';
 
@@ -30,6 +29,7 @@ class DeviceState extends State<Device> {
   int index = 0;
   Widget devices;
   double width;
+  bool isDesktop;
 
   DeviceState(this.api, this.width);
 
@@ -39,7 +39,8 @@ class DeviceState extends State<Device> {
   }
 
   Widget home() {
-    return (width >= desktopResolution) ? Desktop(api) : Mobile(api);
+    isDesktop = width >= desktopResolution;
+    return isDesktop ? Desktop(api) : Mobile(api);
   }
 
   changeIndex(int i) => setState(() {
@@ -50,16 +51,9 @@ class DeviceState extends State<Device> {
   Widget build(BuildContext context) {
     api.parent = this;
     
-    return IndexedStack(index: (index < 3) ? index : 0, children: [
-      Stack(
-        children: [
-          devices,
-          Dialog(),
-          (index == 3) ? LoadingAnimation() : Container(),
-        ],
-      ),
-      Disconnected(),
-      (index == 2)? home() : Disconnected(),
+    return IndexedStack(index: index, children: [
+      home(),
+      Disconnected(api: api,),
     ]);
   }
 }
