@@ -12,7 +12,6 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(horizontal: KDefaultPadding),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       width: double.infinity,
       decoration: BoxDecoration(
