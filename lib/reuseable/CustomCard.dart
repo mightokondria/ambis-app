@@ -8,9 +8,9 @@ class CustomCard {
       borderRadius: BorderRadius.all(Radius.circular(radius)),
       boxShadow: [
         BoxShadow(
-            offset: Offset(0, 3),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(.08))
+            offset: Offset(5, 5),
+            blurRadius: 8,
+            color: Colors.black.withOpacity(.04))
       ],
     );
   }

@@ -36,7 +36,7 @@ class Session {
       method: "POST",
       body: {"email": values[0], "password": values[1]},
     ).then((value) {
-      resultData = jsonDecode(value.body);
+      resultData = api.safeDecoder(value.body);
 
       if (resultData["data"] == null)
         success = false;
@@ -45,5 +45,40 @@ class Session {
     });
 
     return success;
+  }
+
+  Future<String> register(List<TextEditingController> input) async {
+    String result;
+    List<String> inputs = input.map((e) => e.value.text).toList();
+
+    await api.request(path: "auth/register", method: "POST", body: {
+      "nama": inputs[0],
+      "email": inputs[1],
+      "password": inputs[3]
+    }).then((value) {
+      result = value.body;
+
+      if (result == "emailDuplicationException")
+        return api.showSnackbar(
+            content: Text("Email sudah pernah dipakai. Lupa password?"));
+
+      resultData = api.safeDecoder(result);
+      save();
+      api.showSnackbar(content: Text("Yeayy! Pembuatan akunmu sudah berhasil! Silakan ikuti langkah berikutnya."));
+    });
+  }
+
+  Future<String> recovery(TextEditingController email) async {
+    String result;
+
+    await api.request(
+        path: "auth/recovery",
+        method: "POST",
+        body: {"email": email.value.text}).then((res) {
+      Map<String, dynamic> data = api.safeDecoder(res.body);
+      result = data["status"];
+    });
+
+    return result;
   }
 }

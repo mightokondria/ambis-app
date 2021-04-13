@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/reuseable/dialog/RecoveryDialog.dart';
+import 'package:mentoring_id/reuseable/dialog/Dialogs.dart';
 
 import '../API.dart';
 
 class UI {
   final API api;
+
+  Dialogs dialog;
   BuildContext context;
 
   UI(this.api) {
     context = api.context;
+    dialog = Dialogs(api: api, context: context);
   }
 
   // ACCOUNT RECOVERY DIALOG
   showRecoveryDialog() {
     if (api.parent.isDesktop)
-      showGeneralDialog(
+      showDialog(
           context: context,
-          pageBuilder: (context, a1, a2) => RecoveryDialog());
+          builder: (context) => dialog.recoveryDialog(context));
     else
-      showBottomSheet(
-          context: context, builder: (context) => RecoveryDialog());
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          backgroundColor: Color(0xFFF8F8F8),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+          builder: (context) => Wrap(
+                children: [
+                  dialog.recoveryDialog(context),
+                ],
+              ));
   }
 }

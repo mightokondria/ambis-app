@@ -23,25 +23,12 @@ class DeviceState extends State<Device> {
   * INDEXES DETAIL
   * 0 : INITIAL HOMEPAGE
   * 1 : ERROR DISCONNECTED
-  * 2 : REFRESH HOMEPAGE
-  * 3 : SHOW LOADING ANIMATION
   */
   int index = 0;
-  Widget devices;
   double width;
   bool isDesktop;
 
   DeviceState(this.api, this.width);
-
-  @override
-  void initState() {
-    this.devices = home();
-  }
-
-  Widget home() {
-    isDesktop = width >= desktopResolution;
-    return isDesktop ? Desktop(api) : Mobile(api);
-  }
 
   changeIndex(int i) => setState(() {
         index = i;
@@ -49,11 +36,16 @@ class DeviceState extends State<Device> {
 
   @override
   Widget build(BuildContext context) {
+    isDesktop = width >= desktopResolution;
+
     api.parent = this;
-    
+    api.initHandlers();
+
     return IndexedStack(index: index, children: [
-      home(),
-      Disconnected(api: api,),
+      isDesktop ? Desktop(api) : Mobile(api),
+      Disconnected(
+        api: api,
+      ),
     ]);
   }
 }

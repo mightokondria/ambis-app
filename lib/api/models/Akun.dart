@@ -1,12 +1,15 @@
-
 class Akun {
-
+  String noAkun;
   String nmAkun;
-  bool active = true;
+  String expired;
+  bool active;
 
-  Akun(Map<String, dynamic> data) {
-    this.nmAkun = data["nm_akun"];
+  Akun({this.noAkun, this.nmAkun, this.expired});
 
-    if(data["active"] != null) this.active = (data["active"] == "1")? true : false;
+  Akun.fromJson(Map<String, dynamic> json) {
+    noAkun = json['no_akun'];
+    nmAkun = json['nm_akun'];
+    expired = json['expired'];
+    active = (json['active'] == '0')? false : true;
   }
 }

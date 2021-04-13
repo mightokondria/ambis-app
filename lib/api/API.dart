@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
@@ -10,6 +11,7 @@ import 'package:mentoring_id/components/Device.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'handlers/Jurusan.dart';
 import 'handlers/UI.dart';
 
 // THIS IS THE CORE HANDLER
@@ -23,7 +25,11 @@ class API {
   // INITAL STATE CONTAINS
   // ALL REQUIRED STATE AT THE BEGINNING
   // SUCH AS BOOLEAN WHETHER A USER IS LOGGED IN
-  Map<String, dynamic> initialState = {};
+  Map<String, dynamic> initialState = {
+    "isLoggedIn": false,
+    "tidakPunyaKelasLangganan": true,
+    "ready": false
+  };
 
   // LOGGED IN USER DATA
   Siswa data;
@@ -38,12 +44,35 @@ class API {
   DeviceState parent;
   Session session;
   UI ui;
+  Jurusan jurusan;
 
   API(this.context);
-  
+
+  dynamic safeDecoder(String source) {
+    Map<String, dynamic> data;
+
+    try {
+      data = jsonDecode(source);
+    } catch (e) {
+      print(e);
+      showSnackbar(
+          content: Text("Oops! Sepertinya ada yang salah"),
+          action: SnackBarAction(label: "Laporkan", onPressed: () {}));
+    }
+
+    return data;
+  }
+
+  showSnackbar(
+      {Widget content, SnackBarAction action, SnackBarBehavior behavior}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: content, behavior: behavior, action: action));
+  }
+
   initHandlers() {
     session = Session(this);
     ui = UI(this);
+    jurusan = Jurusan(this);
   }
 
   networkDisconnected() {
@@ -51,7 +80,7 @@ class API {
   }
 
   closeDialog(BuildContext dialogContext) {
-    Navigator.of(dialogContext).pop(dialogContext);
+    Navigator.pop(dialogContext);
   }
 
   refresh() async {
@@ -72,18 +101,20 @@ class API {
     String parsedBody = "";
     Response response;
     BuildContext loadingContext;
-    
+
     if (headers == null) headers = {};
 
     if (animation)
-      showGeneralDialog(
-          context: context,
-          transitionDuration: Duration(seconds: 0),
-          pageBuilder: (context, animation, secondaryAnimation) {
-            loadingContext = context;
+      Future.delayed(Duration.zero, () {
+        showGeneralDialog(
+            context: context,
+            transitionDuration: Duration(seconds: 0),
+            pageBuilder: (context, animation, secondaryAnimation) {
+              loadingContext = context;
 
-            return LoadingAnimation();
-          });
+              return LoadingAnimation();
+            });
+      });
 
     body.forEach((key, value) {
       parsedBody += "$key=$value&";
@@ -119,27 +150,29 @@ class API {
     // INITIALIZATION
     // GET TOKEN
     await get(Uri.https(defaultAPI, "frontend/req_token/index")).then((value) {
-      Map<String, dynamic> data = jsonDecode(value.body);
+      Map<String, dynamic> data = safeDecoder(value.body);
       this.token = data["token"];
     });
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
     await isLoggedIn().then((status) => initialState["isLoggedIn"] = status);
 
-    initialState["tidakPunyaKelasLangganan"] =
-        (data != null) ? data.akun.length < 1 : true;
+    if (data != null) {
+      initialState["tidakPunyaKelasLangganan"] =
+          data.initialData.akun.length < 1;
+      initialState["ready"] = data.initialData.ready;
+    }
 
     return initialState;
   }
 
-  Future checkKelasLangganan() async {
+  Future getInitialData() async {
     await request(
-            path: "component/result_siswa",
+            path: "siswa/get_initial_data",
             method: "POST",
             animation: false,
             body: {"no_siswa": data.noSiswa})
-        .then((value) => data.registerKelasLangganan(jsonDecode(value.body)));
-        
+        .then((value) => data.registerInitialData(safeDecoder(value.body)));
   }
 
   // CHECK IF A USER IS ALREADY LOGGED IN
@@ -149,9 +182,9 @@ class API {
     bool loggedIn = data != null;
 
     if (loggedIn) {
-      this.data = Siswa(jsonDecode(data));
+      this.data = Siswa(safeDecoder(data));
 
-      await checkKelasLangganan();
+      await getInitialData();
     }
 
     return loggedIn;

@@ -1,21 +1,19 @@
 import 'package:mentoring_id/api/models/Akun.dart';
+import 'package:mentoring_id/api/models/InitialData.dart';
 
 class Siswa {
 
   String nama;
   String noSiswa;
   List<Akun> akun = [];
+  InitialData initialData;
   
   Siswa(Map<String, dynamic> data) {
     nama = data["nama"];
     noSiswa = data["no_siswa"];
   }
 
-  registerKelasLangganan(Map<String, dynamic> data) {
-    List<dynamic> raw = data["akun"];
-
-    raw.forEach((val) {
-      akun.add(Akun(val));
-    });
+  registerInitialData(Map<String, dynamic> data) {
+    initialData = InitialData.fromJson(data);
   }
 }

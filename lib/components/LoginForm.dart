@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
-
-import 'LoadingAnimation.dart';
 
 // REUSABLE FOR DESKTOP AND MOBILE
 class LoginForm {
@@ -15,6 +12,9 @@ class LoginForm {
   final Function toggler;
 
   LoginForm({this.toggler, this.api, this.context});
+
+  final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
 
   static String emailValidator(String v) {
     if (v.indexOf("@") < 0 || v.indexOf(".") < 0)
@@ -47,14 +47,13 @@ class LoginForm {
 
   Form loginForm() {
     List<TextEditingController> controllers = [];
-    final formKey = GlobalKey<FormState>();
 
     for (int i = 1; i <= 2; i++) {
       controllers.add(TextEditingController());
     }
 
     return Form(
-      key: formKey,
+      key: loginFormKey,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -121,12 +120,12 @@ class LoginForm {
                 textColor: Colors.white,
                 value: "masuk",
                 onTap: () {
-                  if (formKey.currentState.validate())
+                  if (loginFormKey.currentState.validate())
                     api.session.masuk(controllers).then((value) {
                       if (!value)
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        api.showSnackbar(
                             content:
-                                Text("Email atau password tidak tersedia.")));
+                                Text("Email atau password tidak tersedia."));
                       else
                         api.session.save();
                     });
@@ -138,7 +137,6 @@ class LoginForm {
   }
 
   Form registerForm() {
-    final registerKey = GlobalKey<FormState>();
     final List<TextEditingController> controllers = [];
 
     for (int i = 1; i <= 4; i++) {
@@ -146,7 +144,7 @@ class LoginForm {
     }
 
     return Form(
-      key: registerKey,
+      key: registerFormKey,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -222,7 +220,8 @@ class LoginForm {
               textColor: Colors.white,
               value: "daftar",
               onTap: () {
-                //if (registerKey.currentState.validate()) api.loadingAnimation();
+                if (registerFormKey.currentState.validate())
+                  api.session.register(controllers);
               },
             ),
             SizedBox(height: 20),
