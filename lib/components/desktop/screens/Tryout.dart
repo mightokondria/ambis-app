@@ -15,7 +15,7 @@ class _UpdateState extends State<Tryout> {
     List<Map<String, String>> data = [
       {
         "no_paket": "12",
-        "nm_paket": "SAINTEK 8",
+        "nm_paket": "JKT 48",
         "no_akun": "3",
         "xp": "30",
         "pub_start": null,

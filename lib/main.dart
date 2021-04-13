@@ -4,6 +4,7 @@ import 'package:mentoring_id/components/Device.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
 
 import 'components/Splash.dart';
+import 'components/desktop/HalmamanPengerjaan/pengerjaan_to.dart';
 
 // MENGGOKIL
 
@@ -43,6 +44,10 @@ class MyApp extends StatelessWidget {
               },
             );
           },
-        ));
+        ),
+      routes: {
+          '/pengerjaan_to': (context) => halaman_pengerjaan_to()
+      },
+    );
   }
 }
