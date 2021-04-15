@@ -10,7 +10,7 @@ class Jurusan {
   Jurusan(this.api);
 
   Future<List<JurusanModel>> getJurusan() async {
-    List<JurusanModel> jurusan = <JurusanModel>[];
+    List<JurusanModel> jurusan;
 
     await api.request(path: "jurusan/get", animation: false).then((res) {
       List<dynamic> data = jsonDecode(res.body);
@@ -20,7 +20,18 @@ class Jurusan {
     return jurusan;
   }
 
-  Future<List<Prodi>> getProdi() async {
+  Future<List<Prodi>> getProdi(String noJurusan) async {
+    List<Prodi> prodi;
 
+    await api.request(
+        path: "jurusan/get?data=prodi",
+        method: "POST",
+        animation: false,
+        body: {"no_jurusan": noJurusan}).then((res) {
+      List<dynamic> data = jsonDecode(res.body);
+      prodi = data.map((e) => Prodi.fromJson(e)).toList();
+    });
+
+    return prodi;
   }
 }

@@ -16,37 +16,40 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        color: Colors.white,
-        debugShowCheckedModeBanner: false,
-        title: 'Mentoring.id',
-        theme: ThemeData(fontFamily: 'OpenSans'),
-        home: Builder(
-          builder: (BuildContext context) {
-            API api = API(context);
-            double width = MediaQuery.of(context).size.width;
-
-            return FutureBuilder(
-              future: api.init(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError)
-                  return Disconnected();
-                else if (!snapshot.hasData) return Splash();
-
-                return Scaffold(body: Builder(builder: (context) {
-                  api.context = context;
-                  api.initHandlers();
-                  
-                  return Device(
-                    api: api,
-                    width: width,
-                  );
-                }));
-              },
-            );
-          },
-        ),
+      color: Colors.white,
+      debugShowCheckedModeBanner: false,
+      title: 'Mentoring.id',
+      theme: ThemeData(fontFamily: 'OpenSans'),
+      initialRoute: "/",
       routes: {
-          '/pengerjaan_to': (context) => halaman_pengerjaan_to()
+        '/': (context) => Home(),
+        '/tryout': (context) => halaman_pengerjaan_to()
+      },
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    API api = API(context);
+    double width = MediaQuery.of(context).size.width;
+
+    return FutureBuilder(
+      future: api.init(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError)
+          return Disconnected();
+        else if (!snapshot.hasData) return Splash();
+
+        return Scaffold(body: Builder(builder: (context) {
+          api.context = context;
+
+          return Device(
+            api: api,
+            width: width,
+          );
+        }));
       },
     );
   }

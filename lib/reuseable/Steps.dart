@@ -25,6 +25,7 @@ class Steps extends StatelessWidget {
               height: 30,
             ),
             Container(
+              alignment: Alignment.topCenter,
               width: (width / items.length) - 20,
               child: Text(
                 text,
@@ -46,11 +47,13 @@ class Steps extends StatelessWidget {
                   BoxDecoration(color: Colors.white, borderRadius: radius),
               height: height,
             ),
-            Container(
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeInOutCirc,
               height: height,
               width: (width * ((activeIndex + 1) / items.length)) -
                   ((activeIndex != items.length - 1)
-                      ? ((width / items.length) / 2)
+                      ? ((width / items.length) / 2) // WIDTH OF EACH ITEM
                       : 0),
               decoration: BoxDecoration(color: mPrimary, borderRadius: radius),
             ),

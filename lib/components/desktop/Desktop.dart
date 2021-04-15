@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/components/DataCompletionPage.dart';
+import 'package:mentoring_id/components/DataCompletion/DataCompletionPage.dart';
 import 'package:mentoring_id/components/desktop/Login.dart';
 import 'package:mentoring_id/components/desktop/navigation/AppBarCustombyMe.dart';
 import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.dart';
@@ -18,16 +18,15 @@ class Desktop extends StatelessWidget {
     bool ready = init["ready"];
 
     return Scaffold(
-      appBar: (isLoggedIn || !noKelas)
-          ? ready
-              ? AppBarCustombyMe()
-              : null
-          : null,
-      body: isLoggedIn
-          ? ready
-              ? SideNavigationBar(api: _api)
-              : DataCompletionPage(_api)
-          : Login(api: _api),
+      appBar: (isLoggedIn && !noKelas && ready) ? AppBarCustombyMe() : null,
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child: isLoggedIn
+            ? (ready && !noKelas)
+                ? SideNavigationBar(api: _api)
+                : DataCompletionPage(_api)
+            : Login(api: _api),
+      ),
     );
   }
 }

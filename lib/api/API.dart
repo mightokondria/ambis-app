@@ -11,6 +11,7 @@ import 'package:mentoring_id/components/Device.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'handlers/DataSiswa.dart';
 import 'handlers/Jurusan.dart';
 import 'handlers/UI.dart';
 
@@ -37,7 +38,7 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
-  final String defaultAPI = "api.mentoring.web.id";
+  final String defaultAPI = "https://api.mentoring.web.id/";
   final String suffix = "!==+=!==";
 
   // HANDLERS
@@ -45,6 +46,7 @@ class API {
   Session session;
   UI ui;
   Jurusan jurusan;
+  DataSiswa dataSiswa;
 
   API(this.context);
 
@@ -73,6 +75,7 @@ class API {
     session = Session(this);
     ui = UI(this);
     jurusan = Jurusan(this);
+    dataSiswa = DataSiswa(this);
   }
 
   networkDisconnected() {
@@ -97,7 +100,7 @@ class API {
     Map<String, String> headers,
     Map<String, dynamic> body: const <String, dynamic>{},
   }) async {
-    Uri uri = Uri.https(defaultAPI, (frontend ? "frontend/" + path : path));
+    Uri uri = Uri.parse(defaultAPI + (frontend ? "frontend/" : "") + path);
     String parsedBody = "";
     Response response;
     BuildContext loadingContext;
@@ -149,7 +152,7 @@ class API {
   Future<Map<String, dynamic>> init() async {
     // INITIALIZATION
     // GET TOKEN
-    await get(Uri.https(defaultAPI, "frontend/req_token/index")).then((value) {
+    await get(Uri.parse(defaultAPI + "frontend/req_token/index")).then((value) {
       Map<String, dynamic> data = safeDecoder(value.body);
       this.token = data["token"];
     });
@@ -160,6 +163,7 @@ class API {
     if (data != null) {
       initialState["tidakPunyaKelasLangganan"] =
           data.initialData.akun.length < 1;
+
       initialState["ready"] = data.initialData.ready;
     }
 

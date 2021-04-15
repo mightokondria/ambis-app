@@ -7,8 +7,10 @@ class CustomDropdown extends StatelessWidget {
   final Function onChange;
   final String value;
   final Widget hint;
+  final Function validator;
 
-  CustomDropdown({this.items, this.onChange, this.value, this.hint});
+  CustomDropdown(
+      {this.items, this.onChange, this.value, this.hint, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +18,13 @@ class CustomDropdown extends StatelessWidget {
       child: Container(
         decoration: CustomCard.decoration(),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        child: DropdownButton(
+        child: DropdownButtonFormField(
+          decoration: InputDecoration(border: InputBorder.none),
+          validator: validator,
           onChanged: (value) {
             if (onChange != null) onChange(value);
           },
           hint: hint,
-          underline: Container(),
           isExpanded: true,
           value: value,
           items: items,
