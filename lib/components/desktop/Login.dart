@@ -53,10 +53,18 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.all(50),
                     child: Center(
                         child: AnimatedSwitcher(
+                      transitionBuilder: (child, animation) {
+                        final slide = Tween<Offset>(
+                                begin: Offset(0, 0.5), end: Offset(0, 0))
+                            .animate(animation);
+
+                        return FadeTransition(
+                            opacity: animation,
+                            child:
+                                SlideTransition(position: slide, child: child));
+                      },
                       duration: Duration(milliseconds: 500),
-                      child: login
-                          ? forms.loginForm()
-                          : forms.registerForm(),
+                      child: login ? forms.loginForm() : forms.registerForm(),
                     )),
                   ),
                 ),

@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
+import 'package:mentoring_id/reuseable/fancies/KelasLanggananMenuCheck.dart';
 
 import 'input/CustomButton.dart';
 
@@ -18,6 +21,7 @@ class KelasLanggananList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    bool light = color == Colors.white;
 
     return Container(
       decoration: CustomCard.decoration(color: color, radius: 18),
@@ -30,21 +34,25 @@ class KelasLanggananList extends StatelessWidget {
             data.nmAkun,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: mHeadingText,
-            ),
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: light ? mHeadingText : Colors.white),
           ),
           Text(
             data.waktuAktif + " bulan membership",
             textAlign: TextAlign.center,
-            style: TextStyle(color: mHeadingText.withOpacity(.2), fontSize: 14),
+            style: TextStyle(
+                color: light
+                    ? mHeadingText.withOpacity(.2)
+                    : Colors.white.withOpacity(.5),
+                fontSize: 14),
           ),
           SizedBox(height: 30),
           Column(
             children: data.menu
                 .map((e) => KelasLanggananMenu(
                       menu: e.nmMenu,
+                      light: light,
                     ))
                 .toList(),
           ),
@@ -55,7 +63,7 @@ class KelasLanggananList extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text("Rp. " + money.format(int.parse(data.hrgSblmDiskon)),
                 style: TextStyle(
-                    color: Colors.black45,
+                    color: light ? Colors.black45 : Colors.white,
                     decoration: TextDecoration.lineThrough)),
           ), // HARGA STLH DISKON
           Align(
@@ -63,17 +71,18 @@ class KelasLanggananList extends StatelessWidget {
             child: Text("Rp. " + money.format(int.parse(data.hrgStlhDiskon)),
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: Colors.black54,
+                    color: light ? Colors.black54 : Colors.white,
                     fontSize: 20)),
           ),
           SizedBox(
             height: 20,
           ),
           CustomButton(
-            radius: 20,
+            radius: 30,
             value: "Langganan",
-            color: mPrimary,
-            textColor: Colors.white,
+            color: light ? mPrimary : Colors.white,
+            textColor: light ? Colors.white : mPrimary,
+            onTap: () => api.ui.showCheckoutDialog(data),
           )
         ],
       ),
@@ -83,8 +92,9 @@ class KelasLanggananList extends StatelessWidget {
 
 class KelasLanggananMenu extends StatelessWidget {
   final String menu;
+  final bool light;
 
-  const KelasLanggananMenu({Key key, this.menu}) : super(key: key);
+  const KelasLanggananMenu({Key key, this.menu, this.light}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -96,15 +106,22 @@ class KelasLanggananMenu extends StatelessWidget {
             children: [
               TableRow(children: [
                 TableCell(
-                    child: Image.asset(
-                        "assets/img/fancies/kelas-langganan-menu.png")),
+                    child: CustomPaint(
+                  painter: KelasLanggananMenuCheck(
+                      color: light ? mPrimary : Colors.white),
+                  child: SizedBox(
+                    width: 10,
+                    height: 10,
+                  ),
+                )),
                 TableCell(
                   child: SizedBox(),
                 ),
                 TableCell(
                   child: Text(
                     menu,
-                    style: TextStyle(color: Colors.black45),
+                    style:
+                        TextStyle(color: light ? Colors.black45 : Colors.white),
                   ),
                 ),
               ])

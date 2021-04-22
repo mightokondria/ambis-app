@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
+import 'package:mentoring_id/api/models/Invoice.dart';
 // MODELS
 import 'package:mentoring_id/api/models/Siswa.dart';
 import 'package:mentoring_id/components/Device.dart';
@@ -40,6 +41,9 @@ class API {
 
   final String defaultAPI = "https://api.mentoring.web.id/";
   final String suffix = "!==+=!==";
+
+  // CACHED VARIABLES
+  List<PaymentModel> payments;
 
   // HANDLERS
   DeviceState parent;

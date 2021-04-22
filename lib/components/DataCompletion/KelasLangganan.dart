@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
+import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/KelasLanggananList.dart';
 
 class KelasLangganan extends StatelessWidget {
@@ -14,8 +15,12 @@ class KelasLangganan extends StatelessWidget {
         child: Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: kelases
+      children: kelases.reversed
           .map((e) => KelasLanggananList(
+                api: api,
+                color: (e.nmAkun.indexOf("MENTORING") > -1)
+                    ? mPrimary
+                    : Colors.white,
                 data: e,
               ))
           .toList(),

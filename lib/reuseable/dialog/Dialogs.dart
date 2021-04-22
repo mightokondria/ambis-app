@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
+import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/dialog/DialogElement.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
@@ -14,9 +16,11 @@ class Dialogs {
   static final GlobalKey<FormState> recoveryFormKey = GlobalKey<FormState>();
 
   bool isDesktop = false;
+  MainAxisSize mainAxisSize;
 
   Dialogs({this.context, this.api}) {
     isDesktop = api.parent.isDesktop;
+    mainAxisSize = isDesktop ? MainAxisSize.min : MainAxisSize.max;
   }
 
   Widget recoveryDialog(context) {
@@ -28,7 +32,7 @@ class Dialogs {
         child: Form(
           key: recoveryFormKey,
           child: Column(
-            mainAxisSize: isDesktop ? MainAxisSize.min : MainAxisSize.max,
+            mainAxisSize: mainAxisSize,
             children: [
               Text(
                 "Pemulihan password",
@@ -107,6 +111,72 @@ class Dialogs {
                   onTap: () {
                     Navigator.pop(context);
                   }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget checkoutDialog(KelasLanggananModel data) {
+    return Center(
+      child: DialogElement(
+        api: api,
+        child: Form(
+          child: Column(
+            mainAxisSize: mainAxisSize,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "CHECKOUT",
+                style: TextStyle(
+                    color: mHeadingText,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Flexible(
+                      flex: 1,
+                      child: Image.asset(
+                        "assets/img/msg/checkout.png",
+                        width: 70,
+                      )),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          data.nmAkun,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: mHeadingText,
+                          ),
+                        ),
+                        Text(
+                          data.waktuAktif + " bulan membership",
+                          style: TextStyle(
+                            color: mHeadingText.withOpacity(.3),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 20),
+              PaymentMethods(
+                api: api,
+              ),
             ],
           ),
         ),

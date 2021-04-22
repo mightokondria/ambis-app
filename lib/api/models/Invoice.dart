@@ -22,15 +22,20 @@ class Invoice {
     method = json['method'];
     koprom = json['koprom'];
   }
+}
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['invoice'] = this.invoice;
-    data['product'] = this.product;
-    data['no_siswa'] = this.noSiswa;
-    data['method'] = this.method;
-    data['koprom'] = this.koprom;
-    return data;
+class PaymentModel {
+  String id;
+  String pembayaran;
+  String rekening;
+  String logo;
+
+  PaymentModel({this.id, this.pembayaran, this.rekening, this.logo});
+
+  PaymentModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    pembayaran = json['pembayaran'];
+    rekening = json['rekening'];
+    logo = json['logo'];
   }
 }
