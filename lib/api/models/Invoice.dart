@@ -29,6 +29,7 @@ class PaymentModel {
   String pembayaran;
   String rekening;
   String logo;
+  bool selected = false;
 
   PaymentModel({this.id, this.pembayaran, this.rekening, this.logo});
 

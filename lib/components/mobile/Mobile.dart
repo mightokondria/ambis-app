@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/components/DataCompletion/DataCompletionPage.dart';
+import 'package:mentoring_id/components/mobile/Login.dart';
 
 class Mobile extends StatelessWidget {
   final API _api;
@@ -12,7 +12,8 @@ class Mobile extends StatelessWidget {
     Map<String, dynamic> init = _api.initialState;
     bool isLoggedIn = init["isLoggedIn"];
     bool noKelas = init["tidakPunyaKelasLangganan"];
+    bool ready = init["ready"];
 
-    return DataCompletionPage(_api);
+    return Scaffold(body: Login(api: _api));
   }
 }

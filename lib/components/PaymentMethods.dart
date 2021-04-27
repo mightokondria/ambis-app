@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/Helpers.dart';
 import 'package:mentoring_id/api/models/Invoice.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
@@ -27,6 +28,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         List<dynamic> result = jsonDecode(value.body);
 
         api.payments = result.map((e) => PaymentModel.fromJson(e)).toList();
+        api.payments[0].selected = true;
+
         setState(() {
           data = api.payments;
         });
@@ -37,12 +40,32 @@ class _PaymentMethodsState extends State<PaymentMethods> {
       });
   }
 
+  PaymentModel getAnswer() {
+    data.forEach((element) {
+      if (element.selected) return element;
+    });
+  }
+
+  select(int index) {
+    setState(() {
+      data = data.map((e) {
+        e.selected = false;
+        return e;
+      }).toList();
+      data[index].selected = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final dim = (constraints.maxWidth / data.length) - 10;
 
-      return PaymentMethodElement(data: data, dim: dim);
+      return PaymentMethodElement(
+        data: data,
+        dim: dim,
+        parent: this,
+      );
     });
   }
 }
@@ -52,40 +75,53 @@ class PaymentMethodElement extends StatelessWidget {
     Key key,
     @required this.data,
     @required this.dim,
+    @required this.parent,
   }) : super(key: key);
 
   final List<PaymentModel> data;
   final double dim;
+  final _PaymentMethodsState parent;
 
   @override
   Widget build(BuildContext context) {
-    return Clickable(
-      child: Container(
+    return Container(
         width: double.infinity,
         child: Wrap(
             spacing: 5,
-            children: data
-                .map((e) => Container(
-                    width: dim,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        // border: Border.all(
-                        //     color: Colors.blue.withOpacity(.8), width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(3, 3),
-                              blurRadius: 6,
-                              color: Colors.black.withOpacity(.05))
-                        ],
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Image.network(
-                      "https://api.mentoring.web.id/files/method/" + e.logo,
-                      width: 60,
-                    ))))
-                .toList()),
-      ),
-    );
+            children: Helpers.mapIndexed(
+                data,
+                (i, e) => Clickable(
+                      child: GestureDetector(
+                        onTap: () {
+                          parent.select(i);
+                        },
+                        child: AnimatedContainer(
+                            duration: Duration(milliseconds: 100),
+                            width: dim,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                color: e.selected
+                                    ? Color(0xfff2f3ff)
+                                    : Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(3, 3),
+                                      blurRadius: 6,
+                                      color: Colors.black.withOpacity(.05))
+                                ],
+                                border: e.selected
+                                    ? Border.all(
+                                        color: Color(0xFF66B0FF), width: 2)
+                                    : null,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Center(
+                                child: Image.network(
+                              "https://api.mentoring.web.id/files/method/" +
+                                  e.logo,
+                              width: dim * .4,
+                            ))),
+                      ),
+                    )).toList()));
   }
 }

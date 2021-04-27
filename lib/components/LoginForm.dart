@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/Helpers.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
@@ -29,6 +30,11 @@ class LoginForm {
     return null;
   }
 
+  static List<TextEditingController> loginControllers =
+      Helpers.generateEditingControllers(2);
+  static List<TextEditingController> registerControllers =
+      Helpers.generateEditingControllers(4);
+
   Widget togglerText(String text) {
     return GestureDetector(
       onTap: toggler,
@@ -46,12 +52,6 @@ class LoginForm {
   }
 
   Form loginForm() {
-    List<TextEditingController> controllers = [];
-
-    for (int i = 1; i <= 2; i++) {
-      controllers.add(TextEditingController());
-    }
-
     return Form(
       key: loginFormKey,
       child: Column(
@@ -82,7 +82,7 @@ class LoginForm {
               textField: TextFormField(
                 decoration: InputText.inputDecoration(hint: "Email"),
                 validator: emailValidator,
-                controller: controllers[0],
+                controller: loginControllers[0],
               ),
             ),
             SizedBox(height: 20),
@@ -92,7 +92,7 @@ class LoginForm {
                 decoration: InputText.inputDecoration(hint: "Password"),
                 obscureText: true,
                 validator: passwordValidator,
-                controller: controllers[1],
+                controller: loginControllers[1],
               ),
             ),
             SizedBox(height: 10),
@@ -121,7 +121,7 @@ class LoginForm {
                 value: "masuk",
                 onTap: () {
                   if (loginFormKey.currentState.validate())
-                    api.session.masuk(controllers).then((value) {
+                    api.session.masuk(loginControllers).then((value) {
                       if (!value)
                         api.showSnackbar(
                             content:
@@ -137,12 +137,6 @@ class LoginForm {
   }
 
   Form registerForm() {
-    final List<TextEditingController> controllers = [];
-
-    for (int i = 1; i <= 4; i++) {
-      controllers.add(TextEditingController());
-    }
-
     return Form(
       key: registerFormKey,
       child: Column(
@@ -171,7 +165,7 @@ class LoginForm {
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(
-                controller: controllers[0],
+                controller: registerControllers[0],
                 decoration: InputText.inputDecoration(hint: "Nama"),
                 validator: (String val) {
                   if (val.length < 5) return "Masukkan nama dengan benar";
@@ -184,7 +178,7 @@ class LoginForm {
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(
-                controller: controllers[1],
+                controller: registerControllers[1],
                 decoration: InputText.inputDecoration(hint: "Email"),
                 validator: emailValidator,
               ),
@@ -193,7 +187,7 @@ class LoginForm {
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(
-                controller: controllers[2],
+                controller: registerControllers[2],
                 obscureText: true,
                 decoration: InputText.inputDecoration(hint: "Password"),
                 validator: passwordValidator,
@@ -203,11 +197,11 @@ class LoginForm {
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(
-                controller: controllers[3],
+                controller: registerControllers[3],
                 obscureText: true,
                 decoration: InputText.inputDecoration(hint: "Ulangi password"),
                 validator: (String val) {
-                  if (val != controllers[2].value.text)
+                  if (val != registerControllers[2].value.text)
                     return "Password tidak cocok";
 
                   return null;
@@ -221,7 +215,7 @@ class LoginForm {
               value: "daftar",
               onTap: () {
                 if (registerFormKey.currentState.validate())
-                  api.session.register(controllers);
+                  api.session.register(registerControllers);
               },
             ),
             SizedBox(height: 20),

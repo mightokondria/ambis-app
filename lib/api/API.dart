@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:mentoring_id/api/handlers/Invoice.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
-import 'package:mentoring_id/api/models/Invoice.dart';
 // MODELS
 import 'package:mentoring_id/api/models/Siswa.dart';
 import 'package:mentoring_id/components/Device.dart';
@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'handlers/DataSiswa.dart';
 import 'handlers/Jurusan.dart';
 import 'handlers/UI.dart';
+import 'models/Invoice.dart';
 
 // THIS IS THE CORE HANDLER
 // THIS INITIALIZES THE APPLICATION
@@ -51,6 +52,7 @@ class API {
   UI ui;
   Jurusan jurusan;
   DataSiswa dataSiswa;
+  InvoiceHandler invoice;
 
   API(this.context);
 
@@ -80,6 +82,7 @@ class API {
     ui = UI(this);
     jurusan = Jurusan(this);
     dataSiswa = DataSiswa(this);
+    invoice = InvoiceHandler(this);
   }
 
   networkDisconnected() {
@@ -87,7 +90,7 @@ class API {
   }
 
   closeDialog(BuildContext dialogContext) {
-    Navigator.pop(dialogContext);
+    Navigator.pop(context);
   }
 
   refresh() async {

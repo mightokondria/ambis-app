@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/dialog/DialogElement.dart';
+import 'package:mentoring_id/reuseable/fancies/KelasLanggananMenuCheck.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
+
+import '../CustomCard.dart';
 
 class Dialogs {
   final API api;
@@ -118,7 +122,66 @@ class Dialogs {
     );
   }
 
-  Widget checkoutDialog(KelasLanggananModel data) {
+  Widget checkoutDialog(KelasLanggananModel data) => CheckoutDialog(
+        api: api,
+        mainAxisSize: mainAxisSize,
+        data: data,
+      );
+}
+
+class CheckoutDialog extends StatefulWidget {
+  final API api;
+  final MainAxisSize mainAxisSize;
+  final KelasLanggananModel data;
+
+  const CheckoutDialog({Key key, this.api, this.mainAxisSize, this.data})
+      : super(key: key);
+  @override
+  _CheckoutDialogState createState() =>
+      _CheckoutDialogState(api, mainAxisSize, data);
+}
+
+class _CheckoutDialogState extends State<CheckoutDialog> {
+  final API api;
+  final MainAxisSize mainAxisSize;
+  final KelasLanggananModel data;
+  final money = NumberFormat("##,###.00", "in-ID");
+  final List<TextStyle> descs = [
+    TextStyle(color: Colors.black54),
+    TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: const Color(0xFF555555))
+  ];
+  final kopromForm = GlobalKey<FormState>();
+
+  bool koprom = true;
+  bool kopromUnavailable = false;
+  String kopromUsed;
+  Map<String, int> subtotal = {};
+  int total = 0;
+  TextEditingController kopromController;
+
+  _CheckoutDialogState(this.api, this.mainAxisSize, this.data) {
+    int hrg = int.parse(data.hrgStlhDiskon);
+    subtotal[data.nmAkun] = hrg;
+    total = hrg;
+  }
+
+  changeSubtotal(String name, int price) {
+    setState(() {
+      subtotal[name] = price;
+      total += price;
+    });
+  }
+
+  @override
+  void initState() {
+    kopromController = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: DialogElement(
         api: api,
@@ -127,15 +190,15 @@ class Dialogs {
             mainAxisSize: mainAxisSize,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "CHECKOUT",
-                style: TextStyle(
-                    color: mHeadingText,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600),
-              ),
+              // Text(
+              //   "Checkout",
+              //   style: TextStyle(
+              //       color: mHeadingText,
+              //       fontSize: 25,
+              //       fontWeight: FontWeight.w600),
+              // ),
               SizedBox(
-                height: 30,
+                height: 10,
               ),
               Row(
                 children: [
@@ -176,6 +239,132 @@ class Dialogs {
               SizedBox(height: 20),
               PaymentMethods(
                 api: api,
+              ),
+              SizedBox(height: 10),
+              CheckboxListTile(
+                title: Text("Punya kode promo?",
+                    style: TextStyle(color: Colors.black54)),
+                value: koprom,
+                onChanged: (selected) {
+                  setState(() {
+                    koprom = selected;
+                  });
+                },
+                contentPadding: EdgeInsets.all(0),
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              SizedBox(height: 10),
+              AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                child: koprom
+                    ? Container(
+                        decoration: CustomCard.decoration(radius: 100),
+                        child: Form(
+                          key: kopromForm,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  child: TextFormField(
+                                    enabled: kopromUsed == null,
+                                    validator: (String val) {
+                                      if (val.length < 6 || kopromUnavailable)
+                                        return "Kode promo tidak tersedia";
+
+                                      return null;
+                                    },
+                                    controller: kopromController,
+                                    decoration: InputText.inputDecoration(
+                                        hint: "Kode promo"),
+                                    autofocus: true,
+                                  ),
+                                ),
+                              ),
+                              CustomButton(
+                                color: mPrimary,
+                                enabled: kopromUsed == null,
+                                textColor: Colors.white,
+                                fill: false,
+                                onTap: () {
+                                  kopromUnavailable = false;
+                                  if (!kopromForm.currentState.validate())
+                                    return null;
+
+                                  api.invoice
+                                      .checkKoprom(
+                                          kopromController, data.noAkun)
+                                      .then((value) {
+                                    if (value["status"] == "unavail") {
+                                      kopromUnavailable = true;
+                                      kopromForm.currentState.validate();
+                                      return null;
+                                    }
+
+                                    int potongan =
+                                        int.parse("-" + value["potongan"]);
+                                    setState(() {
+                                      kopromUsed = kopromController.value.text;
+                                      subtotal[value["nama"]] = potongan;
+                                      total += potongan;
+                                    });
+
+                                    api.showSnackbar(
+                                        content: Text(
+                                            "Berhasil menggunakan kode promo!"));
+                                  });
+                                },
+                                child: Wrap(
+                                  children: [
+                                    CustomPaint(
+                                      size: Size(10, 10),
+                                      painter: KelasLanggananMenuCheck(
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                radius: 100,
+                              ),
+                              SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+              SizedBox(height: 30),
+              ListView(
+                shrinkWrap: true,
+                children: subtotal.keys
+                    .map((key) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(key, style: descs[0]),
+                            Text(
+                                "Rp. " + money.format(subtotal[key]).toString(),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54)),
+                          ],
+                        ))
+                    .toList(),
+              ),
+              SizedBox(height: 15),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text("Total", style: descs[1]),
+                Text("Rp. " + money.format(total).toString(),
+                    textAlign: TextAlign.right, style: descs[1]),
+              ]),
+              SizedBox(height: 20),
+              CustomButton(
+                radius: 30,
+                color: mPrimary,
+                textColor: Colors.white,
+                value: "konfirmasi",
               ),
             ],
           ),
