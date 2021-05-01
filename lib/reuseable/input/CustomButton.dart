@@ -44,7 +44,7 @@ class CustomButton extends StatelessWidget {
   CustomButton(
       {this.value,
       this.onTap,
-      this.radius,
+      this.radius: 10,
       this.color,
       this.textColor,
       this.fill: true,
@@ -60,7 +60,7 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
         // onTapDown: (TapDownDetails e) => toggle(),
         // onTapUp: (TapUpDetails e) => toggle(),
-        onTap: enabled ? onTap : null,
+        onTap: enabled ? onTap : () {},
         child: Transform.scale(
           scale: pressed ? .99 : 1,
           child: Clickable(

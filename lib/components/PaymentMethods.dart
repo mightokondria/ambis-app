@@ -12,14 +12,14 @@ class PaymentMethods extends StatefulWidget {
   const PaymentMethods({Key key, this.api}) : super(key: key);
 
   @override
-  _PaymentMethodsState createState() => _PaymentMethodsState(api);
+  PaymentMethodInstance createState() => PaymentMethodInstance(api);
 }
 
-class _PaymentMethodsState extends State<PaymentMethods> {
+class PaymentMethodInstance extends State<PaymentMethods> {
   final API api;
   List<PaymentModel> data = [];
 
-  _PaymentMethodsState(this.api);
+  PaymentMethodInstance(this.api);
 
   @override
   initState() {
@@ -41,9 +41,13 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   }
 
   PaymentModel getAnswer() {
+    PaymentModel selected;
+
     data.forEach((element) {
-      if (element.selected) return element;
+      if (element.selected) selected = element;
     });
+
+    return selected;
   }
 
   select(int index) {
@@ -58,6 +62,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
 
   @override
   Widget build(BuildContext context) {
+    api.paymentInstance = this;
+
     return LayoutBuilder(builder: (context, constraints) {
       final dim = (constraints.maxWidth / data.length) - 10;
 
@@ -80,7 +86,7 @@ class PaymentMethodElement extends StatelessWidget {
 
   final List<PaymentModel> data;
   final double dim;
-  final _PaymentMethodsState parent;
+  final PaymentMethodInstance parent;
 
   @override
   Widget build(BuildContext context) {

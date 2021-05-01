@@ -76,7 +76,7 @@ class LoginForm {
                 color: Colors.black38,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 50),
             InputText(
               style: InputStyle.grayed,
               textField: TextFormField(

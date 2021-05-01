@@ -203,15 +203,6 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
               Row(
                 children: [
                   Flexible(
-                      flex: 1,
-                      child: Image.asset(
-                        "assets/img/msg/checkout.png",
-                        width: 70,
-                      )),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Flexible(
                     flex: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,7 +356,14 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 color: mPrimary,
                 textColor: Colors.white,
                 value: "konfirmasi",
+                onTap: () {},
               ),
+              CustomButton(
+                color: Colors.transparent,
+                textColor: mPrimary,
+                value: "batal",
+                onTap: () => Navigator.pop(context),
+              )
             ],
           ),
         ),

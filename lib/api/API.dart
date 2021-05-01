@@ -10,6 +10,7 @@ import 'package:mentoring_id/api/handlers/Session.dart';
 import 'package:mentoring_id/api/models/Siswa.dart';
 import 'package:mentoring_id/components/Device.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
+import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'handlers/DataSiswa.dart';
@@ -45,6 +46,7 @@ class API {
 
   // CACHED VARIABLES
   List<PaymentModel> payments;
+  PaymentMethodInstance paymentInstance;
 
   // HANDLERS
   DeviceState parent;
