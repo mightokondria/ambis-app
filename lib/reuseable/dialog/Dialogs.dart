@@ -249,7 +249,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 duration: Duration(milliseconds: 300),
                 child: koprom
                     ? Container(
-                        decoration: CustomCard.decoration(radius: 100),
+                        decoration: CustomCard.decoration(),
                         child: Form(
                           key: kopromForm,
                           child: Row(

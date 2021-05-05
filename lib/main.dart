@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/components/Device.dart';
+import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
 
 import 'components/Splash.dart';
@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
         return Scaffold(body: Builder(builder: (context) {
           api.context = context;
 
-          return Device(
+          return ScreenAdapter(
             api: api,
             width: width,
           );

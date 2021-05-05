@@ -8,7 +8,8 @@ import 'package:mentoring_id/api/handlers/Invoice.dart';
 import 'package:mentoring_id/api/handlers/Session.dart';
 // MODELS
 import 'package:mentoring_id/api/models/Siswa.dart';
-import 'package:mentoring_id/components/Device.dart';
+import 'package:mentoring_id/components/ScreenAdapter.dart';
+import 'package:mentoring_id/components/InitialScreens.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,8 @@ class API {
     "tidakPunyaKelasLangganan": true,
     "ready": false
   };
+  InitialScreen initialScreens;
+  Widget currentScreen;
 
   // LOGGED IN USER DATA
   Siswa data;
@@ -49,7 +52,7 @@ class API {
   PaymentMethodInstance paymentInstance;
 
   // HANDLERS
-  DeviceState parent;
+  ScreenAdapterState parent;
   Session session;
   UI ui;
   Jurusan jurusan;
@@ -57,6 +60,19 @@ class API {
   InvoiceHandler invoice;
 
   API(this.context);
+
+  // SCREEN ADAPTER HELPERS
+  Widget getCurrentScreen() {
+    return (currentScreen == null) ? initialScreens.login : currentScreen;
+  }
+
+  setCurrentScreen(Widget screen) {
+    currentScreen = screen;
+
+    // REFRESH THE SCREEN ADAPTER
+    parent.setState(() {});
+  }
+  // END SCREEN ADAPTER HELPERS
 
   dynamic safeDecoder(String source) {
     Map<String, dynamic> data;
