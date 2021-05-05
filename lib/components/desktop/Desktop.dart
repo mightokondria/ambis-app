@@ -7,25 +7,19 @@ import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.d
 
 class Desktop extends StatelessWidget {
   final API _api;
+  final Widget page;
 
-  Desktop(this._api);
+  Desktop(this._api, this.page);
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> init = _api.initialState;
-    bool isLoggedIn = init["isLoggedIn"];
-    bool noKelas = init["tidakPunyaKelasLangganan"];
-    bool ready = init["ready"];
+    bool isHome = page.runtimeType == SideNavigationBar;
 
     return Scaffold(
-      appBar: (isLoggedIn && !noKelas && ready) ? AppBarCustombyMe() : null,
+      appBar: (isHome) ? AppBarCustombyMe() : null,
       body: AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
-        child: isLoggedIn
-            ? (ready && !noKelas)
-                ? SideNavigationBar(api: _api)
-                : DataCompletionPage(_api)
-            : Login(api: _api),
+        child: page,
       ),
     );
   }
