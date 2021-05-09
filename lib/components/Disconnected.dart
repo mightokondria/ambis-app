@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
@@ -45,12 +46,10 @@ class Disconnected extends StatelessWidget {
                       style: TextStyle(color: mHeadingText.withOpacity(.3)),
                     ),
                     TextSpan(
-                      text:
-                          "reload",
-                      style: TextStyle(color: Colors.blue.withOpacity(.7)),
-                      recognizer: TapGestureRecognizer()
-                      ..onTap = () => api.refresh()
-                    ),
+                        text: "reload",
+                        style: TextStyle(color: Colors.blue.withOpacity(.7)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => api.refresh()),
                   ],
                 ),
               ),

@@ -9,11 +9,6 @@ class Mobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> init = _api.initialState;
-    bool isLoggedIn = init["isLoggedIn"];
-    bool noKelas = init["tidakPunyaKelasLangganan"];
-    bool ready = init["ready"];
-
     return Scaffold(body: Login(api: _api));
   }
 }

@@ -81,7 +81,8 @@ class _LoginState extends State<Login> {
         ),
         child: Center(
             child: Container(
-                margin: EdgeInsets.symmetric(horizontal: api.parent.width / 3),
+                margin: EdgeInsets.symmetric(
+                    horizontal: api.screenAdapter.width / 3),
                 decoration: CustomCard.decoration(),
                 padding: EdgeInsets.all(40),
                 child: AnimatedSwitcher(

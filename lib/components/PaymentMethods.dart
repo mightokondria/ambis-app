@@ -68,10 +68,7 @@ class PaymentMethodInstance extends State<PaymentMethods> {
       final dim = (constraints.maxWidth / data.length) - 10;
 
       return PaymentMethodElement(
-        data: data,
-        dim: dim,
-        parent: this,
-      );
+          data: data, dim: dim, parent: this, api: api.defaultAPI);
     });
   }
 }
@@ -82,11 +79,13 @@ class PaymentMethodElement extends StatelessWidget {
     @required this.data,
     @required this.dim,
     @required this.parent,
+    this.api,
   }) : super(key: key);
 
   final List<PaymentModel> data;
   final double dim;
   final PaymentMethodInstance parent;
+  final String api;
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +122,7 @@ class PaymentMethodElement extends StatelessWidget {
                                     BorderRadius.all(Radius.circular(10))),
                             child: Center(
                                 child: Image.network(
-                              "https://api.mentoring.web.id/files/method/" +
-                                  e.logo,
+                              "${api}files/method/" + e.logo,
                               width: dim * .4,
                             ))),
                       ),

@@ -120,7 +120,6 @@ class LoginForm {
                 textColor: Colors.white,
                 value: "masuk",
                 onTap: () {
-                  api.setCurrentScreen(api.initialScreens.home);
                   if (loginFormKey.currentState.validate())
                     api.session.masuk(loginControllers).then((value) {
                       if (!value)

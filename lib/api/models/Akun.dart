@@ -6,11 +6,14 @@ class Akun {
 
   Akun({this.noAkun, this.nmAkun, this.expired});
 
-  Akun.fromJson(Map<String, dynamic> json) {
+  Akun.fromJson(Map<String, dynamic> json, {bool invoice: false}) {
     noAkun = json['no_akun'];
     nmAkun = json['nm_akun'];
-    expired = json['expired'];
-    active = (json['active'] == '0') ? false : true;
+
+    if (!invoice) {
+      expired = json['expired'];
+      active = (json['active'] == '0') ? false : true;
+    }
   }
 }
 

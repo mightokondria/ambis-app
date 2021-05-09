@@ -3,6 +3,7 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/InitialScreens.dart';
 import 'package:mentoring_id/components/desktop/Desktop.dart';
 import 'package:mentoring_id/components/desktop/Login.dart';
+import 'package:mentoring_id/components/desktop/PendingInvoice.dart';
 import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.dart';
 import 'package:mentoring_id/components/mobile/Mobile.dart';
 
@@ -41,20 +42,22 @@ class ScreenAdapterState extends State<ScreenAdapter> {
   Widget build(BuildContext context) {
     isDesktop = width >= desktopResolution;
 
-    api.parent = this;
-    api.initHandlers();
+    api.initScreenAdapter(
+        this,
+        isDesktop
+            ? InitialScreen(api,
+                login: Login(
+                  api: api,
+                ),
+                home: SideNavigationBar(
+                  api: api,
+                ),
+                pendingInvoice: PendingInvoice(
+                  api: api,
+                ))
+            : InitialScreen(api));
 
-    api.initialScreens = isDesktop
-        ? InitialScreen(api,
-            login: Login(
-              api: api,
-            ),
-            home: SideNavigationBar(
-              api: api,
-            ))
-        : InitialScreen(api);
-
-    print("rebuilt");
+    print("ScreenAdapter: screen rebuilt");
     return IndexedStack(index: index, children: [
       isDesktop ? Desktop(api, api.getCurrentScreen()) : Mobile(api),
       Disconnected(

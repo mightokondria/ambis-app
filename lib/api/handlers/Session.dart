@@ -17,7 +17,7 @@ class Session {
     Map<String, dynamic> result = resultData["data"];
 
     if (result != null) {
-      api.prefs.setString("data", jsonEncode(result));
+      api.prefs.setString("data", api.encodeSession(result));
       api.refresh();
     }
   }
@@ -64,7 +64,9 @@ class Session {
 
       resultData = api.safeDecoder(result);
       save();
-      api.showSnackbar(content: Text("Yeayy! Pembuatan akunmu sudah berhasil! Silakan ikuti langkah berikutnya."));
+      api.showSnackbar(
+          content: Text(
+              "Yeayy! Pembuatan akunmu sudah berhasil! Silakan ikuti langkah berikutnya."));
     });
   }
 

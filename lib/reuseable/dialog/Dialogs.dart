@@ -23,7 +23,7 @@ class Dialogs {
   MainAxisSize mainAxisSize;
 
   Dialogs({this.context, this.api}) {
-    isDesktop = api.parent.isDesktop;
+    isDesktop = api.screenAdapter.isDesktop;
     mainAxisSize = isDesktop ? MainAxisSize.min : MainAxisSize.max;
   }
 
@@ -296,7 +296,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                                     int potongan =
                                         int.parse("-" + value["potongan"]);
                                     setState(() {
-                                      kopromUsed = kopromController.value.text;
+                                      kopromUsed = value["id"];
                                       subtotal[value["nama"]] = potongan;
                                       total += potongan;
                                     });
@@ -356,7 +356,16 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 color: mPrimary,
                 textColor: Colors.white,
                 value: "konfirmasi",
-                onTap: () {},
+                onTap: () {
+                  List<String> finalData = [
+                    api.data.noSiswa,
+                    data.noAkun,
+                    api.paymentInstance.getAnswer().id,
+                    kopromUsed,
+                    total.toString()
+                  ];
+                  api.invoice.order(finalData);
+                },
               ),
               CustomButton(
                 color: Colors.transparent,

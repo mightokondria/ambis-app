@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class LoadingAnimation extends StatelessWidget {
   static Widget animation() {
-    return Image.asset("assets/img/animation/mentoring-loading.gif", width: 50);
+    // return Image.asset("assets/img/animation/mentoring-loading.gif", width: 50);
+    return LottieBuilder.asset("assets/img/animation/mentoring-loading.json",
+        repeat: true, animate: true);
   }
 
   @override

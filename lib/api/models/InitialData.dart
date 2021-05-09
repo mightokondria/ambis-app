@@ -4,7 +4,7 @@ import 'Invoice.dart';
 class InitialData {
   List<Akun> akun;
   bool ready;
-  List<Invoice> invoice;
+  Invoice invoice;
 
   InitialData({this.akun, this.ready, this.invoice});
 
@@ -16,11 +16,5 @@ class InitialData {
       });
     }
     ready = json['ready'];
-    if (json['invoice'] != null) {
-      invoice = <Invoice>[];
-      json['invoice'].forEach((v) {
-        invoice.add(Invoice.fromJson(v));
-      });
-    }
   }
 }

@@ -21,6 +21,12 @@ class MyApp extends StatelessWidget {
       title: 'Mentoring.id',
       theme: ThemeData(fontFamily: 'OpenSans'),
       initialRoute: "/",
+      onGenerateRoute: (settings) {
+        print(settings.name.split("/"));
+        return MaterialPageRoute(builder: (context) {
+          return Disconnected();
+        });
+      },
       routes: {
         '/': (context) => Home(),
         '/tryout': (context) => halaman_pengerjaan_to()
@@ -38,9 +44,10 @@ class Home extends StatelessWidget {
     return FutureBuilder(
       future: api.init(),
       builder: (context, snapshot) {
-        if (snapshot.hasError)
-          return Disconnected();
-        else if (!snapshot.hasData) return Splash();
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return Disconnected(api: api);
+        } else if (!snapshot.hasData) return Splash();
 
         return Scaffold(body: Builder(builder: (context) {
           api.context = context;

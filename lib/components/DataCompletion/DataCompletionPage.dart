@@ -23,7 +23,7 @@ class DataCompletionPageState extends State<DataCompletionPage> {
   List<KelasLanggananModel> kelases = [];
 
   DataCompletionPageState(this.api) {
-    isDesktop = api.parent.isDesktop;
+    isDesktop = api.screenAdapter.isDesktop;
     step = api.data.initialData.ready ? 2 : 1;
   }
 
@@ -47,7 +47,6 @@ class DataCompletionPageState extends State<DataCompletionPage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
     final width = mediaQuery.width;
-    final height = mediaQuery.width;
     double horizontalMargin = (width >= 646)
         ? (width >= 1024)
             ? width * .3

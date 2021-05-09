@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
@@ -14,6 +15,7 @@ import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
 import 'handlers/DataSiswa.dart';
 import 'handlers/Jurusan.dart';
 import 'handlers/UI.dart';
@@ -30,11 +32,7 @@ class API {
   // INITAL STATE CONTAINS
   // ALL REQUIRED STATE AT THE BEGINNING
   // SUCH AS BOOLEAN WHETHER A USER IS LOGGED IN
-  Map<String, dynamic> initialState = {
-    "isLoggedIn": false,
-    "tidakPunyaKelasLangganan": true,
-    "ready": false
-  };
+  InitialState initialState = InitialState(false, true, false);
   InitialScreen initialScreens;
   Widget currentScreen;
 
@@ -44,7 +42,7 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
-  final String defaultAPI = "https://api.mentoring.web.id/";
+  String defaultAPI = "https://api.mentoring.web.id/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -52,25 +50,58 @@ class API {
   PaymentMethodInstance paymentInstance;
 
   // HANDLERS
-  ScreenAdapterState parent;
+  ScreenAdapterState screenAdapter;
   Session session;
   UI ui;
   Jurusan jurusan;
   DataSiswa dataSiswa;
   InvoiceHandler invoice;
 
-  API(this.context);
+  API(this.context) {
+    defaultAPI = kReleaseMode ? defaultAPI : "http://localhost/";
+  }
+
+  // SESSION HELPER
+  String encodeSession(Map<String, dynamic> data) {
+    return base64.encode(utf8.encode(jsonEncode(data))) + suffix;
+  }
+
+  Siswa decodeSession(String session) {
+    return Siswa(
+        jsonDecode(utf8.decode(base64.decode(session.replaceAll(suffix, "")))));
+  }
+  // END SESSION HELPER
 
   // SCREEN ADAPTER HELPERS
   Widget getCurrentScreen() {
-    return (currentScreen == null) ? initialScreens.login : currentScreen;
+    return (currentScreen == null) ? Container() : currentScreen;
+  }
+
+  buildInitialScreen() {
+    // SCREEN SWITCHER BASED ON INITIAL STATE
+    final ist = initialState;
+    final isc = initialScreens;
+    final hasPendingInvoice = ist.pendingInvoice != null &&
+        ist.pendingInvoice.isPending &&
+        ist.tidakPunyaKelasLangganan;
+
+    if (ist.isLoggedIn &&
+        ist.ready &&
+        !ist.tidakPunyaKelasLangganan &&
+        !hasPendingInvoice)
+      setCurrentScreen(isc.home);
+    else if (!ist.isLoggedIn)
+      setCurrentScreen(isc.login);
+    else if ((!ist.ready || ist.tidakPunyaKelasLangganan) && !hasPendingInvoice)
+      setCurrentScreen(isc.dataCompletion);
+    else if (hasPendingInvoice) setCurrentScreen(isc.pendingInvoice);
   }
 
   setCurrentScreen(Widget screen) {
     currentScreen = screen;
 
     // REFRESH THE SCREEN ADAPTER
-    parent.setState(() {});
+    screenAdapter.setState(() {});
   }
   // END SCREEN ADAPTER HELPERS
 
@@ -80,7 +111,6 @@ class API {
     try {
       data = jsonDecode(source);
     } catch (e) {
-      print(e);
       showSnackbar(
           content: Text("Oops! Sepertinya ada yang salah"),
           action: SnackBarAction(label: "Laporkan", onPressed: () {}));
@@ -95,16 +125,8 @@ class API {
         SnackBar(content: content, behavior: behavior, action: action));
   }
 
-  initHandlers() {
-    session = Session(this);
-    ui = UI(this);
-    jurusan = Jurusan(this);
-    dataSiswa = DataSiswa(this);
-    invoice = InvoiceHandler(this);
-  }
-
   networkDisconnected() {
-    parent.changeIndex(1);
+    screenAdapter.changeIndex(1);
   }
 
   closeDialog(BuildContext dialogContext) {
@@ -112,8 +134,7 @@ class API {
   }
 
   refresh() async {
-    await init();
-    parent.changeIndex(0);
+    Navigator.popAndPushNamed(context, "/");
   }
 
   // DEFAULT HELPER REQUEST FUNCTION WITH TOKEN HEADER
@@ -174,26 +195,62 @@ class API {
     return response;
   }
 
-  Future<Map<String, dynamic>> init() async {
+  // INITIALIZERS
+  Future<InitialState> init() async {
+    prefs = await SharedPreferences.getInstance();
+    final rawToken = prefs.getString("token");
+    final rawTokenData = jsonDecode((rawToken == null) ? "{}" : rawToken);
+    final now = DateTime.now().millisecondsSinceEpoch;
+    Token token = Token.decode(rawTokenData);
+
     // INITIALIZATION
     // GET TOKEN
-    await get(Uri.parse(defaultAPI + "frontend/req_token/index")).then((value) {
-      Map<String, dynamic> data = safeDecoder(value.body);
-      this.token = data["token"];
-    });
+    if (token.isEmpty || now >= token.expiration)
+      await get(Uri.parse(defaultAPI + "frontend/req_token/index"))
+          .then((value) {
+        Map<String, dynamic> data = safeDecoder(value.body);
+        final withExpirationDate =
+            token = Token(data["token"], now + (23 * 3600 * 1000));
+        prefs.setString("token", withExpirationDate.encode());
+      });
+
+    this.token = token.token;
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
-    await isLoggedIn().then((status) => initialState["isLoggedIn"] = status);
+    await isLoggedIn().then((status) => initialState.isLoggedIn = status);
 
     if (data != null) {
-      initialState["tidakPunyaKelasLangganan"] =
-          data.initialData.akun.length < 1;
+      initialState.tidakPunyaKelasLangganan = data.initialData.akun.length < 1;
+      initialState.ready = data.initialData.ready;
 
-      initialState["ready"] = data.initialData.ready;
+      // CHECK IF THE USER HAS PENDING INVOICE
+      await hasPendingInvoice()
+          .then((value) => initialState.pendingInvoice = value);
     }
 
     return initialState;
   }
+
+  initHandlers() {
+    session = Session(this);
+    ui = UI(this);
+    jurusan = Jurusan(this);
+    dataSiswa = DataSiswa(this);
+    invoice = InvoiceHandler(this);
+  }
+
+  initScreenAdapter(
+      ScreenAdapterState adapter, InitialScreen initialScreenInstance) {
+    screenAdapter = adapter;
+    initialScreens = initialScreenInstance;
+
+    // INIT ALL HANDLERS
+    initHandlers();
+
+    buildInitialScreen();
+  }
+
+  // END INITIALIZERS
 
   Future getInitialData() async {
     await request(
@@ -206,16 +263,59 @@ class API {
 
   // CHECK IF A USER IS ALREADY LOGGED IN
   Future<bool> isLoggedIn() async {
-    prefs = await SharedPreferences.getInstance();
     String data = prefs.getString("data");
     bool loggedIn = data != null;
 
     if (loggedIn) {
-      this.data = Siswa(safeDecoder(data));
+      this.data = decodeSession(data);
 
       await getInitialData();
     }
 
     return loggedIn;
+  }
+
+  // CHECK IF THE USER HAS AN PENDING INVOICE
+  Future<Invoice> hasPendingInvoice() async {
+    Invoice result;
+    await request(
+            path: "invoice/my_invoice",
+            method: "POST",
+            body: {"no_siswa": data.noSiswa})
+        .then((value) => result = Invoice.fromJson(jsonDecode(value.body)));
+
+    return result;
+  }
+}
+
+// INITIAL STATES
+class InitialState {
+  bool isLoggedIn;
+  bool tidakPunyaKelasLangganan;
+  bool ready;
+  Invoice pendingInvoice;
+
+  InitialState(this.isLoggedIn, this.tidakPunyaKelasLangganan, this.ready);
+}
+
+// TOKEN CLASS
+class Token {
+  String token;
+  int expiration;
+  bool isEmpty;
+
+  Token.decode(Map<String, dynamic> data) {
+    isEmpty = data.isEmpty;
+
+    if (!isEmpty) {
+      token = data["token"];
+      expiration = data["expiration"];
+    }
+  }
+
+  Token(this.token, this.expiration);
+
+  String encode() {
+    return jsonEncode({"token": token, "expiration": expiration});
   }
 }

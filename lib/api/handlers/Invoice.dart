@@ -24,4 +24,19 @@ class InvoiceHandler {
 
     return result;
   }
+
+  Future order(List<String> data) async {
+    final d = data;
+    final body = {
+      "no_siswa": d[0],
+      "product": d[1],
+      "method": d[2],
+      "total": d[4]
+    };
+
+    if (d[3] != null) body['koprom'] = d[3];
+    await api
+        .request(path: "invoice/order", method: "POST", body: body)
+        .then((value) => api.refresh());
+  }
 }

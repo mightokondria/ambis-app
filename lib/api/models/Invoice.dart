@@ -1,10 +1,14 @@
+import 'package:mentoring_id/api/models/Akun.dart';
+
 class Invoice {
   String id;
   String invoice;
-  String product;
+  Akun product;
   String noSiswa;
-  String method;
+  PaymentModel method;
   String koprom;
+  int total;
+  bool isPending = false;
 
   Invoice(
       {this.id,
@@ -12,15 +16,20 @@ class Invoice {
       this.product,
       this.noSiswa,
       this.method,
-      this.koprom});
+      this.koprom,
+      this.total});
 
   Invoice.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    invoice = json['invoice'];
-    product = json['product'];
-    noSiswa = json['no_siswa'];
-    method = json['method'];
-    koprom = json['koprom'];
+    if (json.isNotEmpty) {
+      isPending = true;
+      id = json['id'];
+      invoice = json['invoice'];
+      product = Akun.fromJson(json['product'], invoice: true);
+      noSiswa = json['no_siswa'];
+      method = PaymentModel.fromJson(json['method']);
+      koprom = json['koprom'];
+      total = int.parse(json['total']);
+    }
   }
 }
 

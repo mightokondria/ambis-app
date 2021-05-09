@@ -21,7 +21,7 @@ class UI {
       Widget mobile,
       Color color: Colors.white,
       bool rounded: true}) {
-    if (api.parent.isDesktop)
+    if (api.screenAdapter.isDesktop)
       showGeneralDialog(
           context: context,
           pageBuilder: (context, animation, animation2) {

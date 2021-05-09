@@ -5,7 +5,7 @@ class Helpers {
   static final money = NumberFormat("##,###.00", "in-ID");
 
   static String moneify(int amount) {
-    return "Rp" + money.format(amount);
+    return "Rp. " + money.format(amount);
   }
 
   static Iterable<E> mapIndexed<E, T>(
