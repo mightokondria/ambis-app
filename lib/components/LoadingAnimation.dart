@@ -5,7 +5,7 @@ class LoadingAnimation extends StatelessWidget {
   static Widget animation() {
     // return Image.asset("assets/img/animation/mentoring-loading.gif", width: 50);
     return LottieBuilder.asset("assets/img/animation/mentoring-loading.json",
-        repeat: true, animate: true);
+        repeat: true, width: 50, animate: true);
   }
 
   @override

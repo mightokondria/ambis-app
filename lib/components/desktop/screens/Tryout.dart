@@ -1,111 +1,43 @@
+import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
+import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/reuseable/Banner.dart';
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/reuseable/Chip.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:mentoring_id/reuseable/TryoutList.dart';
 
-class Tryout extends StatefulWidget {
+class TryoutDataScreen extends StatefulWidget {
+  final API api;
+
+  const TryoutDataScreen({Key key, this.api}) : super(key: key);
+
   @override
-  _UpdateState createState() => _UpdateState();
+  _TryoutDataScreenState createState() => _TryoutDataScreenState(api);
 }
 
-class _UpdateState extends State<Tryout> {
+class _TryoutDataScreenState extends State<TryoutDataScreen> {
+  final API api;
+
+  List<Tryout> dataTryout;
+
+  _TryoutDataScreenState(this.api);
+
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> data = [
-      {
-        "no_paket": "12",
-        "nm_paket": "JKT 48",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "13",
-        "nm_paket": "SAINTEK 3",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "14",
-        "nm_paket": "SAINTEK 2",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "15",
-        "nm_paket": "SAINTEK 1",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "16",
-        "nm_paket": "SAINTEK 7",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "17",
-        "nm_paket": "SAINTEK 9",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "18",
-        "nm_paket": "SAINTEK 5",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "19",
-        "nm_paket": "SAINTEK 4",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "20",
-        "nm_paket": "SAINTEK 6",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      },
-      {
-        "no_paket": "21",
-        "nm_paket": "SAINTEK 10",
-        "no_akun": "3",
-        "xp": "30",
-        "pub_start": null,
-        "pub_end": null,
-        "kategori": "SAINTEK"
-      }
-    ];
+    if (dataTryout == null)
+      api.tryout.getTryoutData().then((value) {
+        setState(() {
+          dataTryout = api.tryout.filterWithKategori("SAINTEK")[0].tryout;
+        });
+      });
 
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(
+        height: 20,
+      ),
+      ScreenBanner(),
       SizedBox(
         height: 20,
       ),
@@ -113,25 +45,30 @@ class _UpdateState extends State<Tryout> {
       SizedBox(
         height: 20,
       ),
-      ScreenBanner(),
-      Container(
-        transform: Matrix4.translationValues(0, -30, 0),
-        child: Wrap(
-          spacing: 10,
-          children: [
-            TryoutCategory(),
-            TryoutCategory(),
-            TryoutCategory(),
-          ],
-        )
+      ChipGroup(
+        allowMultipleSelection: false,
+        chips: <String>["SAINTEK", "SOSHUM", "KEDINASAN"]
+            .map((e) => CustomChip(value: e, selected: e == "SAINTEK"))
+            .toList(),
+        onChange: (v) {
+          setState(() {
+            dataTryout = api.tryout.filterWithKategori(v[0].value)[0].tryout;
+          });
+        },
+      ),
+      SizedBox(
+        height: 20,
       ),
       Wrap(
-        spacing: 20,
-        runSpacing: 20,
-        children: data.map((Map<String, String> e) {
-          return TryoutList(e);
-        }).toList(),
-      )
+        spacing: 10,
+        runSpacing: 10,
+        children: (dataTryout == null)
+            ? [Center(child: LoadingAnimation.animation())]
+            : dataTryout.map((e) => TryoutList(e)).toList(),
+      ),
+      SizedBox(
+        height: 20,
+      ),
     ]);
   }
 }

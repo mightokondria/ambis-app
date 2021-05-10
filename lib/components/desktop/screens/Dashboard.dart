@@ -7,108 +7,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<Map<String, String>> data = [
-    {
-      "no_paket": "12",
-      "nm_paket": "SAINTEK 8",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "13",
-      "nm_paket": "SAINTEK 3",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "14",
-      "nm_paket": "SAINTEK 2",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "15",
-      "nm_paket": "SAINTEK 1",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "16",
-      "nm_paket": "SAINTEK 7",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "17",
-      "nm_paket": "SAINTEK 9",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "18",
-      "nm_paket": "SAINTEK 5",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "19",
-      "nm_paket": "SAINTEK 4",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "20",
-      "nm_paket": "SAINTEK 6",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    },
-    {
-      "no_paket": "21",
-      "nm_paket": "SAINTEK 10",
-      "no_akun": "3",
-      "xp": "30",
-      "pub_start": null,
-      "pub_end": null,
-      "kategori": "SAINTEK"
-    }
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Wrap(
         spacing: 10,
         runSpacing: 10,
-        children: data.map((Map<String, String> e) {
-          return TryoutList(e);
-        }).toList(),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:mentoring_id/reuseable/input/Clickable.dart';
 class ChipGroup extends StatefulWidget {
   final List<CustomChip> chips;
   final bool allowMultipleSelection;
-  final Function onChange;
+  final Function(List<CustomChip>) onChange;
 
   ChipGroup(
       {Key key, this.chips, this.allowMultipleSelection: true, this.onChange})

@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import 'handlers/DataSiswa.dart';
 import 'handlers/Jurusan.dart';
+import 'handlers/Tryout.dart';
 import 'handlers/UI.dart';
 import 'models/Invoice.dart';
 
@@ -56,6 +57,7 @@ class API {
   Jurusan jurusan;
   DataSiswa dataSiswa;
   InvoiceHandler invoice;
+  TryoutHandler tryout;
 
   API(this.context) {
     defaultAPI = kReleaseMode ? defaultAPI : "http://localhost/";
@@ -121,8 +123,10 @@ class API {
 
   showSnackbar(
       {Widget content, SnackBarAction action, SnackBarBehavior behavior}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: content, behavior: behavior, action: action));
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+          SnackBar(content: content, behavior: behavior, action: action));
   }
 
   networkDisconnected() {
@@ -237,6 +241,7 @@ class API {
     jurusan = Jurusan(this);
     dataSiswa = DataSiswa(this);
     invoice = InvoiceHandler(this);
+    tryout = TryoutHandler(this);
   }
 
   initScreenAdapter(

@@ -13,11 +13,11 @@ class SidebarMenuList {
     bool active = selectedIndex == index;
     String icon = title.toLowerCase().replaceAll(" ", "-") + "-on";
 
-    return GestureDetector(
-      onTap: () {
-        onIndexChanged(index);
-      },
-      child: Clickable(
+    return Clickable(
+      child: GestureDetector(
+        onTap: () {
+          onIndexChanged(index);
+        },
         child: AnimatedContainer(
           duration: Duration(milliseconds: 300),
           decoration: BoxDecoration(

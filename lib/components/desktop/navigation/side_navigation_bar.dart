@@ -95,7 +95,9 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                         }
                         //TRYOUT == 2
                         if (selectedIndex == 2) {
-                          return Tryout();
+                          return TryoutDataScreen(
+                            api: _api,
+                          );
                         }
                         //HISTORI TRYOUT == 3
                         if (selectedIndex == 3) {
