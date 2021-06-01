@@ -1,4 +1,4 @@
-package com.example.ambis_app
+package com.mentoring.apps
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/Helpers.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/components/DataCompletion/KelasLangganan.dart';
 import 'package:mentoring_id/constants/color_const.dart';
@@ -47,16 +48,17 @@ class DataCompletionPageState extends State<DataCompletionPage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
     final width = mediaQuery.width;
-    double horizontalMargin = (width >= 646)
+    final Color color = mHeadingText.withOpacity(.03);
+    final double horizontalMargin = (width >= 646)
         ? (width >= 1024)
             ? width * .3
             : width * .2
         : 20;
-    double verticalMargin = 20;
-    ScrollController scrollController = ScrollController();
+    final double verticalMargin = 20;
+    final ScrollController scrollController = ScrollController();
 
     return Scaffold(
-      backgroundColor: mHeadingText.withOpacity(.03),
+      backgroundColor: color,
       body: Scrollbar(
         isAlwaysShown: isDesktop,
         controller: scrollController,

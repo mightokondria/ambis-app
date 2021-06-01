@@ -1,8 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class Disconnected extends StatelessWidget {
   final API api;
@@ -36,22 +35,21 @@ class Disconnected extends StatelessWidget {
             ),
             SizedBox(
               width: 200,
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          "Oops! Terjadi kesalahan jaringan atau server. Coba ",
-                      style: TextStyle(color: mHeadingText.withOpacity(.3)),
-                    ),
-                    TextSpan(
-                        text: "reload",
-                        style: TextStyle(color: Colors.blue.withOpacity(.7)),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => api.refresh()),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  Text(
+                    "Oops! Terjadi kesalahan jaringan atau server. Coba ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: mHeadingText.withOpacity(.3)),
+                  ),
+                  SizedBox(height: 20),
+                  CustomButton(
+                      radius: 5,
+                      color: mSemiPrimary,
+                      textColor: mPrimary,
+                      value: "reload",
+                      onTap: api.refresh),
+                ],
               ),
             )
           ],

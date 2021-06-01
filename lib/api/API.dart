@@ -43,7 +43,8 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
-  String defaultAPI = "https://api.mentoring.web.id/";
+  String defaultAPI =
+      kReleaseMode ? "https://api.mentoring.web.id/" : "http://192.168.43.154/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -59,9 +60,8 @@ class API {
   InvoiceHandler invoice;
   TryoutHandler tryout;
 
-  API(this.context) {
-    defaultAPI = kReleaseMode ? defaultAPI : "http://localhost/";
-  }
+  // CONSTRUCT
+  API(this.context);
 
   // SESSION HELPER
   String encodeSession(Map<String, dynamic> data) {
@@ -69,8 +69,17 @@ class API {
   }
 
   Siswa decodeSession(String session) {
-    return Siswa(
-        jsonDecode(utf8.decode(base64.decode(session.replaceAll(suffix, "")))));
+    final int cut = 16;
+    final String s = session;
+    final int pos = (session.length / 2).round();
+    final List<String> raw = [
+      s.substring(pos - cut, pos),
+      s.substring(0, pos - cut),
+      s.substring(pos, s.length)
+    ];
+    final String decoded = utf8.decode(base64.decode(raw.join("")));
+
+    return Siswa(safeDecoder(decoded));
   }
   // END SESSION HELPER
 
@@ -130,10 +139,10 @@ class API {
   }
 
   networkDisconnected() {
-    screenAdapter.changeIndex(1);
+    if (screenAdapter != null) screenAdapter.changeIndex(1);
   }
 
-  closeDialog(BuildContext dialogContext) {
+  closeDialog({BuildContext dialogContext}) {
     Navigator.pop(context);
   }
 
@@ -149,11 +158,11 @@ class API {
     String method: "GET",
     Map<String, String> headers,
     Map<String, dynamic> body: const <String, dynamic>{},
+    bool auth: true,
   }) async {
     Uri uri = Uri.parse(defaultAPI + (frontend ? "frontend/" : "") + path);
     String parsedBody = "";
     Response response;
-    BuildContext loadingContext;
 
     if (headers == null) headers = {};
 
@@ -162,23 +171,24 @@ class API {
         showGeneralDialog(
             context: context,
             transitionDuration: Duration(seconds: 0),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              loadingContext = context;
-
-              return LoadingAnimation();
-            });
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                LoadingAnimation());
       });
 
     body.forEach((key, value) {
       parsedBody += "$key=$value&";
     });
 
-    headers["token"] = token;
+    if (auth) {
+      headers["token"] = token;
+      headers["no-siswa"] = data.noSiswa;
+    }
 
     appendResponse(Response res) {
       response = res;
 
-      if (animation) closeDialog(loadingContext);
+      print(res.statusCode);
+      if (animation) closeDialog();
     }
 
     try {
@@ -192,8 +202,9 @@ class API {
       } else
         await get(uri, headers: headers).then(appendResponse);
     } catch (e) {
-      closeDialog(loadingContext);
+      if (animation) closeDialog();
       networkDisconnected();
+      return Future.error(e);
     }
 
     return response;
@@ -202,23 +213,6 @@ class API {
   // INITIALIZERS
   Future<InitialState> init() async {
     prefs = await SharedPreferences.getInstance();
-    final rawToken = prefs.getString("token");
-    final rawTokenData = jsonDecode((rawToken == null) ? "{}" : rawToken);
-    final now = DateTime.now().millisecondsSinceEpoch;
-    Token token = Token.decode(rawTokenData);
-
-    // INITIALIZATION
-    // GET TOKEN
-    if (token.isEmpty || now >= token.expiration)
-      await get(Uri.parse(defaultAPI + "frontend/req_token/index"))
-          .then((value) {
-        Map<String, dynamic> data = safeDecoder(value.body);
-        final withExpirationDate =
-            token = Token(data["token"], now + (23 * 3600 * 1000));
-        prefs.setString("token", withExpirationDate.encode());
-      });
-
-    this.token = token.token;
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
     await isLoggedIn().then((status) => initialState.isLoggedIn = status);
@@ -226,10 +220,11 @@ class API {
     if (data != null) {
       initialState.tidakPunyaKelasLangganan = data.initialData.akun.length < 1;
       initialState.ready = data.initialData.ready;
+      initialState.pendingInvoice = data.initialData.invoice;
 
-      // CHECK IF THE USER HAS PENDING INVOICE
-      await hasPendingInvoice()
-          .then((value) => initialState.pendingInvoice = value);
+      // // CHECK IF THE USER HAS PENDING INVOICE
+      // await hasPendingInvoice()
+      //     .then((value) => initialState.pendingInvoice = value);
     }
 
     return initialState;
@@ -268,12 +263,19 @@ class API {
 
   // CHECK IF A USER IS ALREADY LOGGED IN
   Future<bool> isLoggedIn() async {
-    String data = prefs.getString("data");
-    bool loggedIn = data != null;
+    String token = prefs.getString("token");
+    bool loggedIn = token != null;
 
     if (loggedIn) {
-      this.data = decodeSession(data);
-
+      this.token = token;
+      await post(Uri.parse(defaultAPI + "frontend/auth/init"),
+          body: {"token": token}).then((value) {
+        if (value.statusCode == 403) {
+          prefs.remove("token");
+          return refresh();
+        }
+        data = decodeSession(value.body);
+      });
       await getInitialData();
     }
 
@@ -286,6 +288,7 @@ class API {
     await request(
             path: "invoice/my_invoice",
             method: "POST",
+            animation: false,
             body: {"no_siswa": data.noSiswa})
         .then((value) => result = Invoice.fromJson(jsonDecode(value.body)));
 

@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 class SearchBar extends StatefulWidget {
+  final Function(String value, bool empty) onSubmit;
+  final String placeholder;
+
+  const SearchBar({Key key, this.onSubmit, this.placeholder: "Pencarian..."})
+      : super(key: key);
+
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _SearchBarState createState() => _SearchBarState(onSubmit, placeholder);
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final Function(String value, bool empty) onSubmit;
+  final String placeholder;
+  final TextEditingController searchController = TextEditingController();
+
   double KDefaultPadding = 60;
+
+  _SearchBarState(this.onSubmit, this.placeholder);
+
+  onSubmitCallback(String val) =>
+      (onSubmit != null) ? onSubmit(val, val.isEmpty) : null;
 
   @override
   Widget build(BuildContext context) {
@@ -26,28 +43,24 @@ class _SearchBarState extends State<SearchBar> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
+            child: TextFormField(
+              onFieldSubmitted: onSubmitCallback,
+              onChanged: onSubmitCallback,
+              controller: searchController,
               decoration: InputDecoration(
-                hintText: "Cari Tryout...",
-                hintStyle:
-                    TextStyle(color: Colors.black26.withOpacity(0.2)),
+                hintText: placeholder,
+                hintStyle: TextStyle(color: Colors.black26.withOpacity(0.2)),
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
             ),
           ),
-          InkWell(
+          Clickable(
             child: GestureDetector(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        'cari...\n\n\n\n\n\n\n\nddu ddu ddudududu'),
-                  ));
+                  onSubmitCallback(searchController.value.text);
                 },
-                child: Image.asset(
-                  "assets/img/icons/search.png",
-                  width: 20,
-                )),
+                child: Icon(Icons.search, color: mPrimary)),
           ),
         ],
       ),

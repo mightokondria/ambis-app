@@ -12,16 +12,20 @@ TextStyle description = TextStyle(
 
 class TryoutList extends StatelessWidget {
   final Tryout data;
+  final bool mobile;
 
-  TryoutList(this.data);
+  TryoutList(this.data, {this.mobile: false});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        print(data.noPaket);
+      },
       child: Clickable(
         child: AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            width: 250,
+            width: 250 - (mobile ? 50.0 : 0.0),
             decoration: CustomCard.decoration(radius: 15),
             padding: EdgeInsets.all(20),
             child: Column(
@@ -49,7 +53,7 @@ class TryoutList extends StatelessWidget {
                       // KELAS TRYOUT
                       // Text(data['nm_akun'].toUpperCase(), style: description,),
                       // DESKRIPSI TRYOUT
-                      Text("100 soal 90 menit", style: description),
+                      Text("Khusus kelas ${data.nmAkun}", style: description),
                     ],
                   ),
                 ])),

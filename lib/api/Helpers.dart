@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class Helpers {
@@ -26,5 +27,11 @@ class Helpers {
     }
 
     return result;
+  }
+
+  static changeStatusBarColor({Color color: Colors.white, dark: true}) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: color,
+        statusBarIconBrightness: !dark ? Brightness.light : Brightness.dark));
   }
 }

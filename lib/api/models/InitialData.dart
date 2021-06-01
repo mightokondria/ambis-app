@@ -16,5 +16,7 @@ class InitialData {
       });
     }
     ready = json['ready'];
+    invoice =
+        (json['invoice'] != null) ? Invoice.fromJson(json['invoice']) : null;
   }
 }

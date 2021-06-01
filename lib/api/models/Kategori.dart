@@ -5,6 +5,7 @@ class Kategori {
   String nmKategori;
   List<Tryout> tryout = [];
 
+  Kategori(this.noKategori, this.nmKategori, {this.tryout});
   Kategori.fromJSON(Map<String, dynamic> data) {
     noKategori = int.parse(data["no_kategori"]);
     nmKategori = data["nm_kategori"];

@@ -15,7 +15,7 @@ class Session {
     Map<String, dynamic> result = resultData["data"];
 
     if (result != null) {
-      api.prefs.setString("data", api.encodeSession(result));
+      api.prefs.setString("token", result["token"]);
       api.refresh();
     }
   }
@@ -28,12 +28,14 @@ class Session {
       values.add(element.value.text);
     });
 
-    await api.request(
-      path: "auth/login",
-      frontend: true,
-      method: "POST",
-      body: {"email": values[0], "password": values[1]},
-    ).then((value) {
+    await api
+        .request(
+            path: "auth/login",
+            frontend: true,
+            method: "POST",
+            body: {"email": values[0], "password": values[1]},
+            auth: false)
+        .then((value) {
       resultData = api.safeDecoder(value.body);
 
       if (resultData["data"] == null)
@@ -49,11 +51,15 @@ class Session {
     String result;
     List<String> inputs = input.map((e) => e.value.text).toList();
 
-    await api.request(path: "auth/register", method: "POST", body: {
-      "nama": inputs[0],
-      "email": inputs[1],
-      "password": inputs[3]
-    }).then((value) {
+    await api.request(
+        path: "auth/register",
+        auth: false,
+        method: "POST",
+        body: {
+          "nama": inputs[0],
+          "email": inputs[1],
+          "password": inputs[3]
+        }).then((value) {
       result = value.body;
 
       if (result == "emailDuplicationException")
@@ -73,6 +79,7 @@ class Session {
 
     await api.request(
         path: "auth/recovery",
+        auth: false,
         method: "POST",
         body: {"email": email.value.text}).then((res) {
       Map<String, dynamic> data = api.safeDecoder(res.body);

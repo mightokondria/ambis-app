@@ -1,6 +1,9 @@
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/handlers/Tryout.dart';
+import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
+import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/Banner.dart';
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/reuseable/Chip.dart';
@@ -21,6 +24,8 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
   final API api;
 
   List<Tryout> dataTryout;
+  List<Kategori> searchResult;
+  String kategori = TryoutHandler.defaultKategori;
 
   _TryoutDataScreenState(this.api);
 
@@ -29,7 +34,7 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
     if (dataTryout == null)
       api.tryout.getTryoutData().then((value) {
         setState(() {
-          dataTryout = api.tryout.filterWithKategori("SAINTEK")[0].tryout;
+          dataTryout = api.tryout.filterWithKategori(kategori)[0].tryout;
         });
       });
 
@@ -41,18 +46,32 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
       SizedBox(
         height: 20,
       ),
-      SearchBar(),
+      SearchBar(
+        placeholder: "Cari tryout...",
+        onSubmit: (val, empty) {
+          setState(() {
+            searchResult = api.tryout.filter(val);
+            dataTryout = api.tryout
+                .filterWithKategori(kategori,
+                    data: empty ? null : searchResult)[0]
+                .tryout;
+          });
+        },
+      ),
       SizedBox(
         height: 20,
       ),
       ChipGroup(
         allowMultipleSelection: false,
-        chips: <String>["SAINTEK", "SOSHUM", "KEDINASAN"]
-            .map((e) => CustomChip(value: e, selected: e == "SAINTEK"))
+        chips: TryoutHandler.kategori
+            .map((e) => CustomChip(value: e, selected: e == kategori))
             .toList(),
         onChange: (v) {
+          kategori = v[0].value;
           setState(() {
-            dataTryout = api.tryout.filterWithKategori(v[0].value)[0].tryout;
+            dataTryout = api.tryout
+                .filterWithKategori(kategori, data: searchResult)[0]
+                .tryout;
           });
         },
       ),
@@ -64,7 +83,18 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
         runSpacing: 10,
         children: (dataTryout == null)
             ? [Center(child: LoadingAnimation.animation())]
-            : dataTryout.map((e) => TryoutList(e)).toList(),
+            : (dataTryout.isNotEmpty)
+                ? dataTryout.map((e) => TryoutList(e)).toList()
+                : [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      child: Messages.message(
+                          image: AssetImage("assets/img/msg/404.png"),
+                          title: "Oopps..",
+                          content:
+                              "Tryout dengan keyword tersebut nggak ada. Coba keyword lain."),
+                    )
+                  ],
       ),
       SizedBox(
         height: 20,

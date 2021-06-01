@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
 
+import 'api/Helpers.dart';
 import 'components/Splash.dart';
 import 'components/desktop/HalmamanPengerjaan/pengerjaan_to.dart';
 
@@ -40,6 +42,12 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     API api = API(context);
     double width = MediaQuery.of(context).size.width;
+
+    Helpers.changeStatusBarColor();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
 
     return FutureBuilder(
       future: api.init(),

@@ -8,11 +8,8 @@ class InitialScreen {
   final Widget login;
   final Widget home;
   final Widget pendingInvoice;
+  final Widget dataCompletion;
 
-  // UNIVERSAL OR RESPONSIVE PAGE(s)
-  Widget dataCompletion;
-
-  InitialScreen(this.api, {this.login, this.home, this.pendingInvoice}) {
-    dataCompletion = DataCompletionPage(api);
-  }
+  InitialScreen(this.api,
+      {this.login, this.home, this.pendingInvoice, this.dataCompletion});
 }

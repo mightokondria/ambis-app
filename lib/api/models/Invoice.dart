@@ -1,3 +1,4 @@
+import 'package:mentoring_id/api/Helpers.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 
 class Invoice {
@@ -6,7 +7,7 @@ class Invoice {
   Akun product;
   String noSiswa;
   PaymentModel method;
-  String koprom;
+  Koprom koprom;
   int total;
   bool isPending = false;
 
@@ -27,7 +28,7 @@ class Invoice {
       product = Akun.fromJson(json['product'], invoice: true);
       noSiswa = json['no_siswa'];
       method = PaymentModel.fromJson(json['method']);
-      koprom = json['koprom'];
+      koprom = Koprom(json['koprom']);
       total = int.parse(json['total']);
     }
   }
@@ -47,5 +48,17 @@ class PaymentModel {
     pembayaran = json['pembayaran'];
     rekening = json['rekening'];
     logo = json['logo'];
+  }
+}
+
+class Koprom {
+  String nama;
+  String potongan;
+
+  Koprom(Map<String, dynamic> data) {
+    if (data != null) {
+      nama = data["string"];
+      potongan = "Rp. " + Helpers.moneify(int.parse(data["potongan"]));
+    }
   }
 }

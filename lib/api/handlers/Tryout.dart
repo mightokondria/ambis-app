@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
-import 'package:mentoring_id/api/models/Tryout.dart';
 
 class TryoutHandler {
   final API api;
   TryoutHandler(this.api);
+
+  static List<String> kategori = ["SAINTEK", "SOSHUM", "KEDINASAN", "TPS"];
+  static String defaultKategori = "SAINTEK";
 
   List<Kategori> cache = [];
 
@@ -26,12 +28,17 @@ class TryoutHandler {
   }
 
   List<Kategori> filter(String keyword) {
-    final result = [];
+    final List<Kategori> result = [];
 
-    cache.forEach((kategori) {
-      final temp = kategori.tryout
-          .where((tryout) => (tryout.nmPaket.indexOf(keyword) > -1));
-      result.add(temp);
+    cache.forEach((indexed) {
+      Kategori kategori = Kategori(indexed.noKategori, indexed.nmKategori,
+          tryout: indexed.tryout);
+      kategori.tryout = kategori.tryout
+          .where((tryout) =>
+              (tryout.nmPaket.toLowerCase().indexOf(keyword.toLowerCase()) >
+                  -1))
+          .toList();
+      result.add(kategori);
     });
 
     return result;
