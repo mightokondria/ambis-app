@@ -25,6 +25,7 @@ class Tryout {
   DateTime pubStart;
   DateTime pubEnd;
   String kategori;
+  List<Materi> tryouts;
 
   Tryout(
       {this.noPaket,
@@ -43,5 +44,29 @@ class Tryout {
     pubStart = json['pub_start'];
     pubEnd = json['pub_end'];
     kategori = json['kategori'];
+
+    if (json.containsKey('tryouts')) {
+      tryouts = [];
+
+      json['tryouts'].forEach((e) {
+        tryouts.add(Materi.fromJson(e));
+      });
+    }
+  }
+}
+
+class Materi {
+  String nmTryout;
+  String noTryout;
+  int durasi;
+  int jmlSoal;
+
+  Materi({this.nmTryout, this.noTryout, this.durasi, this.jmlSoal});
+
+  Materi.fromJson(Map<String, dynamic> json) {
+    nmTryout = json['nm_tryout'];
+    noTryout = json['no_tryout'];
+    durasi = json['durasi'];
+    jmlSoal = json['jml_soal'];
   }
 }

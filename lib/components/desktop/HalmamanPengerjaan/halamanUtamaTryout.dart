@@ -10,7 +10,12 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
   Widget build(BuildContext context) {
     bool isChecked = false;
     return Container(
-      child: Text('yes ini to'),
+      child: ElevatedButton(
+        child: Text("Close"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 }

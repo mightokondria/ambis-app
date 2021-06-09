@@ -130,8 +130,6 @@ class PendingInvoice extends StatelessWidget {
                                     "Sudah melakukan pembayaran namun masih belum dikonfirmasi? Ingatkan admin dengan menekan tombol di bawah ini 👇"),
                                 SizedBox(height: 10),
                                 CustomButton(
-                                  color: mPrimary,
-                                  textColor: Colors.white,
                                   value: "remind admin",
                                 )
                               ],

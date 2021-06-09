@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
+import 'package:mentoring_id/constants/color_const.dart';
 
 import 'api/Helpers.dart';
 import 'components/Splash.dart';
-import 'components/desktop/HalmamanPengerjaan/pengerjaan_to.dart';
+import 'components/desktop/HalmamanPengerjaan/HalamanPengerjaanTO.dart';
 
 // MENGGOKIL
 
@@ -21,17 +22,28 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       title: 'Mentoring.id',
-      theme: ThemeData(fontFamily: 'OpenSans'),
+      theme: ThemeData(fontFamily: 'OpenSans', primaryColor: mPrimary),
       initialRoute: "/",
       onGenerateRoute: (settings) {
-        print(settings.name.split("/"));
-        return MaterialPageRoute(builder: (context) {
-          return Disconnected();
+        final List<String> route = settings.name.split("/");
+        Widget child = Home();
+
+        if (route[0] == HalamanPengerjaanTO.name)
+          child = HalamanPengerjaanTO(settings.arguments);
+
+        return PageRouteBuilder(pageBuilder: (BuildContext context,
+            Animation<double> animation, Animation<double> secondaryAnimation) {
+          final scaleTransition =
+              Tween<double>(begin: .9, end: 1).animate(animation);
+
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: scaleTransition,
+              child: child,
+            ),
+          );
         });
-      },
-      routes: {
-        '/': (context) => Home(),
-        '/tryout': (context) => halaman_pengerjaan_to()
       },
     );
   }

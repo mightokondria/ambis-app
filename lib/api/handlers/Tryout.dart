@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
+import 'package:mentoring_id/components/Messages.dart';
 
 class TryoutHandler {
   final API api;
@@ -9,6 +12,13 @@ class TryoutHandler {
 
   static List<String> kategori = ["SAINTEK", "SOSHUM", "KEDINASAN", "TPS"];
   static String defaultKategori = "SAINTEK";
+  static Widget notFoundMessage = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 50),
+      child: Messages.message(
+          image: AssetImage("assets/img/msg/404.png"),
+          title: "Oopps..",
+          content:
+              "Tryout dengan keyword tersebut nggak ada. Coba keyword lain."));
 
   List<Kategori> cache = [];
 
@@ -42,5 +52,16 @@ class TryoutHandler {
     });
 
     return result;
+  }
+
+  confirm(String noPaket) {
+    api.request(path: "tryout/confirm", method: "POST", body: {
+      "no_paket": noPaket
+    }).then((value) => api.ui.showTryoutConfirmationDialog(
+        Tryout.fromJson(api.safeDecoder(value.body))));
+  }
+
+  kerjakan(String noPaket) {
+    api.request(path: "/").then((value) => api.closeDialog());
   }
 }

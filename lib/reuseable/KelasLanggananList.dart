@@ -78,10 +78,11 @@ class KelasLanggananList extends StatelessWidget {
             height: 20,
           ),
           CustomButton(
-            radius: 30,
             value: "Langganan",
-            color: light ? mPrimary : Colors.white,
-            textColor: light ? Colors.white : mPrimary,
+            style: light
+                ? CustomButtonStyle.primary(radius: 30)
+                : CustomButtonStyle(
+                    color: Colors.white, textColor: mPrimary, radius: 30),
             onTap: () => api.ui.showCheckoutDialog(data),
           )
         ],
