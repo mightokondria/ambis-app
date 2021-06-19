@@ -22,7 +22,7 @@ class SideNavigationBar extends StatefulWidget {
 }
 
 class _SideNavigationBarState extends State<SideNavigationBar> {
-  int selectedIndex = 2;
+  int selectedIndex = 3;
   int navIndex = 0;
 
   final API _api;

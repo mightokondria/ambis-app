@@ -43,8 +43,9 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
-  String defaultAPI =
-      kReleaseMode ? "https://api.mentoring.web.id/" : "http://192.168.43.154/";
+  String defaultAPI = !kReleaseMode
+      ? "https://api.mentoring.web.id/"
+      : "http://192.168.43.154/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/reuseable/fancies/ProfileButton.dart';
 
 class AppBarCustombyMe extends StatelessWidget implements PreferredSizeWidget {
   final double _prefferedHeight = 60.0;
@@ -29,13 +30,16 @@ class AppBarCustombyMe extends StatelessWidget implements PreferredSizeWidget {
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Image.asset('assets/img/logomentoring.png',width: 30.5,),
-            ],),
-        )
-    );
+              Image.asset(
+                'assets/img/logomentoring.png',
+                width: 30.5,
+              ),
+              ProfileButton()
+            ],
+          ),
+        ));
   }
 
   @override
   Size get preferredSize => Size.fromHeight(_prefferedHeight);
-
 }

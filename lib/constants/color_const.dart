@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
-const mblack = Color(0x00000);
-const mbackgroundColor = Color(0xFFFFF);
-const mGreyColor = Color(0xF2F3F5);
-const mPrimaryRedColor = Color(0xEF3D6E);
-const mPrimaryYellowColor = Color(0xFBAC38);
-const mPrimaryGreenColor = Color(0x3BB663);
-const mSecondaryYellowColor = Color(0xFFE9B4);
-const mSecondaryGreenColor = Color(0xC7E4CA);
-const mSecondaryRedColor = Color(0xFBD4DA);
-const mSecondaryBlueColor = Color(0xC8EAF5);
-const mSemiPrimary = Color(0xFFFCEABD);
+const mblack = Color(0xFF00000);
+const mbackgroundColor = Color(0xFFFFFFF);
+const mGreyColor = Color(0xFFF2F3F5);
+const mPink = Color(0xFFE2529E);
+const mPrimaryRedColor = Color(0xFFEF3D6E);
+const mPrimaryYellowColor = Color(0xFFFBAC38);
+const mPrimaryGreenColor = Color(0xFF3BB663);
+const mSecondaryYellowColor = Color(0xFFFFE9B4);
+const mTersierYellowColor = Color(0xFFFFF3CA);
+const mSecondaryGreenColor = Color(0xFFC7E4CA);
+const mSecondaryRedColor = Color(0xFFFAAA61);
+const mSecondaryBlueColor = Color(0xFFC8EAF5);
+const mSemiPrimary = Color(0xFFFFF3CA);
 const mPrimary = Color(0xFFFAAA42);
+const mOrange = Color(0xFFFFC935);
 
 Color mHeadingText = Colors.black.withBlue(50).withGreen(30).withOpacity(.6);
 
