@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/reuseable/dialog/Dialogs.dart';
 
 import '../API.dart';
@@ -16,7 +17,7 @@ class UI {
   }
 
   showModal(
-      {bool universal: true,
+      {bool universal: false,
       Widget desktop,
       Widget mobile,
       Color color: Colors.white,
@@ -24,6 +25,8 @@ class UI {
     if (api.screenAdapter.isDesktop)
       showGeneralDialog(
           context: context,
+          barrierDismissible: true,
+          barrierLabel: "dialogBarrier",
           pageBuilder: (context, animation, animation2) {
             final scale = Tween<double>(begin: .85, end: 1).animate(animation);
 
@@ -50,27 +53,40 @@ class UI {
 
   // ACCOUNT RECOVERY DIALOG
   showRecoveryDialog() {
+    final Widget child = dialog.recoveryDialog(context);
+
     showModal(
-      universal: false,
-      desktop: dialog.recoveryDialog(context),
+      desktop: child,
       mobile: Wrap(
-        children: [
-          dialog.recoveryDialog(context),
-        ],
+        children: [child],
       ),
     );
   }
 
   // SHOW CHECKOUT DIALOG
   showCheckoutDialog(KelasLanggananModel data) {
+    final Widget child = dialog.checkoutDialog(data);
+
     showModal(
-      universal: false,
-      desktop: dialog.checkoutDialog(data),
+      desktop: child,
       mobile: Wrap(
         children: [
-          dialog.checkoutDialog(data),
+          child,
         ],
       ),
     );
+  }
+
+  // TRYOUT CONFIRM DIALOG
+  showTryoutConfirmationDialog(Tryout data) {
+    final Widget child = dialog.tryoutConfirmationDialog(data);
+
+    showModal(
+        desktop: Container(
+          child: child,
+        ),
+        mobile: Wrap(
+          children: [child],
+        ));
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/reuseable/fancies/xp.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
@@ -13,14 +15,15 @@ TextStyle description = TextStyle(
 class TryoutList extends StatelessWidget {
   final Tryout data;
   final bool mobile;
+  final API api;
 
-  TryoutList(this.data, {this.mobile: false});
+  TryoutList(this.data, this.api, {this.mobile: false});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print(data.noPaket);
+        api.tryout.confirm(data.noPaket);
       },
       child: Clickable(
         child: AnimatedContainer(

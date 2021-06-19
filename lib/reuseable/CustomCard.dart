@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 class CustomCard {
   static BoxDecoration decoration(
-      {Color color: Colors.white, double radius: 10}) {
+      {Color color: Colors.white, double radius: 10, bool shadow: true}) {
     return BoxDecoration(
       color: color,
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      boxShadow: [
-        BoxShadow(
-            offset: Offset(5, 5),
-            blurRadius: 8,
-            color: Colors.black.withOpacity(.04))
-      ],
+      boxShadow: shadow
+          ? [
+              BoxShadow(
+                  offset: Offset(5, 5),
+                  blurRadius: 8,
+                  color: Colors.black.withOpacity(.04))
+            ]
+          : [],
     );
   }
 

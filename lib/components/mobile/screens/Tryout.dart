@@ -25,23 +25,29 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
 
   _TryoutDataScreenState(this.api);
 
-  List<Kategori> data = [];
+  List<Kategori> data = [], searchResult = [];
   String selected = TryoutHandler.defaultKategori;
+  bool empty = false;
+
+  @override
+  void initState() {
+    super.initState();
+    api.tryout.getTryoutData().then((value) => setState(() {
+          data = value;
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
     Helpers.changeStatusBarColor(color: Colors.white);
-    api.tryout.getTryoutData().then((value) => setState(() {
-          data = value;
-        }));
 
     final List<String> cats = TryoutHandler.kategori;
     final List<List<TryoutList>> widgets = cats.map((e) {
       List<TryoutList> children = [];
 
-      data.forEach((val) {
+      (searchResult.isEmpty ? data : searchResult).forEach((val) {
         if (val.nmKategori == e)
-          children = val.tryout.map((e) => TryoutList(e)).toList();
+          children = val.tryout.map((e) => TryoutList(e, api)).toList();
       });
 
       return children;
@@ -60,19 +66,32 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
                 child: SearchBar(
                   placeholder: "Cari tryout...",
                   onSubmit: (val, empty) {
-                    api.showSnackbar(content: Text(val));
+                    setState(() {
+                      data = api.tryout.filter(val);
+                    });
                   },
                 ),
               ),
               SizedBox(height: 30),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    MobileTryoutCategory(
+                        parent: this, category: cats[0], children: widgets[0]),
+                    MobileTryoutCategory(
+                        parent: this, category: cats[1], children: widgets[1]),
+                    MobileTryoutCategory(
+                        parent: this, category: cats[2], children: widgets[2]),
+                  ],
+                ),
+              ),
               MobileTryoutCategory(
-                  parent: this, category: cats[0], children: widgets[0]),
-              MobileTryoutCategory(
-                  parent: this, category: cats[1], children: widgets[1]),
-              MobileTryoutCategory(
-                  parent: this, category: cats[2], children: widgets[2]),
-              MobileTryoutCategory(
-                  parent: this, category: cats[3], children: widgets[3]),
+                  parent: this,
+                  category: cats[3],
+                  children:
+                      empty ? [TryoutHandler.notFoundMessage] : widgets[3]),
             ],
           ),
         ),
@@ -95,7 +114,10 @@ class MobileTryoutCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (children.isEmpty) return Container();
+    parent.empty = children.isEmpty;
+
+    if (parent.empty) return Container();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
