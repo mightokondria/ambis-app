@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
@@ -127,13 +128,15 @@ class Dialogs {
         data: data,
       );
 
-  Widget tryoutConfirmationDialog(Tryout data) {
+  Widget tryoutConfirmationDialog(PaketTryout data) {
     int jmlSoalTot = 0, durasiTot = 0;
 
     data.tryouts.forEach((val) {
       jmlSoalTot += val.jmlSoal;
       durasiTot += val.durasi;
     });
+
+    final String durasiTotTranslated = TryoutTimer.translate(durasiTot);
 
     return Center(
       child: DialogElement(
@@ -160,7 +163,7 @@ class Dialogs {
                       ),
                       SizedBox(height: 1),
                       Text(
-                        "$jmlSoalTot soal $durasiTot menit",
+                        "$jmlSoalTot soal $durasiTotTranslated",
                         textAlign: TextAlign.left,
                         style: TextStyle(color: Colors.black38),
                       ),
@@ -190,7 +193,8 @@ class Dialogs {
                                 color: Colors.black.withOpacity(.5),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16)),
-                        Text("${e.jmlSoal} soal ${e.durasi} menit",
+                        Text(
+                            "${e.jmlSoal} soal ${TryoutTimer.translate(e.durasi)}",
                             style: TextStyle(color: Colors.black38))
                       ],
                     ),
@@ -209,7 +213,7 @@ class Dialogs {
                       value: "kerjakan",
                       fill: false,
                       onTap: () {
-                        api.tryout.kerjakan(data.noPaket);
+                        api.tryout.mulai(data.noPaket);
                       },
                     ),
                   ),

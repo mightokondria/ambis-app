@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 class DataTryout {
   String noKategori;
   String nmKategori;
-  List<Tryout> tryout;
+  List<PaketTryout> tryout;
 
   DataTryout({this.noKategori, this.nmKategori, this.tryout});
 
@@ -9,15 +11,15 @@ class DataTryout {
     noKategori = json['no_kategori'];
     nmKategori = json['nm_kategori'];
     if (json['tryout'] != null) {
-      tryout = <Tryout>[];
+      tryout = <PaketTryout>[];
       json['tryout'].forEach((v) {
-        tryout.add(new Tryout.fromJson(v));
+        tryout.add(new PaketTryout.fromJson(v));
       });
     }
   }
 }
 
-class Tryout {
+class PaketTryout {
   String noPaket;
   String nmPaket;
   String nmAkun;
@@ -25,9 +27,9 @@ class Tryout {
   DateTime pubStart;
   DateTime pubEnd;
   String kategori;
-  List<Materi> tryouts;
+  List<Tryout> tryouts;
 
-  Tryout(
+  PaketTryout(
       {this.noPaket,
       this.nmPaket,
       this.nmAkun,
@@ -36,7 +38,7 @@ class Tryout {
       this.pubEnd,
       this.kategori});
 
-  Tryout.fromJson(Map<String, dynamic> json) {
+  PaketTryout.fromJson(Map<String, dynamic> json) {
     noPaket = json['no_paket'];
     nmPaket = json['nm_paket'];
     nmAkun = json['nm_akun'];
@@ -49,24 +51,77 @@ class Tryout {
       tryouts = [];
 
       json['tryouts'].forEach((e) {
-        tryouts.add(Materi.fromJson(e));
+        tryouts.add(Tryout.fromJson(e));
       });
     }
   }
 }
 
-class Materi {
+class Tryout {
   String nmTryout;
   String noTryout;
   int durasi;
   int jmlSoal;
 
-  Materi({this.nmTryout, this.noTryout, this.durasi, this.jmlSoal});
+  Tryout({this.nmTryout, this.noTryout, this.durasi, this.jmlSoal});
 
-  Materi.fromJson(Map<String, dynamic> json) {
+  Tryout.fromJson(Map<String, dynamic> json) {
     nmTryout = json['nm_tryout'];
     noTryout = json['no_tryout'];
     durasi = json['durasi'];
     jmlSoal = json['jml_soal'];
+  }
+}
+
+class TryoutSession {
+  String nmMateri, nmTryout, session, noTryout, durasi, noSesi, timestamp;
+  bool selesai;
+  List<Soal> soal;
+
+  TryoutSession.parse(Map<String, dynamic> data) {
+    nmMateri = data['nm_materi'];
+    nmTryout = data['nm_tryout'];
+    session = data['session'];
+    soal = [];
+
+    data['soal'].forEach((e) {
+      soal.add(Soal.parse(e));
+    });
+  }
+}
+
+class Soal {
+  String isiSoal, na, noSesiSoal;
+  List<Pilihan> pilihan;
+
+  Soal.parse(Map<String, dynamic> data) {
+    isiSoal = data['isi_soal'];
+    na = data['NA'];
+    noSesiSoal = data['no_sesi_soal'];
+    pilihan = [];
+
+    data['pilihan'].forEach((e) {
+      pilihan.add(Pilihan.parse(e));
+    });
+  }
+}
+
+class Pilihan {
+  String isiPilihan, noSesiSoal, noSesiSoalPilihan;
+
+  Pilihan.parse(Map<String, dynamic> data) {
+    isiPilihan = data['isi_pilihan'];
+    noSesiSoal = data['no_sesi_soal'];
+    noSesiSoalPilihan = data['no_sesi_soal_pilihan'];
+  }
+}
+
+class ActiveTryoutSession {
+  String nop, nmp, session;
+
+  ActiveTryoutSession.parse(Map<String, dynamic> data) {
+    nop = data['nop'].toString();
+    nmp = data['nmp'];
+    session = data['session'];
   }
 }

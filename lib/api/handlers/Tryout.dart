@@ -58,10 +58,20 @@ class TryoutHandler {
     api.request(path: "tryout/confirm", method: "POST", body: {
       "no_paket": noPaket
     }).then((value) => api.ui.showTryoutConfirmationDialog(
-        Tryout.fromJson(api.safeDecoder(value.body))));
+        PaketTryout.fromJson(api.safeDecoder(value.body))));
   }
 
-  kerjakan(String noPaket) {
-    api.request(path: "/").then((value) => api.closeDialog());
+  mulai(String noPaket) {
+    api.request(path: "tryout/mulai", method: "POST", body: {
+      "no_paket": noPaket,
+      "no_siswa": api.data.noSiswa
+    }).then((value) => kerjakan(noPaket, value.body));
+  }
+
+  kerjakan(String noPaket, String data) {
+    Navigator.pushNamed(api.context, "/kerjain", arguments: {
+      "no_paket": noPaket,
+      "data": TryoutSession.parse(api.safeDecoder(data))
+    });
   }
 }

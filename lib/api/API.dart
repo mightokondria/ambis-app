@@ -7,8 +7,10 @@ import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
+import 'package:mentoring_id/api/models/InitialData.dart';
 // MODELS
 import 'package:mentoring_id/api/models/Siswa.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/InitialScreens.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
@@ -217,9 +219,10 @@ class API {
     await isLoggedIn().then((status) => initialState.isLoggedIn = status);
 
     if (data != null) {
-      initialState.tidakPunyaKelasLangganan = data.initialData.akun.length < 1;
-      initialState.ready = data.initialData.ready;
-      initialState.pendingInvoice = data.initialData.invoice;
+      final InitialData initialData = data.initialData;
+      initialState.tidakPunyaKelasLangganan = initialData.akun.length < 1;
+      initialState.ready = initialData.ready;
+      initialState.pendingInvoice = initialData.invoice;
 
       // // CHECK IF THE USER HAS PENDING INVOICE
       // await hasPendingInvoice()
@@ -227,6 +230,22 @@ class API {
     }
 
     return initialState;
+  }
+
+  initActions() {
+    final InitialData initialData = data.initialData;
+    final ActiveTryoutSession activeTryoutSession =
+        initialData.activeTryoutSession;
+
+    // IF USER HAS ACTIVE SESSION
+    if (initialData.hasActiveSession)
+      request(
+          path: "tryout/kerjakan_sesi",
+          method: "POST",
+          body: {"session": activeTryoutSession.session}).then((value) {
+        showSnackbar(content: Text("Tryout ini belum kamu kerjakan"));
+        tryout.kerjakan(activeTryoutSession.nop, value.body);
+      });
   }
 
   initHandlers() {
@@ -245,6 +264,9 @@ class API {
 
     // INIT ALL HANDLERS
     initHandlers();
+
+    // INIT ALL FIRST ACTIONS
+    initActions();
 
     buildInitialScreen();
   }
