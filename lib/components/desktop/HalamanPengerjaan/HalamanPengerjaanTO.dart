@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/components/desktop/HalmamanPengerjaan/HalamanUtamaTryout.dart';
+import 'package:mentoring_id/components/desktop/HalamanPengerjaan/halamanUtamaTryout.dart';
 
 class HalamanPengerjaanTO extends StatefulWidget {
   static String name = "kerjain";
@@ -14,13 +14,21 @@ class HalamanPengerjaanTO extends StatefulWidget {
 
 class _HalamanPengerjaanTOState extends State<HalamanPengerjaanTO> {
   final Object args;
+  final ScrollController scrollController = ScrollController();
 
   _HalamanPengerjaanTOState(this.args);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HalamanUtamaTryout(),
+      backgroundColor: Colors.white,
+      body: Scrollbar(
+          controller: scrollController,
+          isAlwaysShown: true,
+          child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              controller: scrollController,
+              child: HalamanUtamaTryout(data: args))),
     );
   }
 }

@@ -1,10 +1,13 @@
+import 'package:mentoring_id/api/models/Tryout.dart';
+
 import 'Akun.dart';
 import 'Invoice.dart';
 
 class InitialData {
   List<Akun> akun;
-  bool ready;
+  bool ready, hasActiveSession = true;
   Invoice invoice;
+  ActiveTryoutSession activeTryoutSession;
 
   InitialData({this.akun, this.ready, this.invoice});
 
@@ -18,5 +21,11 @@ class InitialData {
     ready = json['ready'];
     invoice =
         (json['invoice'] != null) ? Invoice.fromJson(json['invoice']) : null;
+
+    final activeSessionRaw = json['activeTryoutSession'];
+    if (activeSessionRaw.runtimeType == bool)
+      hasActiveSession = false;
+    else
+      activeTryoutSession = ActiveTryoutSession.parse(activeSessionRaw);
   }
 }

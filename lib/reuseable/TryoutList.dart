@@ -13,7 +13,7 @@ TextStyle description = TextStyle(
 );
 
 class TryoutList extends StatelessWidget {
-  final Tryout data;
+  final PaketTryout data;
   final bool mobile;
   final API api;
 

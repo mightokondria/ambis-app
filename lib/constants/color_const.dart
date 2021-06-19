@@ -15,6 +15,7 @@ const mSecondaryBlueColor = Color(0xFFC8EAF5);
 const mSemiPrimary = Color(0xFFFFF3CA);
 const mPrimary = Color(0xFFFAAA42);
 const mOrange = Color(0xFFFFC935);
+const activeGreenColor = Color(0xFF00E983);
 
 Color mHeadingText = Colors.black.withBlue(50).withGreen(30).withOpacity(.6);
 
