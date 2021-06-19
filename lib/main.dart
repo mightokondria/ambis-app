@@ -61,7 +61,7 @@ class Home extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
-    return HalamanPengerjaanTO({});
+    // return HalamanPengerjaanTO({});
     return FutureBuilder(
       future: api.init(),
       builder: (context, snapshot) {
