@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/components/desktop/HalmamanPengerjaan/HalamanUtamaTryout.dart';
+import 'package:mentoring_id/components/desktop/HalamanPengerjaan/halamanUtamaTryout.dart';
 
 class HalamanPengerjaanTO extends StatefulWidget {
   static String name = "kerjain";
