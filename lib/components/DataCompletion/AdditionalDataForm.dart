@@ -137,8 +137,6 @@ class _AdditionalDataFormState extends State<AdditionalDataForm> {
             SizedBox(height: 20),
             CustomButton(
               value: "Berikutnya",
-              color: mPrimary,
-              textColor: Colors.white,
               onTap: () {
                 if (!formKey.currentState.validate()) return null;
 

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/dialog/DialogElement.dart';
 import 'package:mentoring_id/reuseable/fancies/KelasLanggananMenuCheck.dart';
+import 'package:mentoring_id/reuseable/fancies/xp.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/InputText.dart';
 
@@ -70,8 +72,6 @@ class Dialogs {
               ),
               CustomButton(
                 value: "Pulihkan",
-                color: mPrimary,
-                textColor: Colors.white,
                 onTap: () {
                   if (!recoveryFormKey.currentState.validate()) return null;
 
@@ -110,8 +110,7 @@ class Dialogs {
               ),
               CustomButton(
                   value: "Batal",
-                  color: Colors.transparent,
-                  textColor: mPrimary,
+                  style: CustomButtonStyle.transparent(),
                   onTap: () {
                     Navigator.pop(context);
                   }),
@@ -127,6 +126,110 @@ class Dialogs {
         mainAxisSize: mainAxisSize,
         data: data,
       );
+
+  Widget tryoutConfirmationDialog(Tryout data) {
+    int jmlSoalTot = 0, durasiTot = 0;
+
+    data.tryouts.forEach((val) {
+      jmlSoalTot += val.jmlSoal;
+      durasiTot += val.durasi;
+    });
+
+    return Center(
+      child: DialogElement(
+        horizontalDesktopPadding: 30,
+        // color: Colors.white,
+        api: api,
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data.nmPaket,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black.withOpacity(.5),
+                            fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: 1),
+                      Text(
+                        "$jmlSoalTot soal $durasiTot menit",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black38),
+                      ),
+                    ],
+                  ),
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: XPWidget("+" + data.xp))
+                ],
+              ),
+              SizedBox(height: 30),
+              Text("Materi yang diujikan",
+                  style: TextStyle(color: Colors.black45)),
+              SizedBox(height: 5),
+              ListView(
+                shrinkWrap: true,
+                children: data.tryouts.map((e) {
+                  return Container(
+                    decoration: CustomCard.decoration(),
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e.nmTryout,
+                            style: TextStyle(
+                                color: Colors.black.withOpacity(.5),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16)),
+                        Text("${e.jmlSoal} soal ${e.durasi} menit",
+                            style: TextStyle(color: Colors.black38))
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      style: CustomButtonStyle.primary(shadow: false),
+                      value: "kerjakan",
+                      fill: false,
+                      onTap: () {
+                        api.tryout.kerjakan(data.noPaket);
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: CustomButton(
+                      fill: false,
+                      value: "batal",
+                      style: CustomButtonStyle.semiPrimary(shadow: false),
+                      onTap: () {
+                        api.closeDialog();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ]),
+      ),
+    );
+  }
 }
 
 class CheckoutDialog extends StatefulWidget {
@@ -274,9 +377,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                                 ),
                               ),
                               CustomButton(
-                                color: mPrimary,
                                 enabled: kopromUsed == null,
-                                textColor: Colors.white,
                                 fill: false,
                                 onTap: () {
                                   kopromUnavailable = false;
@@ -315,7 +416,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                                     ),
                                   ],
                                 ),
-                                radius: 100,
+                                style: CustomButtonStyle.primary(radius: 100),
                               ),
                               SizedBox(width: 10),
                             ],
@@ -352,9 +453,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
               ]),
               SizedBox(height: 20),
               CustomButton(
-                radius: 30,
-                color: mPrimary,
-                textColor: Colors.white,
+                style: CustomButtonStyle.primary(radius: 30),
                 value: "konfirmasi",
                 onTap: () {
                   List<String> finalData = [
@@ -368,8 +467,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                 },
               ),
               CustomButton(
-                color: Colors.transparent,
-                textColor: mPrimary,
+                style: CustomButtonStyle.transparent(),
                 value: "batal",
                 onTap: () => Navigator.pop(context),
               )

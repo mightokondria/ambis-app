@@ -84,16 +84,9 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
         children: (dataTryout == null)
             ? [Center(child: LoadingAnimation.animation())]
             : (dataTryout.isNotEmpty)
-                ? dataTryout.map((e) => TryoutList(e)).toList()
+                ? dataTryout.map((e) => TryoutList(e, api)).toList()
                 : [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 50),
-                      child: Messages.message(
-                          image: AssetImage("assets/img/msg/404.png"),
-                          title: "Oopps..",
-                          content:
-                              "Tryout dengan keyword tersebut nggak ada. Coba keyword lain."),
-                    )
+                    TryoutHandler.notFoundMessage,
                   ],
       ),
       SizedBox(

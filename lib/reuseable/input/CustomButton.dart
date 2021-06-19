@@ -3,73 +3,40 @@ import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 import '../CustomCard.dart';
-//
-// class CustomButton extends StatefulWidget {
-//   final String value;
-//   final Widget child;
-//   final Function onTap;
-//   final double radius;
-//   final Color color;
-//   final Color textColor;
-//   final bool fill;
-//   final bool enabled;
-//
-//   CustomButton(
-//       {this.value,
-//       this.onTap,
-//       this.radius: 5,
-//       this.color: Colors.white,
-//       this.textColor,
-//       this.fill: true,
-//       this.child,
-//       this.enabled: true});
-//
-//   @override
-//   State<StatefulWidget> createState() => _CustomButtonState(
-//       value, onTap, radius, color, textColor, fill, child, enabled);
-// }
 
 class CustomButton extends StatelessWidget {
-  bool pressed = false;
-
   final String value;
   final Function onTap;
-  final double radius;
-  final Color color;
-  final Color textColor;
   final bool fill;
   final bool enabled;
   final Widget child;
+  CustomButtonStyle style;
 
   CustomButton(
       {this.value,
-      this.onTap,
-      this.radius: 10,
-      this.color,
-      this.textColor,
       this.fill: true,
       this.child,
-      this.enabled: true});
-
-  // void toggle() => setState(() {
-  //       pressed = !pressed;
-  //     });
+      this.enabled: true,
+      this.onTap,
+      this.style}) {
+    style = (style == null) ? CustomButtonStyle.primary() : style;
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        // onTapDown: (TapDownDetails e) => toggle(),
-        // onTapUp: (TapUpDetails e) => toggle(),
         onTap: enabled ? onTap : () {},
         child: Transform.scale(
-          scale: pressed ? .99 : 1,
+          scale: 1,
           child: Clickable(
             child: Container(
               width: fill ? double.infinity : null,
-              decoration: (color != Colors.transparent)
+              decoration: (style.color != Colors.transparent)
                   ? CustomCard.decoration(
-                      radius: radius,
-                      color: enabled ? color : color.withOpacity(.4))
+                      radius: style.radius,
+                      shadow: style.shadow,
+                      color:
+                          enabled ? style.color : style.color.withOpacity(.4))
                   : null,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: (value != null)
@@ -78,7 +45,9 @@ class CustomButton extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: (textColor == null) ? mHeadingText : textColor,
+                        color: (style.textColor == null)
+                            ? mHeadingText
+                            : style.textColor,
                       ),
                     )
                   : child,
@@ -87,3 +56,34 @@ class CustomButton extends StatelessWidget {
         ));
   }
 }
+
+class CustomButtonStyle {
+  Color color = mPrimary, textColor = Colors.white;
+
+  final double radius;
+  final bool shadow;
+
+  CustomButtonStyle.primary({this.radius: 10, this.shadow: true});
+  CustomButtonStyle.semiPrimary({this.radius: 10, this.shadow: true}) {
+    color = mSemiPrimary;
+    textColor = mPrimary;
+  }
+  CustomButtonStyle.accent({this.radius: 10, this.shadow: true}) {
+    color = Colors.blue;
+  }
+  CustomButtonStyle.transparent(
+      {this.radius: 10, this.shadow: true, this.textColor: mPrimary}) {
+    color = Colors.transparent;
+  }
+
+  CustomButtonStyle(
+      {this.color, this.textColor, this.radius: 10, this.shadow: true});
+}
+
+abstract class DialogButtonsGroupItems {
+  // String value = CustomButtonStyle.primary();
+  Widget child;
+  bool shadow;
+}
+
+class DialogButtonGroup {}

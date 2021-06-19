@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final color = Color(0xFFF5F5F5);
 
-    Helpers.changeStatusBarColor(color: Colors.transparent);
+    Helpers.changeStatusBarColor();
     return Container(
       color: color,
       child: Column(

@@ -43,9 +43,14 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
+<<<<<<< HEAD
   String defaultAPI = !kReleaseMode
       ? "https://api.mentoring.web.id/"
       : "http://192.168.43.154/";
+=======
+  String defaultAPI =
+      kReleaseMode ? "https://api.mentoring.web.id/" : "http://localhost/";
+>>>>>>> 089d2f19081989151daec4c5ae65e5f53fa28d16
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -188,7 +193,6 @@ class API {
     appendResponse(Response res) {
       response = res;
 
-      print(res.statusCode);
       if (animation) closeDialog();
     }
 

@@ -116,8 +116,6 @@ class LoginForm {
             ),
             SizedBox(height: 20),
             CustomButton(
-                color: mPrimary,
-                textColor: Colors.white,
                 value: "masuk",
                 onTap: () {
                   if (loginFormKey.currentState.validate())
@@ -210,8 +208,6 @@ class LoginForm {
             ),
             SizedBox(height: 20),
             CustomButton(
-              color: mPrimary,
-              textColor: Colors.white,
               value: "daftar",
               onTap: () {
                 if (registerFormKey.currentState.validate())

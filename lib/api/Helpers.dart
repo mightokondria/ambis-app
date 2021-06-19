@@ -29,7 +29,7 @@ class Helpers {
     return result;
   }
 
-  static changeStatusBarColor({Color color: Colors.white, dark: true}) {
+  static changeStatusBarColor({Color color: Colors.transparent, dark: true}) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: color,
         statusBarIconBrightness: !dark ? Brightness.light : Brightness.dark));
