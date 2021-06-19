@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/FloatingProfile.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 class ProfileButton extends StatefulWidget {
@@ -36,6 +37,9 @@ class _ProfileButtonState extends State<ProfileButton>
     super.dispose();
   }
 
+  Alignment alignment1 = Alignment(0.0, 0.0);
+  double size1 = 50.0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +47,6 @@ class _ProfileButtonState extends State<ProfileButton>
       height: 45,
       child: Stack(
         children: [
-          AnimatedContainer(duration: Duration(milliseconds: 370)),
           Clickable(
             child: GestureDetector(
               onTap: () {
@@ -51,6 +54,9 @@ class _ProfileButtonState extends State<ProfileButton>
                   if (toggle) {
                     toggle = !toggle;
                     controller.forward();
+                    Future.delayed(Duration(milliseconds: 10), () {
+                      alignment1 = Alignment(-3, -3);
+                    });
                   } else {
                     toggle = !toggle;
                     controller.reverse();
@@ -83,7 +89,11 @@ class _ProfileButtonState extends State<ProfileButton>
                             SizedBox(
                               width: 8,
                             ),
-                            Flexible(child: Icon(Icons.camera))
+                            Flexible(
+                                child: Image.asset(
+                              "assets/img/icons/profile.png",
+                              width: 20,
+                            ))
                           ],
                         )),
                   ),
