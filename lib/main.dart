@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         final List<String> route = settings.name.split("/");
         Widget child = Home();
 
-        if (route[0] == HalamanPengerjaanTO.name)
+        if (route[1] == HalamanPengerjaanTO.name)
           child = HalamanPengerjaanTO(settings.arguments);
 
         return PageRouteBuilder(pageBuilder: (BuildContext context,
@@ -61,6 +61,7 @@ class Home extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
+    return HalamanPengerjaanTO({});
     return FutureBuilder(
       future: api.init(),
       builder: (context, snapshot) {

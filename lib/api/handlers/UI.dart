@@ -78,7 +78,7 @@ class UI {
   }
 
   // TRYOUT CONFIRM DIALOG
-  showTryoutConfirmationDialog(Tryout data) {
+  showTryoutConfirmationDialog(PaketTryout data) {
     final Widget child = dialog.tryoutConfirmationDialog(data);
 
     showModal(

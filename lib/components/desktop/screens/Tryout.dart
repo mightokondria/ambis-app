@@ -23,7 +23,7 @@ class TryoutDataScreen extends StatefulWidget {
 class _TryoutDataScreenState extends State<TryoutDataScreen> {
   final API api;
 
-  List<Tryout> dataTryout;
+  List<PaketTryout> dataTryout;
   List<Kategori> searchResult;
   String kategori = TryoutHandler.defaultKategori;
 
