@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mentoring_id/constants/color_const.dart';
 
 class ProfilePicture extends StatelessWidget {
   @override

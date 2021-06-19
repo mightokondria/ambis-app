@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-import 'package:mentoring_id/reuseable/FloatingProfile.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 class ProfileButton extends StatefulWidget {
@@ -17,7 +16,6 @@ class _ProfileButtonState extends State<ProfileButton>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller = AnimationController(
       vsync: this,

@@ -7,7 +7,7 @@ import 'package:mentoring_id/constants/color_const.dart';
 
 import 'api/Helpers.dart';
 import 'components/Splash.dart';
-import 'components/desktop/HalmamanPengerjaan/HalamanPengerjaanTO.dart';
+import 'components/desktop/HalamanPengerjaan/HalamanPengerjaanTO.dart';
 
 // MENGGOKIL
 
