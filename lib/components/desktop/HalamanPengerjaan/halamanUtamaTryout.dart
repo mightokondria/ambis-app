@@ -1,12 +1,13 @@
-import 'dart:math';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class HalamanUtamaTryout extends StatefulWidget {
-  final Object data;
+  final Map<String, dynamic> data;
 
   const HalamanUtamaTryout({Key key, this.data}) : super(key: key);
 
@@ -15,14 +16,42 @@ class HalamanUtamaTryout extends StatefulWidget {
 }
 
 class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
-  final Object data;
+  final Map<String, dynamic> data;
+  TryoutSession session;
+  int posisiSoal = 0;
 
-  _HalamanUtamaTryoutState(this.data);
+  _HalamanUtamaTryoutState(this.data) {
+    session = data['data'];
+  }
+
+  pindahSoal({int indexSoal}) {
+    setState(() {
+      posisiSoal = indexSoal;
+    });
+  }
+
+  jawabSoal(Pilihan data) {
+    setState(() {
+      session.soal = session.soal.map((soal) {
+        if (soal.noSesiSoal == data.noSesiSoal) {
+          soal.pilihan = soal.pilihan.map((pilihan) {
+            pilihan.dipilih = false;
+            if (pilihan.noSesiSoalPilihan == data.noSesiSoalPilihan)
+              pilihan.dipilih = true;
+
+            return pilihan;
+          }).toList();
+        }
+
+        return soal;
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    bool isChecked = false;
+
     return Container(
       margin: EdgeInsets.only(top: 30),
       color: Colors.white,
@@ -32,17 +61,23 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
           padding: EdgeInsets.all(50),
           child: Column(
             children: [
-              Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac ex neque. Sed nec consectetur tellus. In tempor feugiat eros, a pulvinar felis pellentesque a.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Duis faucibus mauris nec semper consequat. Etiam dolor ante, condimentum a mollis ac, dictum et elit. Curabitur sodales elementum enim. Donec eu urna ornare, rutrum sapien at, aliquet erat. Nullam ut nisi sit amet velit lacinia accumsan quis non velit. Donec semper massa viverra augue tristique, blandit vehicula libero cursus. Sed facilisis iaculis eros."),
+              Html(
+                data: session.soal[posisiSoal].isiSoal,
+                style: {"*": Style(lineHeight: LineHeight.number(1.5))},
+              ),
               SizedBox(
                 height: 20,
               ),
-              PilihanJawaban(),
-              PilihanJawaban(
-                selected: true,
-              ),
-              PilihanJawaban(),
-              PilihanJawaban(),
+              Column(
+                children: session.soal[posisiSoal].pilihan
+                    .map((e) => GestureDetector(
+                          onTap: () => jawabSoal(e),
+                          child: PilihanJawaban(
+                            data: e,
+                          ),
+                        ))
+                    .toList(),
+              )
             ],
           ),
         ),
@@ -51,9 +86,7 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
             height: size.height,
             child: Padding(
               padding: EdgeInsets.only(top: 30, right: 130, left: 50),
-              child: TryoutIdentityWidget(
-                data: data,
-              ),
+              child: TryoutIdentityWidget(instance: this),
             ),
           ),
         )
@@ -63,15 +96,14 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
 }
 
 class PilihanJawaban extends StatelessWidget {
-  PilihanJawaban({Key key, this.selected: false}) : super(key: key) {
-    style = TextStyle(color: selected ? Colors.white : Color(0xFF555555));
-  }
+  PilihanJawaban({Key key, this.data}) : super(key: key);
 
-  final selected;
-  TextStyle style;
+  final Pilihan data;
 
   @override
   Widget build(BuildContext context) {
+    final bool selected = data.dipilih;
+
     return Column(
       children: [
         Clickable(
@@ -86,14 +118,18 @@ class PilihanJawaban extends StatelessWidget {
                         width: 2, color: Colors.black.withOpacity(.05))),
             child: Row(
               children: [
-                Text(
-                  "A",
-                  style: style,
-                ),
-                SizedBox(width: 20),
-                Text(
-                  "Lorem ipsum des neges",
-                  style: style,
+                // Text(
+                //   "A",
+                //   style: style,
+                // ),
+                // SizedBox(width: 20),
+                Html(
+                  data: data.isiPilihan,
+                  shrinkWrap: true,
+                  style: {
+                    "*": Style(
+                        color: selected ? Colors.white : Color(0xFF555555))
+                  },
                 )
               ],
             ),
@@ -106,18 +142,31 @@ class PilihanJawaban extends StatelessWidget {
 }
 
 class TryoutIdentityWidget extends StatefulWidget {
-  final Object data;
+  final _HalamanUtamaTryoutState instance;
 
-  const TryoutIdentityWidget({Key key, this.data}) : super(key: key);
+  const TryoutIdentityWidget({Key key, this.instance}) : super(key: key);
 
   @override
-  _TryoutIdentityWidgetState createState() => _TryoutIdentityWidgetState(data);
+  _TryoutIdentityWidgetState createState() =>
+      _TryoutIdentityWidgetState(instance);
 }
 
 class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
-  final Object data;
+  final _HalamanUtamaTryoutState instance;
+  List<int> nomorSoal;
+  TryoutSession data;
+  int i = 0;
 
-  _TryoutIdentityWidgetState(this.data);
+  _TryoutIdentityWidgetState(this.instance) {
+    data = instance.session;
+    nomorSoal = this.data.soal.asMap().keys.toList();
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        i++;
+      });
+    });
+  }
 
   BoxDecoration getTimerDecoration({bool active: false}) {
     return BoxDecoration(
@@ -135,7 +184,7 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
           style: TextStyle(color: Colors.black38, fontWeight: FontWeight.bold),
         ),
         Text(
-          "00:53:23",
+          i.toString(),
           style: TextStyle(
               fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black54),
         ),
@@ -157,7 +206,7 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
           ],
         ),
         SizedBox(height: 10),
-        ListMateriTryout("SBMPTN"),
+        ListMateriTryout(data.nmTryout, data.materi),
         SizedBox(height: 20),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 230),
@@ -166,19 +215,26 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
               crossAxisSpacing: 5,
               shrinkWrap: true,
               crossAxisCount: 5,
-              children: [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+              children: nomorSoal
                   .map((e) => Clickable(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: activeGreenColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          padding: EdgeInsets.all(3),
-                          child: Center(
-                              child: Text(
-                            e.toString(),
-                            style: TextStyle(color: Colors.white),
-                          )),
+                        child: GestureDetector(
+                          onTap: () {
+                            instance.pindahSoal(indexSoal: e);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: (e == instance.posisiSoal)
+                                    ? activeGreenColor
+                                    : Color(0xFF666666),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            padding: EdgeInsets.all(3),
+                            child: Center(
+                                child: Text(
+                              (e + 1).toString(),
+                              style: TextStyle(color: Colors.white),
+                            )),
+                          ),
                         ),
                       ))
                   .toList()),
@@ -196,11 +252,10 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
 class ListMateriTryout extends StatelessWidget {
   // final API api;
   final String activeMateri;
+  final List<String> materi;
   int active;
-  List<String> materi;
 
-  ListMateriTryout(this.activeMateri) {
-    materi = ["SBMPTN", "TPS"];
+  ListMateriTryout(this.activeMateri, this.materi) {
     active = materi.indexOf(activeMateri);
   }
 

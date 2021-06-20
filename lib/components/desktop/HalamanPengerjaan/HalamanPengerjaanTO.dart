@@ -3,7 +3,7 @@ import 'package:mentoring_id/components/desktop/HalamanPengerjaan/halamanUtamaTr
 
 class HalamanPengerjaanTO extends StatefulWidget {
   static String name = "kerjain";
-  final Object args;
+  final Map<String, dynamic> args;
 
   const HalamanPengerjaanTO(this.args, {Key key}) : super(key: key);
 
@@ -13,7 +13,7 @@ class HalamanPengerjaanTO extends StatefulWidget {
 }
 
 class _HalamanPengerjaanTOState extends State<HalamanPengerjaanTO> {
-  final Object args;
+  final Map<String, dynamic> args;
   final ScrollController scrollController = ScrollController();
 
   _HalamanPengerjaanTOState(this.args);

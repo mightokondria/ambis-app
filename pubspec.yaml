@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^0.17.4
+  flutter_svg: ^0.22.0
   fl_chart: ^0.30.0
   http: ^0.13.1
   shared_preferences: ^2.0.5
@@ -38,6 +38,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   lottie: ^1.0.1
+  flutter_html: ^2.0.0
 
 dev_dependencies:
   flutter_test:

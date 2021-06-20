@@ -77,12 +77,18 @@ class TryoutSession {
   String nmMateri, nmTryout, session, noTryout, durasi, noSesi, timestamp;
   bool selesai;
   List<Soal> soal;
+  List<String> materi;
 
   TryoutSession.parse(Map<String, dynamic> data) {
     nmMateri = data['nm_materi'];
     nmTryout = data['nm_tryout'];
     session = data['session'];
     soal = [];
+    materi = [];
+
+    data['materi'].forEach((e) {
+      materi.add(e.toString());
+    });
 
     data['soal'].forEach((e) {
       soal.add(Soal.parse(e));
@@ -108,11 +114,13 @@ class Soal {
 
 class Pilihan {
   String isiPilihan, noSesiSoal, noSesiSoalPilihan;
+  bool dipilih;
 
   Pilihan.parse(Map<String, dynamic> data) {
     isiPilihan = data['isi_pilihan'];
     noSesiSoal = data['no_sesi_soal'];
     noSesiSoalPilihan = data['no_sesi_soal_pilihan'];
+    dipilih = data['dipilih'];
   }
 }
 
