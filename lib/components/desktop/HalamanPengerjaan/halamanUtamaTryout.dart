@@ -67,68 +67,110 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return Container(
       margin: EdgeInsets.only(top: 30),
       color: Colors.white,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          width: size.width * .65,
-          padding: EdgeInsets.all(50),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFFEEEEEE), width: 1),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+      child: api.screenAdapter.isDesktop
+          ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              TryoutBody(this),
+              Expanded(
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30, right: 130, left: 50),
+                    child: TryoutIdentityWidget(instance: this),
+                  ),
                 ),
-                child: Center(
-                  child: Text((posisiSoal + 1).toString(),
-                      style: TextStyle(fontSize: 18, color: Color(0xFF555555))),
-                ),
-              ),
-              SizedBox(height: 10),
-              Html(
-                data: session.soal[posisiSoal].isiSoal.replaceAll(
-                    "https://server.mentoringid.com/", api.defaultAPI),
-                style: {"*": Style(lineHeight: LineHeight.number(1.5))},
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: session.soal[posisiSoal].pilihan
-                    .map((e) => GestureDetector(
-                          onTap: () => jawabSoal(e),
-                          child: Column(
-                            children: [
-                              PilihanJawaban(
-                                data: e,
-                              ),
-                              SizedBox(height: 10)
-                            ],
-                          ),
-                        ))
-                    .toList(),
               )
-            ],
-          ),
-        ),
-        Expanded(
-          child: Container(
-            child: Padding(
-              padding: EdgeInsets.only(top: 30, right: 130, left: 50),
-              child: TryoutIdentityWidget(instance: this),
+            ])
+          : InteractiveViewer(
+              panEnabled: false,
+              maxScale: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 30),
+                    TryoutBody(
+                      this,
+                      mobile: true,
+                    ),
+                    SizedBox(height: 30),
+                    TryoutIdentityWidget(
+                      instance: this,
+                    )
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+}
+
+class TryoutBody extends StatelessWidget {
+  final _HalamanUtamaTryoutState instance;
+  final bool mobile;
+
+  const TryoutBody(this.instance, {this.mobile: false});
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final double width = size.width;
+    final int posisiSoal = instance.posisiSoal;
+    final TryoutSession session = instance.session;
+    final bool sudahDijawab = instance.sudahDijawab(posisiSoal);
+
+    return Container(
+      width: mobile ? width : width * .65,
+      padding: EdgeInsets.all(mobile ? 0 : 50),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            padding: EdgeInsets.all(mobile ? 0 : 10),
+            decoration: BoxDecoration(
+              color: sudahDijawab ? activeGreenColor : Colors.transparent,
+              border: Border.all(
+                  color: sudahDijawab ? activeGreenColor : Color(0xFFEEEEEE),
+                  width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Center(
+              child: Text((posisiSoal + 1).toString(),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: sudahDijawab ? Colors.white : Color(0xFF555555))),
             ),
           ),
-        )
-      ]),
+          SizedBox(height: 10),
+          Html(
+            data: session.soal[posisiSoal].isiSoal.replaceAll(
+                "https://server.mentoringid.com/", instance.api.defaultAPI),
+            style: {"*": Style(lineHeight: LineHeight.number(1.5))},
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: session.soal[posisiSoal].pilihan
+                .map((e) => GestureDetector(
+                      onTap: () => instance.jawabSoal(e),
+                      child: Column(
+                        children: [
+                          PilihanJawaban(
+                            data: e,
+                          ),
+                          SizedBox(height: 10)
+                        ],
+                      ),
+                    ))
+                .toList(),
+          )
+        ],
+      ),
     );
   }
 }
@@ -247,6 +289,7 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
             mainAxisSpacing: 5,
             crossAxisSpacing: 5,
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             crossAxisCount: 5,
             children: nomorSoal.map((e) {
               return Clickable(
