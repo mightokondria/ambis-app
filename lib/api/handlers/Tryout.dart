@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/Messages.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class TryoutHandler {
   final API api;
   TryoutHandler(this.api);
 
-  static List<String> kategori = ["SAINTEK", "SOSHUM", "KEDINASAN", "TPS"];
+  static List<String> kategori = ["SAINTEK", "SOSHUM", "KEDINASAN", "SKD"];
   static String defaultKategori = "SAINTEK";
   static Widget notFoundMessage = Padding(
       padding: const EdgeInsets.symmetric(vertical: 50),
@@ -69,9 +71,63 @@ class TryoutHandler {
   }
 
   kerjakan(String noPaket, String data) {
+    if (data == "forbiddenNotSubscribed")
+      return showDialog(
+          context: api.context,
+          builder: (context) {
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      "assets/img/msg/mascott-sad.png",
+                      width: 100,
+                    ),
+                    SizedBox(height: 10),
+                    Text("Duh! Kamu belum berlangganan kelas ini"),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            );
+          });
+
     Navigator.pushNamed(api.context, "/kerjain", arguments: {
       "no_paket": noPaket,
-      "data": TryoutSession.parse(api.safeDecoder(data))
+      "data": TryoutSession.parse(api.safeDecoder(data)),
+      "api": api
+    });
+  }
+
+  Future<Response> jawabSoal(String session, String noSesi, Pilihan data) {
+    return api.request(path: "tryout/memilih", method: "POST", body: {
+      "session": session,
+      "no_sesi": noSesi,
+      "no_sesi_soal": data.noSesiSoal,
+      "no_sesi_soal_pilihan": data.noSesiSoalPilihan
+    });
+  }
+
+  akhiri(TryoutSession data) {
+    api.request(
+        path: "tryout/akhiri",
+        method: "POST",
+        body: {"session": data.session, "no_sesi": data.noSesi}).then((value) {
+      final Map<String, dynamic> parsed = api.safeDecoder(value.body);
+
+      api.closeDialog();
+
+      // TODO : Add action when session ends
+      if (parsed.containsKey("status") && parsed['status'] == "sessionEnded")
+        return null;
+
+      api.showSnackbar(content: Text("Sesi berikutnya. Semangat!!💪😆"));
+      kerjakan(
+        parsed['no_paket'],
+        value.body,
+      );
     });
   }
 }

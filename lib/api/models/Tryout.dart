@@ -74,15 +74,19 @@ class Tryout {
 }
 
 class TryoutSession {
-  String nmMateri, nmTryout, session, noTryout, durasi, noSesi, timestamp;
+  String nmMateri, nmTryout, session, noTryout, durasi, noSesi;
   bool selesai;
   List<Soal> soal;
   List<String> materi;
+  int timestamp;
 
   TryoutSession.parse(Map<String, dynamic> data) {
     nmMateri = data['nm_materi'];
     nmTryout = data['nm_tryout'];
     session = data['session'];
+    durasi = data['durasi'];
+    timestamp = data['timestamp'];
+    noSesi = data['no_sesi'];
     soal = [];
     materi = [];
 

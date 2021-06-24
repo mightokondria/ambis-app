@@ -6,6 +6,8 @@ class TryoutTimer {
   final Function(DateTime date, double progress) callback;
   final int interval;
 
+  Timer timer;
+
   static String translate(int minutes) {
     String result = "";
 
@@ -21,13 +23,12 @@ class TryoutTimer {
 
   TryoutTimer(this.duration, this.timestamp, this.callback,
       {this.interval: 1000}) {
-    final int durationMs = (duration * 60 * 1000),
-        target = getRounded() - durationMs;
-    Timer.periodic(Duration(milliseconds: interval), (timer) {
+    final int durationMs = (duration * 60 * 1000);
+    timer = Timer.periodic(Duration(milliseconds: interval), (timer) {
       final int rounded = getRounded(), calculated = (durationMs - rounded);
       final DateTime result =
           DateTime.fromMillisecondsSinceEpoch(calculated, isUtc: true);
-      final double progress = (calculated / target).abs();
+      final double progress = ((rounded) / durationMs).abs();
 
       if (progress <= 0) timer.cancel();
 

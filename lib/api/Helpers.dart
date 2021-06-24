@@ -34,4 +34,9 @@ class Helpers {
         statusBarColor: color,
         statusBarIconBrightness: !dark ? Brightness.light : Brightness.dark));
   }
+
+  static String makeDoubleDigits(int number) {
+    final String stringified = number.toString();
+    return (stringified.length < 2) ? "0" + stringified : stringified;
+  }
 }

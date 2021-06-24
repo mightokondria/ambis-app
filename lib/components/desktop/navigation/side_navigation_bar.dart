@@ -78,52 +78,51 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
             Flexible(
               flex: 2,
               child: Container(
-                  color: mGreyColor,
                   child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: 30, right: _width - (_width * .95)),
-                      child: Builder(builder: (context) {
-                        //DASHBOARD == 0
-                        if (selectedIndex == 0) {
-                          return Dashboard();
-                        }
-                        //UPDATE == 1
-                        if (selectedIndex == 1) {
-                          return Update();
-                        }
-                        //TRYOUT == 2
-                        if (selectedIndex == 2) {
-                          return TryoutDataScreen(
-                            api: _api,
-                          );
-                        }
-                        //HISTORI TRYOUT == 3
-                        if (selectedIndex == 3) {
-                          return HistoriTryout();
-                        }
-                        //RANGKUMAN == 4
-                        if (selectedIndex == 4) {
-                          return Rangkuman();
-                        }
-                        //BEDAH JURUSAN == 5
-                        if (selectedIndex == 5) {
-                          return BedahJurusan();
-                        }
-                        //PENGATURAN
-                        if (selectedIndex == 6) {
-                          return Pengaturan();
-                        }
-                        //FeedBack
-                        if (selectedIndex == 7) {
-                          return FeedBack();
-                        }
+                padding: EdgeInsets.all(8),
+                child: Container(
+                  margin:
+                      EdgeInsets.only(left: 30, right: _width - (_width * .95)),
+                  child: Builder(builder: (context) {
+                    //DASHBOARD == 0
+                    if (selectedIndex == 0) {
+                      return Dashboard();
+                    }
+                    //UPDATE == 1
+                    if (selectedIndex == 1) {
+                      return Update();
+                    }
+                    //TRYOUT == 2
+                    if (selectedIndex == 2) {
+                      return TryoutDataScreen(
+                        api: _api,
+                      );
+                    }
+                    //HISTORI TRYOUT == 3
+                    if (selectedIndex == 3) {
+                      return HistoriTryout();
+                    }
+                    //RANGKUMAN == 4
+                    if (selectedIndex == 4) {
+                      return Rangkuman();
+                    }
+                    //BEDAH JURUSAN == 5
+                    if (selectedIndex == 5) {
+                      return BedahJurusan();
+                    }
+                    //PENGATURAN
+                    if (selectedIndex == 6) {
+                      return Pengaturan();
+                    }
+                    //FeedBack
+                    if (selectedIndex == 7) {
+                      return FeedBack();
+                    }
 
-                        return Container();
-                      }),
-                    ),
-                  )),
+                    return Container();
+                  }),
+                ),
+              )),
             )
           ],
         ),
