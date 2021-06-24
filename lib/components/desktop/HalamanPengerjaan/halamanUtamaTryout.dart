@@ -23,6 +23,7 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
   TryoutSession session;
   int posisiSoal = 0;
   API api;
+  Timer tryoutTimer;
 
   _HalamanUtamaTryoutState(this.data) {
     session = data['data'];
@@ -55,6 +56,31 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
     });
   }
 
+  akhiri() {
+    tryoutTimer.cancel();
+    api.tryout.akhiri(session);
+  }
+
+  akhiriFromUser() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text("Kamu yakin ingin mengakhiri sesi ini?"),
+            actions: [
+              TextButton(
+                child: Text("AKHIRI"),
+                onPressed: akhiri,
+              ),
+              TextButton(
+                child: Text("BATAL"),
+                onPressed: () => api.closeDialog(),
+              )
+            ],
+          );
+        });
+  }
+
   bool sudahDijawab(int noSoal) {
     bool dijawab = false;
 
@@ -77,7 +103,13 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                 child: Container(
                   child: Padding(
                     padding: EdgeInsets.only(top: 30, right: 130, left: 50),
-                    child: TryoutIdentityWidget(instance: this),
+                    child: Column(
+                      children: [
+                        TryoutTimerWidget(instance: this),
+                        SizedBox(height: 10),
+                        ListNomorSoal(instance: this)
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -89,14 +121,39 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
                   children: [
+                    TryoutTimerWidget(
+                      instance: this,
+                    ),
                     SizedBox(height: 30),
                     TryoutBody(
                       this,
                       mobile: true,
                     ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: CustomButton(
+                          enabled: posisiSoal > 0,
+                          onTap: () => pindahSoal(indexSoal: posisiSoal - 1),
+                          value: "<",
+                        )),
+                        SizedBox(width: 10),
+                        Expanded(
+                            child: CustomButton(
+                          enabled: posisiSoal < session.soal.length - 1,
+                          onTap: () => pindahSoal(indexSoal: posisiSoal + 1),
+                          value: ">",
+                        )),
+                      ],
+                    ),
                     SizedBox(height: 30),
-                    TryoutIdentityWidget(
-                      instance: this,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListMateriTryout(session.nmTryout, session.materi),
+                        ListNomorSoal(instance: this),
+                      ],
                     )
                   ],
                 ),
@@ -204,31 +261,27 @@ class PilihanJawaban extends StatelessWidget {
   }
 }
 
-class TryoutIdentityWidget extends StatefulWidget {
+class TryoutTimerWidget extends StatefulWidget {
   final _HalamanUtamaTryoutState instance;
 
-  const TryoutIdentityWidget({Key key, this.instance}) : super(key: key);
+  const TryoutTimerWidget({Key key, this.instance}) : super(key: key);
 
   @override
-  _TryoutIdentityWidgetState createState() =>
-      _TryoutIdentityWidgetState(instance);
+  _TryoutTimerWidgetState createState() => _TryoutTimerWidgetState(instance);
 }
 
-class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
+class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
   final _HalamanUtamaTryoutState instance;
-  List<int> nomorSoal;
   TryoutSession data;
   DateTime sisaWaktu = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
   double progressWaktu = 1;
   API api;
-  Timer tryoutTimer;
 
-  _TryoutIdentityWidgetState(this.instance) {
+  _TryoutTimerWidgetState(this.instance) {
     data = instance.session;
-    nomorSoal = this.data.soal.asMap().keys.toList();
     api = instance.api;
 
-    tryoutTimer = TryoutTimer(
+    instance.tryoutTimer = TryoutTimer(
         int.parse(data.durasi),
         data.timestamp,
         (date, progress) => setState(() {
@@ -282,9 +335,26 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
             }),
           ],
         ),
-        SizedBox(height: 10),
-        ListMateriTryout(data.nmTryout, data.materi),
-        SizedBox(height: 20),
+      ],
+    );
+  }
+}
+
+class ListNomorSoal extends StatelessWidget {
+  ListNomorSoal({
+    Key key,
+    @required this.instance,
+  }) {
+    nomorSoal = instance.session.soal.asMap().keys.toList();
+  }
+
+  final _HalamanUtamaTryoutState instance;
+  List<int> nomorSoal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
         GridView.count(
             mainAxisSpacing: 5,
             crossAxisSpacing: 5,
@@ -318,10 +388,7 @@ class _TryoutIdentityWidgetState extends State<TryoutIdentityWidget> {
         SizedBox(height: 20),
         CustomButton(
             value: "akhiri",
-            onTap: () {
-              tryoutTimer.cancel();
-              api.tryout.akhiri(data);
-            },
+            onTap: instance.akhiriFromUser,
             style: CustomButtonStyle(
                 color: Colors.redAccent, textColor: Colors.white))
       ],

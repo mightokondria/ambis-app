@@ -46,7 +46,7 @@ class API {
   BuildContext context;
 
   String defaultAPI =
-      !kReleaseMode ? "https://api.mentoring.web.id/" : "http://localhost/";
+      kReleaseMode ? "https://api.mentoring.web.id/" : "http://localhost/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
