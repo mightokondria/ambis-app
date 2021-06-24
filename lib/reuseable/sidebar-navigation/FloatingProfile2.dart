@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/Steps.dart';

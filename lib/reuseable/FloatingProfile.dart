@@ -1,16 +1,9 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-import 'package:mentoring_id/reuseable/Steps.dart';
 import 'package:mentoring_id/reuseable/fancies/ProfilePicture.dart';
-import 'package:mentoring_id/reuseable/fancies/circle.dart';
 import 'package:mentoring_id/reuseable/fancies/circle_icon.dart';
-import 'package:mentoring_id/reuseable/input/Clickable.dart';
-import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'package:mentoring_id/reuseable/input/SizedButton.dart';
 
-import 'fancies/Paket.dart';
 import 'fancies/XPbar.dart';
 
 class FloatingProfile extends StatefulWidget {
