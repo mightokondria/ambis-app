@@ -7,7 +7,7 @@ class InitialData {
   List<Akun> akun;
   bool ready, hasActiveSession = true;
   Invoice invoice;
-  ActiveTryoutSession activeTryoutSession;
+  SimplifiedTryoutSession activeTryoutSession;
 
   InitialData({this.akun, this.ready, this.invoice});
 
@@ -26,6 +26,6 @@ class InitialData {
     if (activeSessionRaw.runtimeType == bool)
       hasActiveSession = false;
     else
-      activeTryoutSession = ActiveTryoutSession.parse(activeSessionRaw);
+      activeTryoutSession = SimplifiedTryoutSession.parse(activeSessionRaw);
   }
 }

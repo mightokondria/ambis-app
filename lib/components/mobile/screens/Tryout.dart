@@ -3,9 +3,7 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/Helpers.dart';
 import 'package:mentoring_id/api/handlers/Tryout.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
-import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-import 'package:mentoring_id/reuseable/Chip.dart';
 import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:mentoring_id/reuseable/TryoutList.dart';
 
@@ -27,7 +25,6 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
 
   List<Kategori> data = [], searchResult = [];
   String selected = TryoutHandler.defaultKategori;
-  bool empty = false;
 
   @override
   void initState() {
@@ -46,7 +43,7 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
       List<TryoutList> children = [];
 
       (searchResult.isEmpty ? data : searchResult).forEach((val) {
-        if (val.nmKategori == e)
+        if (val.nmKategori.toLowerCase() == e.toLowerCase())
           children = val.tryout.map((e) => TryoutList(e, api)).toList();
       });
 
@@ -58,6 +55,7 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
         child: Container(
           width: double.infinity,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MobileTryoutHeader(),
               SizedBox(height: 20),
@@ -88,10 +86,7 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
                 ),
               ),
               MobileTryoutCategory(
-                  parent: this,
-                  category: cats[3],
-                  children:
-                      empty ? [TryoutHandler.notFoundMessage] : widgets[3]),
+                  parent: this, category: cats[3], children: widgets[3]),
             ],
           ),
         ),
@@ -114,9 +109,7 @@ class MobileTryoutCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    parent.empty = children.isEmpty;
-
-    if (parent.empty) return Container();
+    if (children.isEmpty) return Container();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

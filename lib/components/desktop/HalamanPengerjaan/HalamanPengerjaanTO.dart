@@ -20,15 +20,18 @@ class _HalamanPengerjaanTOState extends State<HalamanPengerjaanTO> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Scrollbar(
-          controller: scrollController,
-          isAlwaysShown: true,
-          child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              controller: scrollController,
-              child: HalamanUtamaTryout(data: args))),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Scrollbar(
+            controller: scrollController,
+            isAlwaysShown: true,
+            child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                controller: scrollController,
+                child: HalamanUtamaTryout(data: args))),
+      ),
     );
   }
 }

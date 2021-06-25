@@ -128,12 +128,26 @@ class Pilihan {
   }
 }
 
-class ActiveTryoutSession {
+class SimplifiedTryoutSession {
   String nop, nmp, session;
 
-  ActiveTryoutSession.parse(Map<String, dynamic> data) {
+  SimplifiedTryoutSession.parse(Map<String, dynamic> data) {
     nop = data['nop'].toString();
     nmp = data['nmp'];
     session = data['session'];
+  }
+}
+
+class HistoryTryoutSession {
+  SimplifiedTryoutSession session;
+  int nilai, peringkat, jumlahPeserta;
+  String date;
+
+  HistoryTryoutSession.parse(Map<String, dynamic> data) {
+    session = SimplifiedTryoutSession.parse(data);
+    nilai = data['nilai'];
+    date = data['date'];
+    peringkat = data['peringkat'];
+    jumlahPeserta = data['jumlah_peserta'];
   }
 }

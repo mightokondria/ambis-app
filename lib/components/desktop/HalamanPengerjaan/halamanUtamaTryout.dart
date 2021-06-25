@@ -69,9 +69,11 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
             content: Text("Kamu yakin ingin mengakhiri sesi ini?"),
             actions: [
               TextButton(
-                child: Text("AKHIRI"),
-                onPressed: akhiri,
-              ),
+                  child: Text("AKHIRI"),
+                  onPressed: () {
+                    akhiri();
+                    api.closeDialog();
+                  }),
               TextButton(
                 child: Text("BATAL"),
                 onPressed: () => api.closeDialog(),
@@ -152,6 +154,7 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListMateriTryout(session.nmTryout, session.materi),
+                        SizedBox(height: 10),
                         ListNomorSoal(instance: this),
                       ],
                     )
@@ -281,14 +284,14 @@ class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
     data = instance.session;
     api = instance.api;
 
-    instance.tryoutTimer = TryoutTimer(
-        int.parse(data.durasi),
-        data.timestamp,
-        (date, progress) => setState(() {
-              sisaWaktu = date;
-              progressWaktu = progress;
-            })).timer;
+    instance.tryoutTimer =
+        TryoutTimer(int.parse(data.durasi), data.timestamp, updateDate).timer;
   }
+
+  updateDate(DateTime date, double progress) => setState(() {
+        sisaWaktu = date;
+        progressWaktu = progress;
+      });
 
   BoxDecoration getTimerDecoration({bool active: false, Color color}) {
     return BoxDecoration(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
+import 'package:mentoring_id/components/mobile/features/HistoryTryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
 import 'api/Helpers.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         final List<String> route = settings.name.split("/");
         Widget child = Home();
+        child = HistoryTryout();
 
         if (route[1] == HalamanPengerjaanTO.name)
           child = HalamanPengerjaanTO(settings.arguments);
@@ -35,6 +37,17 @@ class MyApp extends StatelessWidget {
             Animation<double> animation, Animation<double> secondaryAnimation) {
           final scaleTransition =
               Tween<double>(begin: .9, end: 1).animate(animation);
+          final bool isMobile = MediaQuery.of(context).size.width < 768;
+
+          if (isMobile) {
+            final slideTransition =
+                Tween<Offset>(begin: Offset(0, .5), end: Offset(0, 0))
+                    .animate(animation);
+            return SlideTransition(
+              position: slideTransition,
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          }
 
           return FadeTransition(
             opacity: animation,
@@ -70,14 +83,20 @@ class Home extends StatelessWidget {
           return Disconnected(api: api);
         } else if (!snapshot.hasData) return Splash();
 
-        return Scaffold(body: Builder(builder: (context) {
-          api.context = context;
+        return Scaffold(
+            body: GestureDetector(
+          onTapDown: (_) {
+            FocusScope.of(context).unfocus();
+          },
+          child: Builder(builder: (context) {
+            api.context = context;
 
-          return ScreenAdapter(
-            api: api,
-            width: width,
-          );
-        }));
+            return ScreenAdapter(
+              api: api,
+              width: width,
+            );
+          }),
+        ));
       },
     );
   }

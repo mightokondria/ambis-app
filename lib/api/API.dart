@@ -45,8 +45,7 @@ class API {
   // CONTEXT WITH NAVIGATOR
   BuildContext context;
 
-  String defaultAPI =
-      kReleaseMode ? "https://api.mentoring.web.id/" : "http://localhost/";
+  String defaultAPI = "https://api.mentoring.web.id/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -235,7 +234,7 @@ class API {
   initActions() {
     if (data != null) {
       final InitialData initialData = data.initialData;
-      final ActiveTryoutSession activeTryoutSession =
+      final SimplifiedTryoutSession activeTryoutSession =
           initialData.activeTryoutSession;
 
       // IF USER HAS ACTIVE SESSION
@@ -244,7 +243,7 @@ class API {
             path: "tryout/kerjakan_sesi",
             method: "POST",
             body: {"session": activeTryoutSession.session}).then((value) {
-          showSnackbar(content: Text("Tryout ini belum kamu kerjakan"));
+          showSnackbar(content: Text("Tryout ini belum kamu selesaikan"));
           tryout.kerjakan(activeTryoutSession.nop, value.body);
         });
     }
