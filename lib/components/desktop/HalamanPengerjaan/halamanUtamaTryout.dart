@@ -2,15 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/api/Helpers.dart';
-import 'package:mentoring_id/api/TryoutTimer.dart';
+import 'package:mentoring_id/class/Args.dart';
+import 'package:mentoring_id/class/Helpers.dart';
+import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class HalamanUtamaTryout extends StatefulWidget {
-  final Map<String, dynamic> data;
+  final Args data;
 
   const HalamanUtamaTryout({Key key, this.data}) : super(key: key);
 
@@ -19,15 +20,15 @@ class HalamanUtamaTryout extends StatefulWidget {
 }
 
 class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
-  final Map<String, dynamic> data;
+  final Args data;
   TryoutSession session;
   int posisiSoal = 0;
   API api;
   Timer tryoutTimer;
 
   _HalamanUtamaTryoutState(this.data) {
-    session = data['data'];
-    api = data['api'];
+    session = data.data['session'];
+    api = data.api;
   }
 
   pindahSoal({int indexSoal}) {
@@ -62,25 +63,26 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
   }
 
   akhiriFromUser() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text("Kamu yakin ingin mengakhiri sesi ini?"),
-            actions: [
-              TextButton(
-                  child: Text("AKHIRI"),
-                  onPressed: () {
-                    akhiri();
-                    api.closeDialog();
-                  }),
-              TextButton(
-                child: Text("BATAL"),
-                onPressed: () => api.closeDialog(),
-              )
-            ],
-          );
-        });
+    // showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return DialogElement(
+    //         child: Text("Kamu yakin ingin mengakhiri sesi ini?"),
+    //         // actions: [
+    //         //   TextButton(
+    //         //       child: Text("AKHIRI"),
+    //         //       onPressed: () {
+    //         //         akhiri();
+    //         //         api.closeDialog();
+    //         //       }),
+    //         //   TextButton(
+    //         //     child: Text("BATAL"),
+    //         //     onPressed: () => api.closeDialog(),
+    //         //   )
+    //         // ],
+    //       );
+    //     });
+    api.ui.showTryoutEndConfirmationDialog(akhiri);
   }
 
   bool sudahDijawab(int noSoal) {
@@ -283,15 +285,14 @@ class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
   _TryoutTimerWidgetState(this.instance) {
     data = instance.session;
     api = instance.api;
-
-    instance.tryoutTimer =
-        TryoutTimer(int.parse(data.durasi), data.timestamp, updateDate).timer;
   }
 
-  updateDate(DateTime date, double progress) => setState(() {
-        sisaWaktu = date;
-        progressWaktu = progress;
-      });
+  updateDate(DateTime date, double progress) {
+    setState(() {
+      sisaWaktu = date;
+      progressWaktu = progress;
+    });
+  }
 
   BoxDecoration getTimerDecoration({bool active: false, Color color}) {
     return BoxDecoration(
@@ -300,6 +301,11 @@ class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
   }
 
   Widget build(BuildContext context) {
+    if (instance.tryoutTimer == null)
+      Timer.run(() => instance.tryoutTimer =
+          TryoutTimer(int.parse(data.durasi), data.timestamp, updateDate)
+              .timer);
+
     final List<int> waktu = [
       sisaWaktu.hour,
       sisaWaktu.minute,

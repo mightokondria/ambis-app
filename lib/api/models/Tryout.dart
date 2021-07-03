@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class DataTryout {
   String noKategori;
   String nmKategori;
@@ -73,6 +71,15 @@ class Tryout {
   }
 }
 
+class TryoutMateri {
+  String nmMateri, noSesi;
+
+  TryoutMateri.fromJson(Map<String, dynamic> data) {
+    nmMateri = data["nm_materi"];
+    noSesi = data["no_materi"];
+  }
+}
+
 class TryoutSession {
   String nmMateri, nmTryout, session, noTryout, durasi, noSesi;
   bool selesai;
@@ -135,19 +142,5 @@ class SimplifiedTryoutSession {
     nop = data['nop'].toString();
     nmp = data['nmp'];
     session = data['session'];
-  }
-}
-
-class HistoryTryoutSession {
-  SimplifiedTryoutSession session;
-  int nilai, peringkat, jumlahPeserta;
-  String date;
-
-  HistoryTryoutSession.parse(Map<String, dynamic> data) {
-    session = SimplifiedTryoutSession.parse(data);
-    nilai = data['nilai'];
-    date = data['date'];
-    peringkat = data['peringkat'];
-    jumlahPeserta = data['jumlah_peserta'];
   }
 }

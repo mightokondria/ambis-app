@@ -95,8 +95,10 @@ class TryoutHandler {
           });
 
     Navigator.pushNamed(api.context, "/kerjain", arguments: {
-      "no_paket": noPaket,
-      "data": TryoutSession.parse(api.safeDecoder(data)),
+      "data": {
+        "session": TryoutSession.parse(api.safeDecoder(data)),
+        "no_paket": noPaket
+      },
       "api": api
     });
   }

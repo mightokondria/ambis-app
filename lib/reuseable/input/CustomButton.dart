@@ -86,4 +86,83 @@ abstract class DialogButtonsGroupItems {
   bool shadow;
 }
 
-class DialogButtonGroup {}
+class CustomButtonTab extends StatelessWidget {
+  final Color inactiveColor, activeColor;
+  final List<_CustomButtonTabButton> buttons;
+  final Function(int) onChange;
+
+  static _CustomButtonTabButton button(String value) =>
+      _CustomButtonTabButton(value);
+
+  CustomButtonTab(
+      this.inactiveColor, this.activeColor, this.buttons, this.onChange);
+
+  @override
+  Widget build(BuildContext context) {
+    return _CustomButtonTabElement(
+      children: buttons,
+      onChange: onChange,
+      color: inactiveColor,
+      activeColor: activeColor,
+    );
+  }
+}
+
+class _CustomButtonTabButton {
+  final String value;
+
+  _CustomButtonTabButton(this.value);
+}
+
+class _CustomButtonTabElement extends StatefulWidget {
+  final List<_CustomButtonTabButton> children;
+  final Color color, activeColor;
+  final Function(int) onChange;
+
+  const _CustomButtonTabElement(
+      {Key key, this.color, this.activeColor, this.children, this.onChange})
+      : super(key: key);
+
+  @override
+  __CustomButtonTabElementState createState() =>
+      __CustomButtonTabElementState();
+}
+
+class __CustomButtonTabElementState extends State<_CustomButtonTabElement> {
+  int index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> childrenWidget = [];
+
+    widget.children.asMap().forEach((e, v) {
+      childrenWidget.add(GestureDetector(
+        onTap: () => setState(() {
+          widget.onChange(e + 1);
+          index = e;
+        }),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          color: (index == e)
+              ? widget.activeColor
+              : widget.activeColor.withOpacity(.2),
+          child: Text(v.value,
+              style: TextStyle(
+                  color: (index == e) ? widget.color : widget.activeColor)),
+        ),
+      ));
+    });
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: childrenWidget,
+      ),
+    );
+  }
+}

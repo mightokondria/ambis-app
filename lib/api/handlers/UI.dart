@@ -89,4 +89,14 @@ class UI {
           children: [child],
         ));
   }
+
+  showTryoutEndConfirmationDialog(Function onEnd) {
+    final Widget child = dialog.tryoutEndConfirmationDialog(onEnd);
+
+    showModal(
+        desktop: child,
+        mobile: Wrap(
+          children: [child],
+        ));
+  }
 }

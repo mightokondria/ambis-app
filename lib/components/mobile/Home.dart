@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/api/Helpers.dart';
+import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/components/mobile/screens/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
@@ -36,7 +36,13 @@ class _HomeState extends State<Home> {
           Expanded(
             child: IndexedStack(index: activeIndex - 1, children: [
               Container(),
-              Container(),
+              Center(
+                  child: ElevatedButton(
+                child: Text("History tryout"),
+                onPressed: () {
+                  api.nilai.getHistory();
+                },
+              )),
               TryoutDataScreen(api),
               Container(),
             ]),

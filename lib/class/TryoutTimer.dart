@@ -34,6 +34,9 @@ class TryoutTimer {
 
       callback(result, 1 - progress);
     });
+
+    // INITIAL CALL
+    callback(DateTime.fromMillisecondsSinceEpoch(0, isUtc: true), 1);
   }
 
   int getRounded() {

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
-import 'package:mentoring_id/components/mobile/features/HistoryTryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
-import 'api/Helpers.dart';
+import 'class/Helpers.dart';
 import 'components/Splash.dart';
 import 'components/desktop/HalamanPengerjaan/HalamanPengerjaanTO.dart';
+import 'components/features/HistoryTryout.dart';
+import 'components/features/NilaiTryout.dart';
 
 // MENGGOKIL
 
@@ -27,11 +29,11 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       onGenerateRoute: (settings) {
         final List<String> route = settings.name.split("/");
+        final Args args = settings.arguments;
         Widget child = Home();
-        child = HistoryTryout();
+        // child = NilaiTryout.mobile();
 
-        if (route[1] == HalamanPengerjaanTO.name)
-          child = HalamanPengerjaanTO(settings.arguments);
+        Helpers.changeStatusBarColor();
 
         return PageRouteBuilder(pageBuilder: (BuildContext context,
             Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -39,13 +41,24 @@ class MyApp extends StatelessWidget {
               Tween<double>(begin: .9, end: 1).animate(animation);
           final bool isMobile = MediaQuery.of(context).size.width < 768;
 
+          if (route[1] == HalamanPengerjaanTO.name)
+            child = HalamanPengerjaanTO(args);
+          else if (route[1] == HistoryTryout.route)
+            child = isMobile
+                ? HistoryTryout.mobile(args)
+                : HistoryTryout.desktop(args);
+          else if (route[1] == NilaiTryout.route)
+            child =
+                isMobile ? NilaiTryout.mobile(args) : NilaiTryout.desktop(args);
+
           if (isMobile) {
             final slideTransition =
-                Tween<Offset>(begin: Offset(0, .5), end: Offset(0, 0))
-                    .animate(animation);
+                Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)).animate(
+                    CurvedAnimation(
+                        parent: animation, curve: Curves.easeInOut));
             return SlideTransition(
               position: slideTransition,
-              child: FadeTransition(opacity: animation, child: child),
+              child: child,
             );
           }
 

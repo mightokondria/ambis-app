@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class Helpers {
+abstract class Helpers {
   static final money = NumberFormat("##,###.00", "in-ID");
 
   static String moneify(int amount) {

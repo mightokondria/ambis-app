@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/desktop/HalamanPengerjaan/HalamanUtamaTryout.dart';
 
 class HalamanPengerjaanTO extends StatefulWidget {
   static String name = "kerjain";
-  final Map<String, dynamic> args;
+  final Args args;
 
   const HalamanPengerjaanTO(this.args, {Key key}) : super(key: key);
 
@@ -13,7 +14,7 @@ class HalamanPengerjaanTO extends StatefulWidget {
 }
 
 class _HalamanPengerjaanTOState extends State<HalamanPengerjaanTO> {
-  final Map<String, dynamic> args;
+  final Args args;
   final ScrollController scrollController = ScrollController();
 
   _HalamanPengerjaanTOState(this.args);

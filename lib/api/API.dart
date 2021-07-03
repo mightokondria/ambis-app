@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
+import 'package:mentoring_id/api/handlers/Nilai.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
 import 'package:mentoring_id/api/models/InitialData.dart';
@@ -60,6 +61,7 @@ class API {
   DataSiswa dataSiswa;
   InvoiceHandler invoice;
   TryoutHandler tryout;
+  NilaiHandler nilai;
 
   // CONSTRUCT
   API(this.context);
@@ -118,7 +120,7 @@ class API {
   // END SCREEN ADAPTER HELPERS
 
   dynamic safeDecoder(String source) {
-    Map<String, dynamic> data;
+    dynamic data;
 
     try {
       data = jsonDecode(source);
@@ -126,6 +128,7 @@ class API {
       showSnackbar(
           content: Text("Oops! Sepertinya ada yang salah"),
           action: SnackBarAction(label: "Laporkan", onPressed: () {}));
+      print(e);
     }
 
     return data;
@@ -256,6 +259,7 @@ class API {
     dataSiswa = DataSiswa(this);
     invoice = InvoiceHandler(this);
     tryout = TryoutHandler(this);
+    nilai = NilaiHandler(this);
   }
 
   initScreenAdapter(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/api/TryoutTimer.dart';
+import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/LoginForm.dart';
@@ -233,6 +233,49 @@ class Dialogs {
             ]),
       ),
     );
+  }
+
+  Widget tryoutEndConfirmationDialog(Function onEnd) {
+    return Center(
+        child: DialogElement(
+      horizontalDesktopPadding: 30,
+      api: api,
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Konfirmasi",
+                style: TextStyle(
+                  color: Color(0xFF555555),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                )),
+            SizedBox(height: 10),
+            Text("Kamu yakin mau mengakhiri sesi ini?",
+                style: TextStyle(color: Color(0xFF999999))),
+            SizedBox(height: 30),
+            Row(children: [
+              Expanded(
+                  child: CustomButton(
+                      value: "akhiri",
+                      onTap: () {
+                        api.closeDialog();
+                        onEnd();
+                      },
+                      fill: false)),
+              SizedBox(width: 5),
+              Expanded(
+                child: CustomButton(
+                    value: "batal",
+                    style: CustomButtonStyle.semiPrimary(),
+                    onTap: () => api.closeDialog(),
+                    fill: false),
+              ),
+            ]),
+          ],
+        ),
+      ),
+    ));
   }
 }
 

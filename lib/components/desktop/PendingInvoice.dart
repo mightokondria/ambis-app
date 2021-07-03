@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:mentoring_id/api/Helpers.dart';
+import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/api/models/Invoice.dart';
 
 import 'package:mentoring_id/constants/color_const.dart';
