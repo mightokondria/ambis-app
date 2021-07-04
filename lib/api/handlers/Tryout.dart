@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
+import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
@@ -94,13 +95,11 @@ class TryoutHandler {
             );
           });
 
-    Navigator.pushNamed(api.context, "/kerjain", arguments: {
-      "data": {
-        "session": TryoutSession.parse(api.safeDecoder(data)),
-        "no_paket": noPaket
-      },
-      "api": api
-    });
+    Navigator.pushNamed(api.context, "/kerjain",
+        arguments: Args(data: {
+          "session": TryoutSession.parse(api.safeDecoder(data)),
+          "no_paket": noPaket
+        }, api: api));
   }
 
   Future<Response> jawabSoal(String session, String noSesi, Pilihan data) {
@@ -113,17 +112,18 @@ class TryoutHandler {
   }
 
   akhiri(TryoutSession data) {
-    api.request(
-        path: "tryout/akhiri",
-        method: "POST",
-        body: {"session": data.session, "no_sesi": data.noSesi}).then((value) {
+    api.request(path: "tryout/akhiri", method: "POST", body: {
+      "session": data.session,
+      "no_sesi": data.noSesi
+    }).then((value) async {
       final Map<String, dynamic> parsed = api.safeDecoder(value.body);
 
       api.closeDialog();
 
-      // TODO : Add action when session ends
-      if (parsed.containsKey("status") && parsed['status'] == "sessionEnded")
-        return null;
+      if (parsed.containsKey("status") && parsed['status'] == "sessionEnded") {
+        await api.nilai.getNilai(data.session);
+        return api.nilai.cacheHistory();
+      }
 
       api.showSnackbar(content: Text("Sesi berikutnya. Semangat!!💪😆"));
       kerjakan(

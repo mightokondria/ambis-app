@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/desktop/screens/Dashboard.dart';
 import 'package:mentoring_id/components/desktop/screens/Tryout.dart';
 import 'package:mentoring_id/components/desktop/screens/Update.dart';
 import 'package:mentoring_id/components/desktop/screens/bedah_jurusan.dart';
 import 'package:mentoring_id/components/desktop/screens/feedback.dart';
-import 'package:mentoring_id/components/desktop/screens/histori_tryout.dart';
 import 'package:mentoring_id/components/desktop/screens/pengaturan.dart';
 import 'package:mentoring_id/components/desktop/screens/rangkuman.dart';
-import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/components/features/HistoryTryout.dart';
 import 'package:mentoring_id/reuseable/sidebar-navigation/DesktopSidebar.dart';
 
 class SideNavigationBar extends StatefulWidget {
@@ -37,10 +37,9 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    ScrollController sidebarNavigationScroll = ScrollController();
-    ScrollController contentScrollController = ScrollController();
+    final Size size = MediaQuery.of(context).size;
+    final double _width = size.width;
+    final ScrollController contentScrollController = ScrollController();
 
     return Scrollbar(
       isAlwaysShown: true,
@@ -100,7 +99,8 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                     }
                     //HISTORI TRYOUT == 3
                     if (selectedIndex == 3) {
-                      return HistoriTryout();
+                      return HistoryTryout.desktop(Args(
+                          api: widget.api, data: widget.api.nilai.historia));
                     }
                     //RANGKUMAN == 4
                     if (selectedIndex == 4) {

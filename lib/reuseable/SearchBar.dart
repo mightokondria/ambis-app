@@ -5,25 +5,31 @@ import 'package:mentoring_id/reuseable/input/Clickable.dart';
 class SearchBar extends StatefulWidget {
   final Function(String value, bool empty) onSubmit;
   final String placeholder;
+  final BorderRadius radius;
+  final Color color;
+  final bool shadow;
 
-  const SearchBar({Key key, this.onSubmit, this.placeholder: "Pencarian..."})
+  const SearchBar(
+      {Key key,
+      this.onSubmit,
+      this.placeholder: "Pencarian...",
+      this.radius,
+      this.color: Colors.white,
+      this.shadow: true})
       : super(key: key);
 
   @override
-  _SearchBarState createState() => _SearchBarState(onSubmit, placeholder);
+  _SearchBarState createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
-  final Function(String value, bool empty) onSubmit;
-  final String placeholder;
   final TextEditingController searchController = TextEditingController();
 
-  double KDefaultPadding = 60;
+  double kDefaultPadding = 60;
 
-  _SearchBarState(this.onSubmit, this.placeholder);
-
-  onSubmitCallback(String val) =>
-      (onSubmit != null) ? onSubmit(val, val.isEmpty) : null;
+  onSubmitCallback(String val) => (widget.createElement() != null)
+      ? widget.onSubmit(val, val.isEmpty)
+      : null;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +38,18 @@ class _SearchBarState extends State<SearchBar> {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(50),
-          boxShadow: [
-            BoxShadow(
-                offset: Offset(0, 4),
-                blurRadius: 6,
-                color: Colors.black26.withOpacity(0.06)),
-          ]),
+          color: widget.color,
+          borderRadius: (widget.radius == null)
+              ? BorderRadius.circular(50)
+              : widget.radius,
+          boxShadow: widget.shadow
+              ? [
+                  BoxShadow(
+                      offset: Offset(0, 4),
+                      blurRadius: 6,
+                      color: Colors.black26.withOpacity(0.06)),
+                ]
+              : []),
       child: Row(
         children: [
           Expanded(
@@ -48,7 +58,7 @@ class _SearchBarState extends State<SearchBar> {
               onChanged: onSubmitCallback,
               controller: searchController,
               decoration: InputDecoration(
-                hintText: placeholder,
+                hintText: widget.placeholder,
                 hintStyle: TextStyle(color: Colors.black26.withOpacity(0.2)),
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,

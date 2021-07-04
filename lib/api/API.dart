@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
@@ -18,7 +17,6 @@ import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
 import 'handlers/DataSiswa.dart';
 import 'handlers/Jurusan.dart';
 import 'handlers/Tryout.dart';
@@ -234,7 +232,7 @@ class API {
     return initialState;
   }
 
-  initActions() {
+  initActions() async {
     if (data != null) {
       final InitialData initialData = data.initialData;
       final SimplifiedTryoutSession activeTryoutSession =
@@ -249,6 +247,8 @@ class API {
           showSnackbar(content: Text("Tryout ini belum kamu selesaikan"));
           tryout.kerjakan(activeTryoutSession.nop, value.body);
         });
+
+      await nilai.cacheHistory();
     }
   }
 
@@ -263,7 +263,7 @@ class API {
   }
 
   initScreenAdapter(
-      ScreenAdapterState adapter, InitialScreen initialScreenInstance) {
+      ScreenAdapterState adapter, InitialScreen initialScreenInstance) async {
     screenAdapter = adapter;
     initialScreens = initialScreenInstance;
 
@@ -271,7 +271,7 @@ class API {
     initHandlers();
 
     // INIT ALL FIRST ACTIONS
-    initActions();
+    await initActions();
 
     buildInitialScreen();
   }

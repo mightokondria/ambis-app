@@ -8,7 +8,8 @@ class HistoryTryoutSession {
 
   HistoryTryoutSession.parse(Map<String, dynamic> data) {
     session = SimplifiedTryoutSession.parse(data);
-    nilai = data['nilai'].toDouble();
+    if (data.containsKey('nilai')) nilai = data['nilai'].toDouble();
+
     date = data['date'];
     jumlahPeserta = data['jumlah_peserta'];
     peringkat = PeringkatModel.parse(data['peringkat']);
@@ -47,7 +48,7 @@ class NilaiPaket {
   NilaiPaket(Map<String, dynamic> json) {
     nilai = HistoryTryoutSession.parse(json);
 
-    json["data"].forEach((e) => NilaiTryoutModel(e));
+    json["data"].forEach((e) => data.add(NilaiTryoutModel(e)));
   }
 }
 

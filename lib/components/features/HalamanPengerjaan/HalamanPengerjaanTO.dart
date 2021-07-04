@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/class/Args.dart';
-import 'package:mentoring_id/components/desktop/HalamanPengerjaan/HalamanUtamaTryout.dart';
+import 'package:mentoring_id/components/features/HalamanPengerjaan/HalamanUtamaTryout.dart';
 
-class HalamanPengerjaanTO extends StatefulWidget {
-  static String name = "kerjain";
-  final Args args;
-
-  const HalamanPengerjaanTO(this.args, {Key key}) : super(key: key);
-
-  @override
-  _HalamanPengerjaanTOState createState() =>
-      _HalamanPengerjaanTOState(this.args);
-}
-
-class _HalamanPengerjaanTOState extends State<HalamanPengerjaanTO> {
+class HalamanPengerjaanTO extends StatelessWidget {
   final Args args;
   final ScrollController scrollController = ScrollController();
 
-  _HalamanPengerjaanTOState(this.args);
+  static String route = "kerjain";
+
+  HalamanPengerjaanTO({Key key, this.args}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

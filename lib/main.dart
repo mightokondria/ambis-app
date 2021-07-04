@@ -4,11 +4,12 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
+import 'package:mentoring_id/components/features/HalamanPembahasan.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
 import 'class/Helpers.dart';
 import 'components/Splash.dart';
-import 'components/desktop/HalamanPengerjaan/HalamanPengerjaanTO.dart';
+import 'components/features/HalamanPengerjaan/HalamanPengerjaanTO.dart';
 import 'components/features/HistoryTryout.dart';
 import 'components/features/NilaiTryout.dart';
 
@@ -31,7 +32,6 @@ class MyApp extends StatelessWidget {
         final List<String> route = settings.name.split("/");
         final Args args = settings.arguments;
         Widget child = Home();
-        // child = NilaiTryout.mobile();
 
         Helpers.changeStatusBarColor();
 
@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
               Tween<double>(begin: .9, end: 1).animate(animation);
           final bool isMobile = MediaQuery.of(context).size.width < 768;
 
-          if (route[1] == HalamanPengerjaanTO.name)
-            child = HalamanPengerjaanTO(args);
+          if (route[1] == HalamanPengerjaanTO.route)
+            child = HalamanPengerjaanTO(args: args);
           else if (route[1] == HistoryTryout.route)
             child = isMobile
                 ? HistoryTryout.mobile(args)
@@ -50,6 +50,10 @@ class MyApp extends StatelessWidget {
           else if (route[1] == NilaiTryout.route)
             child =
                 isMobile ? NilaiTryout.mobile(args) : NilaiTryout.desktop(args);
+          else if (route[1] == HalamanPembahasan.route)
+            child = HalamanPembahasan(
+              args: args,
+            );
 
           if (isMobile) {
             final slideTransition =

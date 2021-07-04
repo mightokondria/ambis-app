@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Args.dart';
-import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/api/models/Nilai.dart';
 import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/ScoreBoard.dart';
+import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 abstract class HistoryTryout {
   static String route = "history_tryout";
@@ -15,7 +15,7 @@ abstract class HistoryTryout {
   }
 
   static Widget desktop(Args data) {
-    return null;
+    return _HistoryTryoutDesktop(data: data);
   }
 
   static List<double> calculateIkhtisar(List<HistoryTryoutSession> sessions) {
@@ -46,50 +46,94 @@ abstract class HistoryTryout {
 
   static Widget history(List<HistoryTryoutSession> sessions,
       {@required API api, @required BuildContext context, bool mobile: false}) {
-    return sessions.isNotEmpty
-        ? GridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            children: sessions
-                .map((data) => GestureDetector(
-                      onTap: () => api.nilai.api.nilai.api.nilai.api.nilai
-                          .getNilai(data.session.session),
-                      child: TryoutHistoryElement(
-                          session: data, api: api, mobile: mobile),
-                    ))
-                .toList(),
-          )
-        : Column(
-            children: [
-              SizedBox(height: 50),
-              Messages.message(
-                  image: AssetImage("assets/img/msg/404.png"),
-                  title: "Kosong",
-                  content:
-                      "History tryout kamu masih kosong, lho! Yuk kerjain tryout dulu!"),
-            ],
-          );
+    final List<Widget> children = sessions
+        .map((data) => GestureDetector(
+              onTap: () => api.nilai.api.nilai.api.nilai.api.nilai
+                  .getNilai(data.session.session),
+              child:
+                  TryoutHistoryElement(session: data, api: api, mobile: mobile),
+            ))
+        .toList();
+
+    if (sessions.isNotEmpty)
+      return api.screenAdapter.isDesktop
+          ? Wrap(children: children, spacing: 10, runSpacing: 10)
+          : GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: children,
+            );
+
+    return Column(
+      children: [
+        SizedBox(height: 50),
+        Messages.message(
+            image: AssetImage("assets/img/msg/404.png"),
+            title: "Kosong",
+            content:
+                "History tryout kamu masih kosong, lho! Yuk kerjain tryout dulu!"),
+      ],
+    );
   }
 }
 
-class _HistoryTryoutMobile extends StatefulWidget {
-  final Object data;
+class _HistoryTryoutDesktop extends StatelessWidget {
+  final Args data;
 
-  const _HistoryTryoutMobile({Key key, this.data}) : super(key: key);
+  const _HistoryTryoutDesktop({Key key, this.data}) : super(key: key);
 
   @override
-  _HistoryTryoutMobileState createState() => _HistoryTryoutMobileState(data);
+  Widget build(BuildContext context) {
+    final List<double> ikhtisar = HistoryTryout.calculateIkhtisar(data.data);
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 30,
+          ),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 630),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ScoreBoard(
+                  title: "Peringkat tertinggi",
+                  score: ikhtisar[0].toString(),
+                  fontSize: 50,
+                  textColor: Color(0xFF777777),
+                ),
+                ScoreBoard(
+                  title: "Nilai tertinggi",
+                  score: ikhtisar[1].round().toString(),
+                  fontSize: 50,
+                  textColor: Color(0xFF777777),
+                ),
+                ScoreBoard(
+                  title: "Rata-rata",
+                  score: ikhtisar[2].round().toString(),
+                  fontSize: 50,
+                  textColor: Color(0xFF777777),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 30),
+          HistoryTryout.history(data.data, api: data.api, context: context)
+        ],
+      ),
+    );
+  }
 }
 
-class _HistoryTryoutMobileState extends State<_HistoryTryoutMobile> {
+class _HistoryTryoutMobile extends StatelessWidget {
   final Args data;
   List<HistoryTryoutSession> sessions;
   API api;
 
-  _HistoryTryoutMobileState(this.data) {
+  _HistoryTryoutMobile({this.data}) {
     sessions = data.data;
     api = data.api;
   }
@@ -210,34 +254,38 @@ class TryoutHistoryElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: mobile
-          ? BoxDecoration(
-              border: Border.all(width: 1.3, color: Color(0xFFEEEEEE)),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            )
-          : CustomCard.decoration(),
-      padding: EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            ((session.nilai != null) ? session.nilai.round() : 0).toString(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-                color: Color(0xFF555555)),
-          ),
-          SizedBox(height: 10),
-          Text(session.session.nmp,
+    return Clickable(
+      child: Container(
+        constraints:
+            mobile ? null : BoxConstraints(minWidth: 180, minHeight: 150),
+        decoration: mobile
+            ? BoxDecoration(
+                border: Border.all(width: 1.3, color: Color(0xFFEEEEEE)),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              )
+            : CustomCard.decoration(),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              ((session.nilai != null) ? session.nilai.round() : 0).toString(),
               style: TextStyle(
-                  color: Color(0xFF777777),
                   fontWeight: FontWeight.bold,
-                  fontSize: 12)),
-          Text(session.date,
-              style: TextStyle(color: Color(0xFFB5B5B5), fontSize: 12)),
-        ],
+                  fontSize: 40,
+                  color: Color(0xFF555555)),
+            ),
+            SizedBox(height: 10),
+            Text(session.session.nmp,
+                style: TextStyle(
+                    color: Color(0xFF777777),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12)),
+            Text(session.date,
+                style: TextStyle(color: Color(0xFFB5B5B5), fontSize: 12)),
+          ],
+        ),
       ),
     );
   }

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class ScoreBoard extends StatelessWidget {
   final String title, score;
   final Color textColor;
+  final double fontSize;
 
   const ScoreBoard({
     Key key,
     this.title,
     this.score,
     this.textColor: Colors.white,
+    this.fontSize: 36,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,9 @@ class ScoreBoard extends StatelessWidget {
           Text(
             score,
             style: TextStyle(
-                color: textColor, fontWeight: FontWeight.bold, fontSize: 36),
+                color: textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: fontSize),
           )
         ],
       ),

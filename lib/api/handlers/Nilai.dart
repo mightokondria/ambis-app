@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/models/Nilai.dart';
+import 'package:mentoring_id/api/models/Pembahasan.dart';
 import 'package:mentoring_id/class/Args.dart';
+import 'package:mentoring_id/components/features/HalamanPembahasan.dart';
 import 'package:mentoring_id/components/features/HistoryTryout.dart';
 import 'package:mentoring_id/components/features/NilaiTryout.dart';
 
@@ -8,22 +10,25 @@ import '../API.dart';
 
 class NilaiHandler {
   final API api;
+  List<HistoryTryoutSession> historia = [];
 
   NilaiHandler(this.api);
 
-  getHistory() {
-    api.request(
+  cacheHistory() async {
+    final List<HistoryTryoutSession> cache = [];
+    await api.request(
         path: "tryout/history",
         method: "POST",
         body: {"no_siswa": api.data.noSiswa}).then((value) {
       final sessions = api.safeDecoder(value.body);
-      final List<HistoryTryoutSession> data = [];
-      sessions.forEach((val) => data.add(HistoryTryoutSession.parse(val)));
-
-      Navigator.of(api.context).pushNamed("/${HistoryTryout.route}",
-          arguments: Args(api: api, data: data));
+      sessions.forEach((val) => cache.add(HistoryTryoutSession.parse(val)));
     });
+
+    historia = cache;
   }
+
+  getHistory() => Navigator.of(api.context).pushNamed("/${HistoryTryout.route}",
+      arguments: Args(api: api, data: historia));
 
   getNilai(String session) {
     api.request(
@@ -32,7 +37,20 @@ class NilaiHandler {
         body: {"session": session}).then((value) {
       final NilaiPaket data = NilaiPaket(api.safeDecoder(value.body));
       Navigator.of(api.context).pushNamed("/${NilaiTryout.route}",
-          arguments: Args(api: api, data: {"data": data}));
+          arguments: Args(api: api, data: data));
+    });
+  }
+
+  bahas(String session, String noTryout, String noSesi) {
+    api.request(path: "pembahasan/bahas", method: "POST", body: {
+      'session': session,
+      'no_tryout': noTryout,
+      'no_sesi': noSesi
+    }).then((value) {
+      final Pembahasan pembahasan = Pembahasan(api.safeDecoder(value.body));
+
+      Navigator.pushNamed(api.context, "/${HalamanPembahasan.route}",
+          arguments: Args(api: api, data: pembahasan));
     });
   }
 }

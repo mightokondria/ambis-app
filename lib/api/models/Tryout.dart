@@ -76,7 +76,7 @@ class TryoutMateri {
 
   TryoutMateri.fromJson(Map<String, dynamic> data) {
     nmMateri = data["nm_materi"];
-    noSesi = data["no_materi"];
+    noSesi = data["no_sesi"];
   }
 }
 

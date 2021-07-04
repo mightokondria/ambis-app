@@ -10,6 +10,8 @@ class CustomButton extends StatelessWidget {
   final bool fill;
   final bool enabled;
   final Widget child;
+  final double fontSize;
+  final EdgeInsetsGeometry padding;
   CustomButtonStyle style;
 
   CustomButton(
@@ -18,6 +20,8 @@ class CustomButton extends StatelessWidget {
       this.child,
       this.enabled: true,
       this.onTap,
+      this.fontSize: 13,
+      this.padding,
       this.style}) {
     style = (style == null) ? CustomButtonStyle.primary() : style;
   }
@@ -38,13 +42,16 @@ class CustomButton extends StatelessWidget {
                       color:
                           enabled ? style.color : style.color.withOpacity(.4))
                   : null,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              padding: (padding != null)
+                  ? padding
+                  : EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: (value != null)
                   ? Text(
                       value.toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
+                        fontSize: fontSize,
                         color: (style.textColor == null)
                             ? mHeadingText
                             : style.textColor,
@@ -141,15 +148,17 @@ class __CustomButtonTabElementState extends State<_CustomButtonTabElement> {
           widget.onChange(e + 1);
           index = e;
         }),
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          color: (index == e)
-              ? widget.activeColor
-              : widget.activeColor.withOpacity(.2),
-          child: Text(v.value,
-              style: TextStyle(
-                  color: (index == e) ? widget.color : widget.activeColor)),
+        child: Clickable(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            color: (index == e)
+                ? widget.activeColor
+                : widget.activeColor.withOpacity(.2),
+            child: Text(v.value,
+                style: TextStyle(
+                    color: (index == e) ? widget.color : widget.activeColor)),
+          ),
         ),
       ));
     });

@@ -63,25 +63,6 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
   }
 
   akhiriFromUser() {
-    // showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return DialogElement(
-    //         child: Text("Kamu yakin ingin mengakhiri sesi ini?"),
-    //         // actions: [
-    //         //   TextButton(
-    //         //       child: Text("AKHIRI"),
-    //         //       onPressed: () {
-    //         //         akhiri();
-    //         //         api.closeDialog();
-    //         //       }),
-    //         //   TextButton(
-    //         //     child: Text("BATAL"),
-    //         //     onPressed: () => api.closeDialog(),
-    //         //   )
-    //         // ],
-    //       );
-    //     });
     api.ui.showTryoutEndConfirmationDialog(akhiri);
   }
 
@@ -108,8 +89,11 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 30, right: 130, left: 50),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TryoutTimerWidget(instance: this),
+                        SizedBox(height: 10),
+                        ListMateriTryout(session.nmTryout, session.materi),
                         SizedBox(height: 10),
                         ListNomorSoal(instance: this)
                       ],
@@ -188,28 +172,13 @@ class TryoutBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 46,
-            height: 46,
-            padding: EdgeInsets.all(mobile ? 0 : 10),
-            decoration: BoxDecoration(
-              color: sudahDijawab ? activeGreenColor : Colors.transparent,
-              border: Border.all(
-                  color: sudahDijawab ? activeGreenColor : Color(0xFFEEEEEE),
-                  width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-            ),
-            child: Center(
-              child: Text((posisiSoal + 1).toString(),
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: sudahDijawab ? Colors.white : Color(0xFF555555))),
-            ),
-          ),
+          NomorSoalAktif(
+              mobile: mobile,
+              sudahDijawab: sudahDijawab,
+              posisiSoal: posisiSoal),
           SizedBox(height: 10),
           Html(
-            data: session.soal[posisiSoal].isiSoal.replaceAll(
-                "https://server.mentoringid.com/", instance.api.defaultAPI),
+            data: session.soal[posisiSoal].isiSoal,
             style: {"*": Style(lineHeight: LineHeight.number(1.5))},
           ),
           SizedBox(
@@ -224,6 +193,9 @@ class TryoutBody extends StatelessWidget {
                         children: [
                           PilihanJawaban(
                             data: e,
+                            color: !e.dipilih
+                                ? Colors.transparent
+                                : activeGreenColor,
                           ),
                           SizedBox(height: 10)
                         ],
@@ -237,20 +209,57 @@ class TryoutBody extends StatelessWidget {
   }
 }
 
-class PilihanJawaban extends StatelessWidget {
-  PilihanJawaban({Key key, this.data}) : super(key: key);
+class NomorSoalAktif extends StatelessWidget {
+  const NomorSoalAktif({
+    Key key,
+    @required this.mobile,
+    @required this.sudahDijawab,
+    @required this.posisiSoal,
+  }) : super(key: key);
 
-  final Pilihan data;
+  final bool mobile;
+  final bool sudahDijawab;
+  final int posisiSoal;
 
   @override
   Widget build(BuildContext context) {
-    final bool selected = data.dipilih;
+    return Container(
+      width: 46,
+      height: 46,
+      padding: EdgeInsets.all(mobile ? 0 : 10),
+      decoration: BoxDecoration(
+        color: sudahDijawab ? activeGreenColor : Colors.transparent,
+        border: Border.all(
+            color: sudahDijawab ? activeGreenColor : Color(0xFFEEEEEE),
+            width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Center(
+        child: Text((posisiSoal + 1).toString(),
+            style: TextStyle(
+                fontSize: 18,
+                color: sudahDijawab ? Colors.white : Color(0xFF555555))),
+      ),
+    );
+  }
+}
+
+class PilihanJawaban extends StatelessWidget {
+  PilihanJawaban({Key key, this.data, this.color: Colors.transparent})
+      : super(key: key);
+
+  final Pilihan data;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool selected = data.dipilih || color != Colors.transparent;
 
     return Clickable(
       child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: selected ? activeGreenColor : Colors.transparent,
+            color: color,
             borderRadius: BorderRadius.all(Radius.circular(5)),
             border: selected
                 ? null
