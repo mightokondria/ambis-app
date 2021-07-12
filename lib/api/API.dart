@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
@@ -15,6 +16,7 @@ import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/InitialScreens.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/components/PaymentMethods.dart';
+import 'package:mentoring_id/components/desktop/Desktop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'handlers/DataSiswa.dart';
@@ -41,10 +43,13 @@ class API {
   // LOGGED IN USER DATA
   Siswa data;
 
-  // CONTEXT WITH NAVIGATOR
+  // BRIDGES
   BuildContext context;
+  Desktop desktop;
+  Function(int) screenChanger;
 
-  String defaultAPI = "https://api.mentoring.web.id/";
+  // String defaultAPI = "https://api.mentoring.web.id/";
+  String defaultAPI = "http://192.168.43.154/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -89,6 +94,16 @@ class API {
     return (currentScreen == null) ? Container() : currentScreen;
   }
 
+  conf(String key, {bool value}) {
+    if (value != null) {
+      prefs.setBool(key, value);
+
+      return value;
+    }
+
+    return prefs.getBool(key);
+  }
+
   buildInitialScreen() {
     // SCREEN SWITCHER BASED ON INITIAL STATE
     final ist = initialState;
@@ -126,7 +141,8 @@ class API {
       showSnackbar(
           content: Text("Oops! Sepertinya ada yang salah"),
           action: SnackBarAction(label: "Laporkan", onPressed: () {}));
-      print(e);
+
+      print(source);
     }
 
     return data;
@@ -145,7 +161,7 @@ class API {
   }
 
   closeDialog({BuildContext dialogContext}) {
-    Navigator.pop(context);
+    if (Navigator.of(context).canPop()) Navigator.pop(context);
   }
 
   refresh() async {
@@ -189,6 +205,14 @@ class API {
     appendResponse(Response res) {
       response = res;
 
+      if (response.body.indexOf("<!DOCTYPE html>") > -1)
+        print("""API error encountered\n
+        URL :\t$uri\n
+        Method :\t$method\n
+        Body :\t$body\n
+        Headers :\t$headers\n
+        Response :\t${res.body}""");
+
       if (animation) closeDialog();
     }
 
@@ -215,6 +239,31 @@ class API {
   Future<InitialState> init() async {
     prefs = await SharedPreferences.getInstance();
 
+    // CHECK IF MENTORING EVER GOT INSTALLED
+    // ON THIS DEVICE
+    if (!prefs.containsKey("configured") || kDebugMode) {
+      Map<String, bool> localConf = {
+        "configured": true,
+
+        // INITIAL CONFIGURATION
+        "pageViewIntroduction": true,
+        "groupsInvitation": true,
+        "overlayTour": true,
+        "skdHowTo": true,
+        "historyTryoutInformation": true,
+        "peringkatSwitchGuide": true,
+        "mobilePembahasanInformation": true,
+
+        // CONFIGURATION STARTS HERE
+        "carouselInformation": true,
+        "forYouTryout": true
+      };
+
+      localConf.forEach((key, value) {
+        prefs.setBool(key, value);
+      });
+    }
+
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
     await isLoggedIn().then((status) => initialState.isLoggedIn = status);
 
@@ -227,12 +276,14 @@ class API {
       // // CHECK IF THE USER HAS PENDING INVOICE
       // await hasPendingInvoice()
       //     .then((value) => initialState.pendingInvoice = value);
+
+      conf("emailActivated", value: !initialData.emailActivated);
     }
 
     return initialState;
   }
 
-  initActions() async {
+  Future<bool> initActions() async {
     if (data != null) {
       final InitialData initialData = data.initialData;
       final SimplifiedTryoutSession activeTryoutSession =
@@ -247,9 +298,9 @@ class API {
           showSnackbar(content: Text("Tryout ini belum kamu selesaikan"));
           tryout.kerjakan(activeTryoutSession.nop, value.body);
         });
-
-      await nilai.cacheHistory();
     }
+
+    return true;
   }
 
   initHandlers() {
@@ -263,7 +314,7 @@ class API {
   }
 
   initScreenAdapter(
-      ScreenAdapterState adapter, InitialScreen initialScreenInstance) async {
+      ScreenAdapterState adapter, InitialScreen initialScreenInstance) {
     screenAdapter = adapter;
     initialScreens = initialScreenInstance;
 
@@ -271,7 +322,7 @@ class API {
     initHandlers();
 
     // INIT ALL FIRST ACTIONS
-    await initActions();
+    initActions();
 
     buildInitialScreen();
   }
@@ -279,12 +330,14 @@ class API {
   // END INITIALIZERS
 
   Future getInitialData() async {
-    await request(
-            path: "siswa/get_initial_data",
-            method: "POST",
-            animation: false,
-            body: {"no_siswa": data.noSiswa})
-        .then((value) => data.registerInitialData(safeDecoder(value.body)));
+    if (data.initialData == null)
+      await request(
+          path: "siswa/get_initial_data",
+          method: "POST",
+          animation: false,
+          body: {
+            // "no_siswa": data.noSiswa
+          }).then((value) => data.registerInitialData(safeDecoder(value.body)));
   }
 
   // CHECK IF A USER IS ALREADY LOGGED IN
@@ -312,11 +365,12 @@ class API {
   Future<Invoice> hasPendingInvoice() async {
     Invoice result;
     await request(
-            path: "invoice/my_invoice",
-            method: "POST",
-            animation: false,
-            body: {"no_siswa": data.noSiswa})
-        .then((value) => result = Invoice.fromJson(jsonDecode(value.body)));
+        path: "invoice/my_invoice",
+        method: "POST",
+        animation: false,
+        body: {
+          // "no_siswa": data.noSiswa
+        }).then((value) => result = Invoice.fromJson(jsonDecode(value.body)));
 
     return result;
   }

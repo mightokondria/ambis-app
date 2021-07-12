@@ -54,67 +54,68 @@ class DataCompletionPageState extends State<DataCompletionPage> {
             ? width * .3
             : width * .2
         : 20;
-    final double verticalMargin = 20;
     final ScrollController scrollController = ScrollController();
 
     return Scaffold(
       backgroundColor: color,
-      body: Scrollbar(
-        isAlwaysShown: isDesktop,
-        controller: scrollController,
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Scrollbar(
+          isAlwaysShown: isDesktop,
           controller: scrollController,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: verticalMargin),
-            child: Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
-                    child: Column(
-                      children: [
-                        Text("Tinggal beberapa langkah lagi!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: mHeadingText,
-                              fontWeight: FontWeight.w600,
-                            )),
-                        SizedBox(height: 20),
-                        Steps(
-                          activeIndex: step,
-                          items: [
-                            "Daftar menggunakan email",
-                            "Isi identitas tambahan",
-                            "Langganan kelas",
-                          ],
-                        ),
-                      ],
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Container(
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  SizedBox(height: 30),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500),
-                    child: (step == 1)
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: horizontalMargin),
-                            child: AdditionalDataForm(
-                              parent: this,
-                            ),
-                          )
-                        : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: KelasLangganan(
-                              api: api,
-                              kelases: kelases,
-                            ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: horizontalMargin),
+                      child: Column(
+                        children: [
+                          Text("Tinggal beberapa langkah lagi!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: mHeadingText,
+                                fontWeight: FontWeight.w600,
+                              )),
+                          SizedBox(height: 20),
+                          Steps(
+                            activeIndex: step,
+                            items: [
+                              "Daftar menggunakan email",
+                              "Isi identitas tambahan",
+                              "Langganan kelas",
+                            ],
                           ),
-                  )
-                ],
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: (step == 1)
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: horizontalMargin),
+                              child: AdditionalDataForm(
+                                parent: this,
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              child: KelasLangganan(
+                                api: api,
+                                kelases: kelases,
+                              ),
+                            ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

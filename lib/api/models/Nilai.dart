@@ -33,7 +33,8 @@ class PeringkatLevelModel {
 
   PeringkatLevelModel.parse(dynamic json) {
     jumlahPeserta = json['jumlah_peserta'];
-    peringkat = json['peringkat'].toDouble();
+
+    if (json['peringkat'] != null) peringkat = json['peringkat'].toDouble();
 
     json['data'].forEach((val) {
       data.add(val.toDouble());

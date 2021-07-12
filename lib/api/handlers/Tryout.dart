@@ -7,7 +7,6 @@ import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/Messages.dart';
-import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class TryoutHandler {
   final API api;
@@ -24,6 +23,7 @@ class TryoutHandler {
               "Tryout dengan keyword tersebut nggak ada. Coba keyword lain."));
 
   List<Kategori> cache = [];
+  List<PaketTryout> recommendationCache;
 
   Future<List<Kategori>> getTryoutData() async {
     if (cache.isEmpty)
@@ -64,37 +64,40 @@ class TryoutHandler {
         PaketTryout.fromJson(api.safeDecoder(value.body))));
   }
 
-  mulai(String noPaket) {
+  mulai(PaketTryout data) {
     api.request(path: "tryout/mulai", method: "POST", body: {
-      "no_paket": noPaket,
-      "no_siswa": api.data.noSiswa
-    }).then((value) => kerjakan(noPaket, value.body));
+      "no_paket": data.noPaket,
+      // "no_siswa": api.data.noSiswa
+    }).then((value) async {
+      if (value.body == "forbiddenNotSubscribed")
+        return showDialog(
+            context: api.context,
+            builder: (context) {
+              return Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        "assets/img/msg/mascott-sad.png",
+                        width: 100,
+                      ),
+                      SizedBox(height: 10),
+                      Text("Duh! Kamu belum berlangganan kelas ini"),
+                      SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              );
+            });
+
+      await api.dataSiswa.changeXP(data.xp);
+      kerjakan(data.noPaket, value.body);
+    });
   }
 
   kerjakan(String noPaket, String data) {
-    if (data == "forbiddenNotSubscribed")
-      return showDialog(
-          context: api.context,
-          builder: (context) {
-            return Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      "assets/img/msg/mascott-sad.png",
-                      width: 100,
-                    ),
-                    SizedBox(height: 10),
-                    Text("Duh! Kamu belum berlangganan kelas ini"),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            );
-          });
-
     Navigator.pushNamed(api.context, "/kerjain",
         arguments: Args(data: {
           "session": TryoutSession.parse(api.safeDecoder(data)),
@@ -111,11 +114,27 @@ class TryoutHandler {
     });
   }
 
+  Future<Response> pindahMateri(String session, String noSesi) {
+    return api.request(
+        path: "tryout/pindah_materi",
+        method: "POST",
+        body: {"no_sesi": noSesi, "session": session});
+  }
+
   akhiri(TryoutSession data) {
-    api.request(path: "tryout/akhiri", method: "POST", body: {
+    final Map<String, dynamic> body = {
       "session": data.session,
       "no_sesi": data.noSesi
-    }).then((value) async {
+    };
+
+    if (data.onetime) {
+      body['onetime'] = 1;
+      body['no_tryout'] = data.noTryout;
+    }
+
+    api
+        .request(path: "tryout/akhiri", method: "POST", body: body)
+        .then((value) async {
       final Map<String, dynamic> parsed = api.safeDecoder(value.body);
 
       api.closeDialog();
@@ -131,5 +150,31 @@ class TryoutHandler {
         value.body,
       );
     });
+  }
+
+  Future<List<PaketTryout>> getRecommendation() async {
+    if (recommendationCache == null) {
+      final List<PaketTryout> result = [];
+
+      await api
+          .request(
+              path: "recommendation/tryout",
+              method: "POST",
+              body: {
+                "total": 10,
+              },
+              animation: false)
+          .then((value) {
+        final cache = api.safeDecoder(value.body) as List<dynamic>;
+
+        cache.forEach((tryout) {
+          result.add(PaketTryout.fromJson(tryout));
+        });
+      });
+
+      recommendationCache = result;
+    }
+
+    return recommendationCache;
   }
 }

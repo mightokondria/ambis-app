@@ -3,6 +3,7 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/api/handlers/Tryout.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
+import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:mentoring_id/reuseable/TryoutList.dart';
@@ -52,6 +53,7 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
 
     return SafeArea(
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Container(
           width: double.infinity,
           child: Column(
@@ -71,22 +73,34 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
                 ),
               ),
               SizedBox(height: 30),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    MobileTryoutCategory(
-                        parent: this, category: cats[0], children: widgets[0]),
-                    MobileTryoutCategory(
-                        parent: this, category: cats[1], children: widgets[1]),
-                    MobileTryoutCategory(
-                        parent: this, category: cats[2], children: widgets[2]),
-                  ],
-                ),
-              ),
-              MobileTryoutCategory(
-                  parent: this, category: cats[3], children: widgets[3]),
+              (data.isEmpty)
+                  ? Align(
+                      alignment: Alignment.center,
+                      child: LoadingAnimation.animation())
+                  : Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          MobileTryoutCategory(
+                              parent: this,
+                              category: cats[0],
+                              children: widgets[0]),
+                          MobileTryoutCategory(
+                              parent: this,
+                              category: cats[1],
+                              children: widgets[1]),
+                          MobileTryoutCategory(
+                              parent: this,
+                              category: cats[2],
+                              children: widgets[2]),
+                          MobileTryoutCategory(
+                              parent: this,
+                              category: cats[3],
+                              children: widgets[3]),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
 import '../CustomCard.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButton extends StatefulWidget {
   final String value;
   final Function onTap;
   final bool fill;
@@ -27,37 +27,71 @@ class CustomButton extends StatelessWidget {
   }
 
   @override
+  _CustomButtonState createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton>
+    with SingleTickerProviderStateMixin {
+  bool tapped = false;
+  AnimationController _controller;
+  Animation scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+          ..addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    scaleAnimation = Tween<double>(begin: 1, end: .95).animate(_controller);
+
     return GestureDetector(
-        onTap: enabled ? onTap : () {},
+        onTap: widget.enabled ? widget.onTap : () {},
+        onTapDown: (_) {
+          _controller.forward();
+        },
+        onTapUp: (_) {
+          _controller.reverse();
+        },
+        onTapCancel: _controller.reverse,
         child: Transform.scale(
-          scale: 1,
+          scale: widget.enabled ? scaleAnimation.value : 1,
           child: Clickable(
             child: Container(
-              width: fill ? double.infinity : null,
-              decoration: (style.color != Colors.transparent)
+              width: widget.fill ? double.infinity : null,
+              decoration: (widget.style.color != Colors.transparent)
                   ? CustomCard.decoration(
-                      radius: style.radius,
-                      shadow: style.shadow,
-                      color:
-                          enabled ? style.color : style.color.withOpacity(.4))
+                      radius: widget.style.radius,
+                      shadow: widget.style.shadow,
+                      color: widget.enabled
+                          ? widget.style.color
+                          : widget.style.color.withOpacity(.4))
                   : null,
-              padding: (padding != null)
-                  ? padding
+              padding: (widget.padding != null)
+                  ? widget.padding
                   : EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: (value != null)
+              child: (widget.value != null)
                   ? Text(
-                      value.toUpperCase(),
+                      widget.value.toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: fontSize,
-                        color: (style.textColor == null)
+                        fontSize: widget.fontSize,
+                        color: (widget.style.textColor == null)
                             ? mHeadingText
-                            : style.textColor,
+                            : widget.style.textColor,
                       ),
                     )
-                  : child,
+                  : widget.child,
             ),
           ),
         ));

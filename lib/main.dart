@@ -26,7 +26,10 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       title: 'Mentoring.id',
-      theme: ThemeData(fontFamily: 'OpenSans', primaryColor: mPrimary),
+      theme: ThemeData(
+          fontFamily: 'OpenSans',
+          primaryColor: mPrimary,
+          accentColor: mPrimary),
       initialRoute: "/",
       onGenerateRoute: (settings) {
         final List<String> route = settings.name.split("/");
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
             Animation<double> animation, Animation<double> secondaryAnimation) {
           final scaleTransition =
               Tween<double>(begin: .9, end: 1).animate(animation);
-          final bool isMobile = MediaQuery.of(context).size.width < 768;
+          final bool isMobile = MediaQuery.of(context).size.width < 1024;
 
           if (route[1] == HalamanPengerjaanTO.route)
             child = HalamanPengerjaanTO(args: args);
@@ -79,10 +82,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  API api;
+
   @override
   Widget build(BuildContext context) {
-    API api = API(context);
+    if (api == null) api = API(context);
     double width = MediaQuery.of(context).size.width;
 
     Helpers.changeStatusBarColor();

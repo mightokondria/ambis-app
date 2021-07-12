@@ -82,20 +82,23 @@ class TryoutMateri {
 
 class TryoutSession {
   String nmMateri, nmTryout, session, noTryout, durasi, noSesi;
-  bool selesai;
+  bool selesai, onetime = false;
   List<Soal> soal;
   List<String> materi;
+  List<TryoutSessionSubmateri> submateri;
   int timestamp;
 
   TryoutSession.parse(Map<String, dynamic> data) {
     nmMateri = data['nm_materi'];
     nmTryout = data['nm_tryout'];
+    noTryout = data['no_tryout'];
     session = data['session'];
     durasi = data['durasi'];
     timestamp = data['timestamp'];
     noSesi = data['no_sesi'];
     soal = [];
     materi = [];
+    submateri = [];
 
     data['materi'].forEach((e) {
       materi.add(e.toString());
@@ -104,6 +107,23 @@ class TryoutSession {
     data['soal'].forEach((e) {
       soal.add(Soal.parse(e));
     });
+
+    if (data.containsKey("onetime")) onetime = int.parse(data['onetime']) == 1;
+    if (onetime) {
+      data['submateri'].forEach((e) {
+        submateri.add(TryoutSessionSubmateri(e));
+      });
+    }
+  }
+}
+
+class TryoutSessionSubmateri {
+  TryoutMateri materi;
+  bool active;
+
+  TryoutSessionSubmateri(Map<String, dynamic> data) {
+    materi = TryoutMateri.fromJson(data);
+    active = data['active'];
   }
 }
 

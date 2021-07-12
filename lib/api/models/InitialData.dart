@@ -5,9 +5,10 @@ import 'Invoice.dart';
 
 class InitialData {
   List<Akun> akun;
-  bool ready, hasActiveSession = true;
+  bool ready, webinarNotification, emailActivated, hasActiveSession = true;
   Invoice invoice;
   SimplifiedTryoutSession activeTryoutSession;
+  String xp;
 
   InitialData({this.akun, this.ready, this.invoice});
 
@@ -21,6 +22,9 @@ class InitialData {
     ready = json['ready'];
     invoice =
         (json['invoice'] != null) ? Invoice.fromJson(json['invoice']) : null;
+    webinarNotification = json['webinarNotification'] == "1";
+    emailActivated = json['emailActivated'];
+    xp = json['xp'];
 
     final activeSessionRaw = json['activeTryoutSession'];
     if (activeSessionRaw.runtimeType == bool)

@@ -7,6 +7,9 @@ import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/ContentLoading.dart';
+import 'package:mentoring_id/reuseable/CustomCard.dart';
+import 'package:mentoring_id/reuseable/Information.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
@@ -34,6 +37,15 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
   pindahSoal({int indexSoal}) {
     setState(() {
       posisiSoal = indexSoal;
+    });
+  }
+
+  pindahSubmateri(String noSesi) {
+    api.tryout.pindahMateri(session.session, noSesi).then((value) {
+      setState(() {
+        session = TryoutSession.parse(api.safeDecoder(value.body));
+        posisiSoal = 0;
+      });
     });
   }
 
@@ -78,6 +90,15 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
 
   @override
   Widget build(BuildContext context) {
+    final Widget stop = session.onetime
+        ? SomeInfo(
+            api: api,
+            message:
+                "🤚STOP!🤚 Sebelum menekan akhiri,  selesaikan dulu submateri TWK TIU dan TKP. Untuk pindah submateri, kamu bisa menekan tab di atas.",
+            config: "skdHowTo",
+            color: Colors.red)
+        : SizedBox();
+
     return Container(
       margin: EdgeInsets.only(top: 30),
       color: Colors.white,
@@ -91,6 +112,14 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        TryoutSubmateriUI(this),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        stop,
+                        SizedBox(
+                          height: 10,
+                        ),
                         TryoutTimerWidget(instance: this),
                         SizedBox(height: 10),
                         ListMateriTryout(session.nmTryout, session.materi),
@@ -109,6 +138,10 @@ class _HalamanUtamaTryoutState extends State<HalamanUtamaTryout> {
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
                   children: [
+                    TryoutSubmateriUI(this),
+                    SizedBox(height: 5),
+                    stop,
+                    SizedBox(height: 15),
                     TryoutTimerWidget(
                       instance: this,
                     ),
@@ -281,20 +314,14 @@ class TryoutTimerWidget extends StatefulWidget {
   const TryoutTimerWidget({Key key, this.instance}) : super(key: key);
 
   @override
-  _TryoutTimerWidgetState createState() => _TryoutTimerWidgetState(instance);
+  _TryoutTimerWidgetState createState() => _TryoutTimerWidgetState();
 }
 
 class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
-  final _HalamanUtamaTryoutState instance;
   TryoutSession data;
   DateTime sisaWaktu = DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
   double progressWaktu = 1;
   API api;
-
-  _TryoutTimerWidgetState(this.instance) {
-    data = instance.session;
-    api = instance.api;
-  }
 
   updateDate(DateTime date, double progress) {
     setState(() {
@@ -310,10 +337,18 @@ class _TryoutTimerWidgetState extends State<TryoutTimerWidget> {
   }
 
   Widget build(BuildContext context) {
-    if (instance.tryoutTimer == null)
+    final instance = widget.instance;
+
+    data = widget.instance.session;
+    api = widget.instance.api;
+
+    if (instance.tryoutTimer == null) {
       Timer.run(() => instance.tryoutTimer =
           TryoutTimer(int.parse(data.durasi), data.timestamp, updateDate)
               .timer);
+
+      return ContentLoading();
+    }
 
     final List<int> waktu = [
       sisaWaktu.hour,
@@ -385,20 +420,13 @@ class ListNomorSoal extends StatelessWidget {
                   onTap: () {
                     instance.pindahSoal(indexSoal: e);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: (e == instance.posisiSoal)
-                            ? Colors.blueAccent
-                            : (instance.sudahDijawab(e))
-                                ? activeGreenColor
-                                : Color(0xFF666666),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    padding: EdgeInsets.all(3),
-                    child: Center(
-                        child: Text(
-                      (e + 1).toString(),
-                      style: TextStyle(color: Colors.white),
-                    )),
+                  child: NomorSoal(
+                    color: (e == instance.posisiSoal)
+                        ? Colors.blueAccent
+                        : (instance.sudahDijawab(e))
+                            ? activeGreenColor
+                            : Color(0xFF666666),
+                    nomor: e,
                   ),
                 ),
               );
@@ -408,8 +436,34 @@ class ListNomorSoal extends StatelessWidget {
             value: "akhiri",
             onTap: instance.akhiriFromUser,
             style: CustomButtonStyle(
-                color: Colors.redAccent, textColor: Colors.white))
+                color: Colors.redAccent, textColor: Colors.white)),
+        SizedBox(height: 10),
       ],
+    );
+  }
+}
+
+class NomorSoal extends StatelessWidget {
+  const NomorSoal({
+    Key key,
+    this.color,
+    this.nomor,
+  }) : super(key: key);
+
+  final Color color;
+  final int nomor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.all(Radius.circular(5))),
+      padding: EdgeInsets.all(3),
+      child: Center(
+          child: Text(
+        (nomor + 1).toString(),
+        style: TextStyle(color: Colors.white),
+      )),
     );
   }
 }
@@ -467,5 +521,60 @@ class ListMateriTryout extends StatelessWidget {
         children: children,
       ),
     );
+  }
+}
+
+class TryoutSubmateriUI extends StatelessWidget {
+  final _HalamanUtamaTryoutState instance;
+  TryoutSubmateriUI(this.instance);
+
+  @override
+  Widget build(BuildContext context) {
+    final List<TryoutSessionSubmateri> submateri = instance.session.submateri;
+    if (instance.session.onetime) {
+      return Container(child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: submateri.map((e) {
+                final Color color = e.active ? mPrimary : Color(0xFFDDDDDD);
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => instance.pindahSubmateri(e.materi.noSesi),
+                    child: Clickable(
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 3,
+                              width: constraints.maxWidth / submateri.length,
+                              color: color,
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              // decoration: CustomCard.decoration(color: color),
+                              child: Text(e.materi.nmMateri,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: color,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList());
+        },
+      ));
+    } else {
+      return SizedBox(height: 0);
+    }
   }
 }

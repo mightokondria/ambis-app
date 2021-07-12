@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Helpers.dart';
+import 'package:mentoring_id/components/mobile/screens/Dashboard.dart';
+import 'package:mentoring_id/components/mobile/screens/Saya.dart';
 import 'package:mentoring_id/components/mobile/screens/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
@@ -14,7 +16,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final API api;
-  int activeIndex = 3;
+  int activeIndex = 1;
 
   _HomeState(this.api);
 
@@ -27,25 +29,30 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final color = Color(0xFFF5F5F5);
+    List<Widget> child = [
+      Dashboard(api: api),
+      Center(
+          child: ElevatedButton(
+        child: Text("History tryout"),
+        onPressed: () {
+          api.nilai.getHistory();
+        },
+      )),
+      TryoutDataScreen(api),
+      Saya(
+        api: api,
+      ),
+    ];
+    api.screenChanger = changeActiveIndex;
 
     Helpers.changeStatusBarColor();
+
     return Container(
       color: color,
       child: Column(
         children: [
           Expanded(
-            child: IndexedStack(index: activeIndex - 1, children: [
-              Container(),
-              Center(
-                  child: ElevatedButton(
-                child: Text("History tryout"),
-                onPressed: () {
-                  api.nilai.getHistory();
-                },
-              )),
-              TryoutDataScreen(api),
-              Container(),
-            ]),
+            child: child[activeIndex - 1],
           ),
           CustomBottomNavigation(
               activeIndex: activeIndex, changeActiveIndex: changeActiveIndex),
@@ -96,7 +103,7 @@ class CustomBottomNavigation extends StatelessWidget {
           ),
           itemAdapter.addItem(
             icon: "profile",
-            label: "Profil",
+            label: "Saya",
           ),
         ],
       ),

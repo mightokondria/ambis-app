@@ -3,16 +3,16 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:mentoring_id/api/models/Pembahasan.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/class/Args.dart';
-import 'package:mentoring_id/components/features/HalamanPengerjaan/HalamanUtamaTryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
-
+import 'package:mentoring_id/reuseable/Information.dart';
+import 'package:mentoring_id/reuseable/input/Clickable.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 import 'HalamanPengerjaan/HalamanUtamaTryout.dart';
 
-class HalamanPembahasan extends StatelessWidget {
+class HalamanPembahasan extends StatefulWidget {
   static String route = "bahas";
 
   final Args args;
-  int posisiSoal = 0;
   Pembahasan session;
 
   HalamanPembahasan({Key key, this.args}) {
@@ -20,38 +20,103 @@ class HalamanPembahasan extends StatelessWidget {
   }
 
   @override
+  _HalamanPembahasanState createState() => _HalamanPembahasanState();
+}
+
+class _HalamanPembahasanState extends State<HalamanPembahasan> {
+  int posisiSoal = 0;
+
+  @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: args.api.screenAdapter.isDesktop
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PembahasanBody(this),
-                  Expanded(
-                    child: Column(
+      body: Scrollbar(
+        isAlwaysShown: widget.args.api.screenAdapter.isDesktop,
+        controller: scrollController,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          physics: BouncingScrollPhysics(),
+          child: widget.args.api.screenAdapter.isDesktop
+              ? Stack(
+                  children: [
+                    Positioned(
+                        top: 30,
+                        right: 30,
+                        child: Clickable(
+                            child: GestureDetector(
+                                onTap: widget.args.api.closeDialog,
+                                child: Icon(Icons.close,
+                                    size: 25, color: Colors.black54)))),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 50),
-                        KotakPembahasan(
-                          session: session,
-                          posisiSoal: posisiSoal,
-                        ),
+                        PembahasanBody(this),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(30),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 50),
+                                KotakPembahasan(
+                                  session: widget.session,
+                                  posisiSoal: posisiSoal,
+                                ),
+                                SizedBox(height: 20),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 130),
+                                  child: DaftarNomorPembahasan(
+                                    instance: this,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              )
-            : Column(
-                children: [PembahasanBody(this, mobile: true)],
-              ),
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Column(children: [
+                    SizedBox(height: 20),
+                    SomeInfo(
+                        api: widget.args.api,
+                        message:
+                            "Jangan sampai tersesat! Pembahasan dan tombol kembali ada di bawah😉",
+                        config: "mobilePembahasanInformation"),
+                    SizedBox(height: 10),
+                    PembahasanBody(this, mobile: true),
+                    SizedBox(height: 10),
+                    KotakPembahasan(
+                        session: widget.session, posisiSoal: posisiSoal),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    DaftarNomorPembahasan(instance: this),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomButton(
+                      value: "tutup",
+                      onTap: widget.args.api.closeDialog,
+                    )
+                  ]),
+                ),
+        ),
       ),
     );
   }
+
+  changeSoal(int index) => setState(() {
+        posisiSoal = index;
+      });
 }
 
 class PembahasanBody extends StatelessWidget {
-  final HalamanPembahasan instance;
+  final _HalamanPembahasanState instance;
   final bool mobile;
 
   const PembahasanBody(this.instance, {this.mobile: false});
@@ -61,7 +126,7 @@ class PembahasanBody extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final double width = size.width;
     final int posisiSoal = instance.posisiSoal;
-    final Pembahasan session = instance.session;
+    final Pembahasan session = instance.widget.session;
     final bool sudahDijawab = session.pembahasan[posisiSoal].status != 0;
 
     return Container(
@@ -117,32 +182,32 @@ class KotakPembahasan extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "PEMBAHASAN",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Color(0xFF555555)),
-          ),
-          Html(
-            data: session.pembahasan[posisiSoal].pembahasan,
-            style: {"*": Style(lineHeight: LineHeight.number(1.5))},
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "PEMBAHASAN",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color(0xFF555555)),
+        ),
+        Html(
+          data: session.pembahasan[posisiSoal].pembahasan,
+          style: {"*": Style(lineHeight: LineHeight.number(1.5))},
+        ),
+      ],
     );
   }
 }
 
 class DaftarNomorPembahasan extends StatelessWidget {
-  final List<PembahasanSoal> data;
+  List<PembahasanSoal> data;
+  final _HalamanPembahasanState instance;
 
-  const DaftarNomorPembahasan({Key key, this.data}) : super(key: key);
+  DaftarNomorPembahasan({Key key, this.instance}) {
+    data = instance.widget.session.pembahasan;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,9 +220,20 @@ class DaftarNomorPembahasan extends StatelessWidget {
         color = Colors.redAccent;
       else if (e.status == 2) color = activeGreenColor;
 
-      children.add(NomorSoal(nomor: k, color: color));
+      if (k == instance.posisiSoal) color = Colors.blue;
+
+      children.add(Clickable(
+          child: GestureDetector(
+              onTap: () => instance.changeSoal(k),
+              child: NomorSoal(nomor: k, color: color))));
     });
 
-    return Wrap(children: children, spacing: 5, runSpacing: 5);
+    return GridView.count(
+        crossAxisCount: 5,
+        mainAxisSpacing: 5,
+        crossAxisSpacing: 5,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: children);
   }
 }

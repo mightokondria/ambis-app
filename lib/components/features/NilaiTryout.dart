@@ -4,6 +4,7 @@ import 'package:mentoring_id/api/models/Nilai.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
+import 'package:mentoring_id/reuseable/Information.dart';
 import 'package:mentoring_id/reuseable/ScoreBoard.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
@@ -71,9 +72,7 @@ class _NilaiTryoutMobile extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 30),
-              NilaiAndPeringkat(
-                nilai: data.nilai,
-              ),
+              NilaiAndPeringkat(nilai: data.nilai, api: api),
               SizedBox(height: 30),
               Column(
                 children: data.data
@@ -137,6 +136,7 @@ class _NilaiTryoutDesktop extends StatelessWidget {
                                     color: Colors.white54,
                                     fontWeight: FontWeight.bold)),
                             NilaiAndPeringkat(
+                              api: api,
                               nilai: data.nilai,
                             ),
                           ],
@@ -170,8 +170,10 @@ class _NilaiTryoutDesktop extends StatelessWidget {
 class NilaiAndPeringkat extends StatefulWidget {
   final Color textColor;
   final HistoryTryoutSession nilai;
+  final API api;
 
-  const NilaiAndPeringkat({Key key, this.nilai, this.textColor: Colors.white})
+  const NilaiAndPeringkat(
+      {Key key, this.nilai, this.textColor: Colors.white, this.api})
       : super(key: key);
 
   @override
@@ -257,6 +259,13 @@ class _NilaiAndPeringkatState extends State<NilaiAndPeringkat> {
             (index) => setState(() {
                   nasional = index == 1;
                 })),
+        SizedBox(height: 10),
+        SomeInfo(
+          color: Colors.white,
+          api: widget.api,
+          message: "Klik tombol di atas untuk mengganti tingkatan peringkatmu",
+          config: "peringkatSwitchGuide",
+        ),
         SizedBox(height: 10),
         Text(
             "Peringkat ${peringkat.peringkat.toInt()} dari ${peringkat.jumlahPeserta} peserta",

@@ -44,7 +44,7 @@ class Disconnected extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   CustomButton(
-                      style: CustomButtonStyle.semiPrimary(radius: 5),
+                      style: CustomButtonStyle.primary(radius: 5),
                       value: "reload",
                       onTap: api.refresh),
                 ],

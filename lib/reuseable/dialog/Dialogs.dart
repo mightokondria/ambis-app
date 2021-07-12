@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
@@ -69,52 +70,60 @@ class Dialogs {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
-              CustomButton(
-                value: "Pulihkan",
-                onTap: () {
-                  if (!recoveryFormKey.currentState.validate()) return null;
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      value: "Pulihkan",
+                      fill: false,
+                      onTap: () {
+                        if (!recoveryFormKey.currentState.validate())
+                          return null;
 
-                  api.session.recovery(emailController).then((status) {
-                    String message;
+                        api.session.recovery(emailController).then((status) {
+                          String message, type = "success", title = "Berhasil!";
 
-                    switch (status) {
-                      case "recoveryLinkSent":
-                        message = "Tautan pemulihan sudah dikirim ke emailmu.";
-                        break;
-                      case "emailNotRegisteredException":
-                        message = "Email tidak terdaftar. Belum mendaftar?";
-                        break;
-                      default:
-                        break;
-                    }
+                          switch (status) {
+                            case "recoveryLinkSent":
+                              message =
+                                  "Tautan pemulihan sudah dikirim ke emailmu.";
+                              break;
+                            case "emailNotRegisteredException":
+                              message =
+                                  "Email tidak terdaftar. Belum mendaftar?";
+                              type = "warning";
+                              title = "Peringatan";
 
-                    if (status == "recoveryLinkSent") Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text(message),
-                            actions: [
-                              TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("TUTUP"))
-                            ],
-                          );
+                              break;
+                            default:
+                              break;
+                          }
+
+                          if (status == "recoveryLinkSent")
+                            Navigator.pop(context);
+
+                          api.ui.showShortMessageDialog(
+                              title: title, message: message, type: type);
                         });
-                  });
-                },
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: CustomButton(
+                        value: "Batal",
+                        fill: false,
+                        style: CustomButtonStyle.semiPrimary(),
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 5,
-              ),
-              CustomButton(
-                  value: "Batal",
-                  style: CustomButtonStyle.transparent(),
-                  onTap: () {
-                    Navigator.pop(context);
-                  }),
             ],
           ),
         ),
@@ -180,6 +189,7 @@ class Dialogs {
               SizedBox(height: 5),
               ListView(
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 children: data.tryouts.map((e) {
                   return Container(
                     decoration: CustomCard.decoration(),
@@ -213,7 +223,7 @@ class Dialogs {
                       value: "kerjakan",
                       fill: false,
                       onTap: () {
-                        api.tryout.mulai(data.noPaket);
+                        api.tryout.mulai(data);
                       },
                     ),
                   ),
@@ -277,6 +287,14 @@ class Dialogs {
       ),
     ));
   }
+
+  Widget emailUpdateDialog(API api) => UpdateEmailDialog(
+        api: api,
+      );
+
+  Widget passwordUpdateDialog(API api) => UpdatePasswordDialog(
+        api: api,
+      );
 }
 
 class CheckoutDialog extends StatefulWidget {
@@ -499,25 +517,343 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                     textAlign: TextAlign.right, style: descs[1]),
               ]),
               SizedBox(height: 20),
-              CustomButton(
-                style: CustomButtonStyle.primary(radius: 30),
-                value: "konfirmasi",
-                onTap: () {
-                  List<String> finalData = [
-                    api.data.noSiswa,
-                    data.noAkun,
-                    api.paymentInstance.getAnswer().id,
-                    kopromUsed,
-                    total.toString()
-                  ];
-                  api.invoice.order(finalData);
-                },
-              ),
-              CustomButton(
-                style: CustomButtonStyle.transparent(),
-                value: "batal",
-                onTap: () => Navigator.pop(context),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      style: CustomButtonStyle.primary(radius: 30),
+                      value: "konfirmasi",
+                      fill: false,
+                      onTap: () {
+                        List<String> finalData = [
+                          // api.data.noSiswa,
+                          data.noAkun,
+                          api.paymentInstance.getAnswer().id,
+                          kopromUsed,
+                          total.toString()
+                        ];
+                        api.invoice.order(finalData);
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Expanded(
+                    child: CustomButton(
+                      fill: false,
+                      style: CustomButtonStyle.transparent(),
+                      value: "batal",
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ),
+                ],
               )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateEmailDialog extends StatefulWidget {
+  final API api;
+
+  const UpdateEmailDialog({Key key, this.api}) : super(key: key);
+
+  @override
+  _UpdateEmailDialogState createState() => _UpdateEmailDialogState();
+}
+
+class _UpdateEmailDialogState extends State<UpdateEmailDialog> {
+  final GlobalKey<FormState> updateEmailFormKey = GlobalKey<FormState>();
+  List<TextEditingController> controllers;
+  String response;
+
+  @override
+  void initState() {
+    super.initState();
+    controllers = Helpers.generateEditingControllers(2);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: DialogElement(
+        api: widget.api,
+        child: Form(
+          key: updateEmailFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Ganti email",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: mHeadingText,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 3),
+              Text(
+                "Masukkan email baru dan passwordmu",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: mHeadingText.withOpacity(.4),
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(height: 20),
+              Material(
+                child: InputText(
+                  textField: TextFormField(
+                    controller: controllers[0],
+                    validator: (val) {
+                      final validator = LoginForm.emailValidator(val);
+
+                      if (validator != null)
+                        return validator;
+                      else if (response == "emailUsedException")
+                        return "Email sudah pernah digunakan";
+
+                      return null;
+                    },
+                    decoration: InputText.inputDecoration(hint: "Email baru"),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Material(
+                child: InputText(
+                  textField: TextFormField(
+                    controller: controllers[1],
+                    validator: (val) {
+                      final validator = LoginForm.passwordValidator(val);
+
+                      if (validator != null)
+                        return validator;
+                      else if (response == "passwordNoMatchException")
+                        return "Password salah";
+
+                      return null;
+                    },
+                    obscureText: true,
+                    decoration: InputText.inputDecoration(hint: "Password"),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      value: "Ganti",
+                      fill: false,
+                      onTap: () {
+                        response = null;
+
+                        if (!updateEmailFormKey.currentState.validate())
+                          return null;
+
+                        widget.api.request(
+                            path: "siswa/update_email",
+                            method: "POST",
+                            body: {
+                              // "no_siswa": widget.api.data.noSiswa,
+                              "email": controllers[0].value.text,
+                              "password": controllers[1].value.text
+                            }).then((value) {
+                          response = value.body;
+
+                          if (updateEmailFormKey.currentState.validate()) {
+                            widget.api.closeDialog();
+                            widget.api.ui.showShortMessageDialog(
+                                message: "Email kamu berhasil diubah!");
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: CustomButton(
+                        value: "Batal",
+                        style: CustomButtonStyle.semiPrimary(),
+                        fill: false,
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdatePasswordDialog extends StatefulWidget {
+  final API api;
+
+  const UpdatePasswordDialog({Key key, this.api}) : super(key: key);
+
+  @override
+  _UpdatePasswordDialogState createState() => _UpdatePasswordDialogState();
+}
+
+class _UpdatePasswordDialogState extends State<UpdatePasswordDialog> {
+  final GlobalKey<FormState> updatePasswordFormKey = GlobalKey<FormState>();
+  List<TextEditingController> controllers;
+  String response;
+
+  @override
+  void initState() {
+    super.initState();
+    controllers = Helpers.generateEditingControllers(3);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: DialogElement(
+        api: widget.api,
+        child: Form(
+          key: updatePasswordFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Ganti password",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: mHeadingText,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 3),
+              Text(
+                "Isi kolom-kolom di bawah ini dengan benar",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: mHeadingText.withOpacity(.4),
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(height: 20),
+              Material(
+                child: InputText(
+                  textField: TextFormField(
+                    controller: controllers[0],
+                    obscureText: true,
+                    validator: LoginForm.passwordValidator,
+                    decoration:
+                        InputText.inputDecoration(hint: "Password baru"),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Material(
+                child: InputText(
+                  textField: TextFormField(
+                    controller: controllers[1],
+                    validator: (val) {
+                      final validator = LoginForm.passwordValidator(val);
+
+                      if (validator != null)
+                        return validator;
+                      else if (controllers[0].value.text !=
+                          controllers[1].value.text)
+                        return "Password tidak cocok";
+
+                      return null;
+                    },
+                    obscureText: true,
+                    decoration: InputText.inputDecoration(
+                        hint: "Konfirmasi password baru"),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Material(
+                child: InputText(
+                  textField: TextFormField(
+                    controller: controllers[2],
+                    validator: (val) {
+                      final validator = LoginForm.passwordValidator(val);
+
+                      if (validator != null)
+                        return validator;
+                      else if (response == "passwordNoMatchException")
+                        return "Password lama belum benar";
+
+                      return null;
+                    },
+                    obscureText: true,
+                    decoration:
+                        InputText.inputDecoration(hint: "Password sekarang"),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      value: "Ganti",
+                      fill: false,
+                      onTap: () {
+                        response = null;
+
+                        if (!updatePasswordFormKey.currentState.validate())
+                          return null;
+
+                        final Map<String, dynamic> body = {
+                          // "no_siswa": widget.api.data.noSiswa
+                        };
+
+                        ["baru", "lama"].asMap().forEach((key, value) {
+                          body["password_$value"] =
+                              controllers[key + 1].value.text;
+                        });
+
+                        widget.api
+                            .request(
+                                path: "auth/ubah_password",
+                                method: "POST",
+                                body: body)
+                            .then((value) {
+                          response = value.body;
+
+                          if (updatePasswordFormKey.currentState.validate()) {
+                            widget.api.closeDialog();
+                            widget.api.ui.showShortMessageDialog(
+                                message: "Password kamu berhasil diubah!");
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: CustomButton(
+                        value: "Batal",
+                        style: CustomButtonStyle.semiPrimary(),
+                        fill: false,
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

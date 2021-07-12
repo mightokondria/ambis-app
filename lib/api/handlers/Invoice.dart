@@ -28,13 +28,13 @@ class InvoiceHandler {
   Future order(List<String> data) async {
     final d = data;
     final body = {
-      "no_siswa": d[0],
-      "product": d[1],
-      "method": d[2],
-      "total": d[4]
+      // "no_siswa": d[0],
+      "product": d[0],
+      "method": d[1],
+      "total": d[3]
     };
 
-    if (d[3] != null) body['koprom'] = d[3];
+    if (d[2] != null) body['koprom'] = d[2];
     await api
         .request(path: "invoice/order", method: "POST", body: body)
         .then((value) => api.refresh());

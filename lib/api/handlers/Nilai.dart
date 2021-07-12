@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:mentoring_id/api/models/Nilai.dart';
 import 'package:mentoring_id/api/models/Pembahasan.dart';
 import 'package:mentoring_id/class/Args.dart';
@@ -14,30 +15,36 @@ class NilaiHandler {
 
   NilaiHandler(this.api);
 
-  cacheHistory() async {
+  Future<bool> cacheHistory() async {
     final List<HistoryTryoutSession> cache = [];
     await api.request(
         path: "tryout/history",
         method: "POST",
-        body: {"no_siswa": api.data.noSiswa}).then((value) {
+        animation: false,
+        body: {
+          // "no_siswa": api.data.noSiswa
+        }).then((value) {
       final sessions = api.safeDecoder(value.body);
       sessions.forEach((val) => cache.add(HistoryTryoutSession.parse(val)));
     });
 
     historia = cache;
+    return true;
   }
 
   getHistory() => Navigator.of(api.context).pushNamed("/${HistoryTryout.route}",
       arguments: Args(api: api, data: historia));
 
-  getNilai(String session) {
-    api.request(
+  Future<Response> getNilai(String session) {
+    return api.request(
         path: "session/nilai",
         method: "POST",
         body: {"session": session}).then((value) {
       final NilaiPaket data = NilaiPaket(api.safeDecoder(value.body));
       Navigator.of(api.context).pushNamed("/${NilaiTryout.route}",
           arguments: Args(api: api, data: data));
+
+      return value;
     });
   }
 

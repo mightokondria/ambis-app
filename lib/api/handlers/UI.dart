@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
+import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/dialog/Dialogs.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 import '../API.dart';
 
@@ -48,7 +51,11 @@ class UI {
                       topRight: Radius.circular(10)))
               : null,
           context: context,
-          builder: (context) => universal ? desktop : mobile);
+          builder: (context) => AnimatedPadding(
+              duration: Duration(milliseconds: 100),
+              padding: MediaQuery.of(context).viewInsets,
+              child:
+                  SingleChildScrollView(child: universal ? desktop : mobile)));
   }
 
   // ACCOUNT RECOVERY DIALOG
@@ -98,5 +105,71 @@ class UI {
         mobile: Wrap(
           children: [child],
         ));
+  }
+
+  showUpdateEmailDialog() {
+    final Widget child = dialog.emailUpdateDialog(api);
+
+    showModal(
+        desktop: child,
+        mobile: Wrap(
+          children: [child],
+        ));
+  }
+
+  showUpdatePasswordDialog() {
+    final Widget child = dialog.passwordUpdateDialog(api);
+
+    showModal(
+        desktop: child,
+        mobile: Wrap(
+          children: [child],
+        ));
+  }
+
+  showShortMessageDialog(
+      {String title: "Berhasil!",
+      String message: "Berhasil dilakukan!",
+      String type: "success",
+      Widget additionalChild,
+      double maxWidth: 200}) {
+    final child = Container(
+      constraints: BoxConstraints(maxWidth: maxWidth),
+      decoration: CustomCard.decoration(),
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            "assets/img/msg/$type.svg",
+            width: 50,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              )),
+          Text(message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF888888),
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          (additionalChild != null) ? additionalChild : SizedBox(),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => Center(child: child),
+    ).timeout(Duration(seconds: 5), onTimeout: () => api.closeDialog());
   }
 }

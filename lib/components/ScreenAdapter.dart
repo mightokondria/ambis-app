@@ -26,7 +26,7 @@ class ScreenAdapter extends StatefulWidget {
 
 class ScreenAdapterState extends State<ScreenAdapter> {
   final API api;
-  final int desktopResolution = 768;
+  final int desktopResolution = 1024;
 
   /*
   * INDEXES DETAIL
@@ -79,7 +79,7 @@ class ScreenAdapterState extends State<ScreenAdapter> {
     return IndexedStack(index: index, children: [
       isDesktop
           ? Desktop(api, api.getCurrentScreen())
-          : Mobile(api, api.getCurrentScreen()),
+          : Mobile(api.getCurrentScreen()),
       Disconnected(
         api: api,
       ),

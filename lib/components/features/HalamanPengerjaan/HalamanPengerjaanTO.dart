@@ -16,13 +16,15 @@ class HalamanPengerjaanTO extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Scrollbar(
-            controller: scrollController,
-            isAlwaysShown: true,
-            child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                controller: scrollController,
-                child: HalamanUtamaTryout(data: args))),
+        body: SafeArea(
+          child: Scrollbar(
+              controller: scrollController,
+              isAlwaysShown: true,
+              child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  controller: scrollController,
+                  child: HalamanUtamaTryout(data: args))),
+        ),
       ),
     );
   }

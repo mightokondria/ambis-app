@@ -4,6 +4,7 @@ import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/api/models/Nilai.dart';
 import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
+import 'package:mentoring_id/reuseable/Information.dart';
 import 'package:mentoring_id/reuseable/ScoreBoard.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
@@ -134,8 +135,8 @@ class _HistoryTryoutMobile extends StatelessWidget {
   API api;
 
   _HistoryTryoutMobile({this.data}) {
-    sessions = data.data;
     api = data.api;
+    sessions = api.nilai.historia;
   }
 
   @override
@@ -174,11 +175,9 @@ class _HistoryTryoutMobile extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 30),
-                IkhtisarHistory(
-                  data: ikhtisar,
-                ),
+                IkhtisarHistory(data: ikhtisar, api: api),
                 SizedBox(height: 15),
-                HistoryTryout.history(sessions,
+                HistoryTryout.history(sessions.reversed.toList(),
                     context: context, api: api, mobile: true)
               ],
             ),
@@ -191,8 +190,9 @@ class _HistoryTryoutMobile extends StatelessWidget {
 
 class IkhtisarHistory extends StatelessWidget {
   final List<double> data;
+  final API api;
 
-  const IkhtisarHistory({Key key, this.data}) : super(key: key);
+  const IkhtisarHistory({Key key, this.data, this.api}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -221,21 +221,10 @@ class IkhtisarHistory extends StatelessWidget {
             ],
           ),
           SizedBox(height: 15),
-          Container(
-            decoration: CustomCard.decoration(color: Colors.blue, radius: 5),
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Icon(Icons.info, color: Colors.white),
-                SizedBox(width: 15),
-                Expanded(
-                  child: Text(
-                    "Data di atas adalah data tertinggi",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
+          SomeInfo(
+            message: "Data di atas adalah data tertinggi",
+            config: "historyTryoutInformation",
+            api: api,
           )
         ],
       ),
