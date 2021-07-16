@@ -23,6 +23,7 @@ class PaymentMethodInstance extends State<PaymentMethods> {
 
   @override
   initState() {
+    super.initState();
     if (api.payments == null)
       api.request(path: "invoice/get_methods").then((value) {
         List<dynamic> result = jsonDecode(value.body);

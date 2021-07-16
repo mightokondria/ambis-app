@@ -3,7 +3,6 @@ import 'package:mentoring_id/api/handlers/Tryout.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
-import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/Banner.dart';
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/reuseable/Chip.dart';
@@ -39,9 +38,6 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
       });
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(
-        height: 20,
-      ),
       ScreenBanner(),
       SizedBox(
         height: 20,

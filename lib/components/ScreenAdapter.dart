@@ -39,6 +39,8 @@ class ScreenAdapterState extends State<ScreenAdapter> {
 
   ScreenAdapterState(this.api, this.width);
 
+  update() => setState(() {});
+
   changeIndex(int i) => setState(() {
         index = i;
       });

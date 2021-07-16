@@ -40,6 +40,7 @@ class _AdditionalDataFormState extends State<AdditionalDataForm> {
 
   @override
   initState() {
+    super.initState();
     api.jurusan.getJurusan().then((value) {
       setState(() {
         jurusan = value

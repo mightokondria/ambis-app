@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CustomCard.dart';
 import 'input/Clickable.dart';
@@ -44,37 +43,40 @@ class _SomeInfoState extends State<SomeInfo> {
     final Color textColor =
         (widget.color == Colors.white) ? Colors.black54 : Colors.white;
 
-    return AnimatedCrossFade(
-      crossFadeState:
-          shown ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-      sizeCurve: Curves.easeInOut,
-      duration: Duration(milliseconds: 300),
-      firstChild: Container(
-        width: double.infinity,
-        decoration: CustomCard.decoration(color: widget.color, radius: 5),
-        padding: EdgeInsets.all(15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: (widget.message != null)
-                  ? Text(
-                      widget.message,
-                      style: TextStyle(color: textColor),
-                    )
-                  : widget.child,
-            ),
-            Clickable(
-              child: GestureDetector(
-                onTap: hidePermanently,
-                child: Icon(Icons.close, size: 20, color: textColor),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: shown ? 10.0 : 0),
+      child: AnimatedCrossFade(
+        crossFadeState:
+            shown ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        sizeCurve: Curves.easeInOut,
+        duration: Duration(milliseconds: 300),
+        firstChild: Container(
+          width: double.infinity,
+          decoration: CustomCard.decoration(color: widget.color, radius: 5),
+          padding: EdgeInsets.all(15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: (widget.message != null)
+                    ? Text(
+                        widget.message,
+                        style: TextStyle(color: textColor),
+                      )
+                    : widget.child,
               ),
-            ),
-          ],
+              Clickable(
+                child: GestureDetector(
+                  onTap: hidePermanently,
+                  child: Icon(Icons.close, size: 20, color: textColor),
+                ),
+              ),
+            ],
+          ),
         ),
+        secondChild: SizedBox(height: 0, width: 0),
       ),
-      secondChild: SizedBox(height: 0, width: 0),
     );
   }
 }

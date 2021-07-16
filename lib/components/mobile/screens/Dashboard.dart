@@ -26,7 +26,7 @@ class _DashboardState extends State<Dashboard> {
 
     onTaps = [
       widget.api.nilai.getHistory,
-      () => null,
+      widget.api.rangkuman.getRangkumanList,
       () => null,
       () => null,
     ];

@@ -8,7 +8,6 @@ import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/ContentLoading.dart';
-import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/Information.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
@@ -397,15 +396,14 @@ class ListNomorSoal extends StatelessWidget {
   ListNomorSoal({
     Key key,
     @required this.instance,
-  }) {
-    nomorSoal = instance.session.soal.asMap().keys.toList();
-  }
+  });
 
   final _HalamanUtamaTryoutState instance;
-  List<int> nomorSoal;
 
   @override
   Widget build(BuildContext context) {
+    final nomorSoal = instance.session.soal.asMap().keys.toList();
+
     return Column(
       children: [
         GridView.count(
@@ -468,20 +466,24 @@ class NomorSoal extends StatelessWidget {
   }
 }
 
-class ListMateriTryout extends StatelessWidget {
+class ListMateriTryout extends StatefulWidget {
   // final API api;
   final String activeMateri;
   final List<String> materi;
-  int active;
 
-  ListMateriTryout(this.activeMateri, this.materi) {
-    active = materi.indexOf(activeMateri);
-  }
+  ListMateriTryout(this.activeMateri, this.materi);
 
   @override
+  _ListMateriTryoutState createState() => _ListMateriTryoutState();
+}
+
+class _ListMateriTryoutState extends State<ListMateriTryout> {
+  @override
   Widget build(BuildContext context) {
+    final active = widget.materi.indexOf(widget.activeMateri);
     List<Widget> children = [];
-    materi.asMap().forEach((key, value) {
+
+    widget.materi.asMap().forEach((key, value) {
       final bool isActive = key <= active;
       final Color textColor = isActive ? Colors.white : Color(0xFF555555);
 

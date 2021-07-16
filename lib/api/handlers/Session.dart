@@ -72,6 +72,8 @@ class Session {
           content: Text(
               "Yeayy! Pembuatan akunmu sudah berhasil! Silakan ikuti langkah berikutnya."));
     });
+
+    return result;
   }
 
   Future<String> recovery(TextEditingController email) async {

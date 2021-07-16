@@ -113,10 +113,11 @@ class IdentitySettings extends StatelessWidget {
   final List<TextEditingController> controllers;
   final List<String> kelases = ["X", "XI", "XII", "Gapyear"];
   final API api;
-  String kelas;
+  final String kelas;
 
   @override
   Widget build(BuildContext context) {
+    String selectedKelas = kelas;
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return SettingsField(
@@ -143,11 +144,12 @@ class IdentitySettings extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: ChipGroup(
                   onChange: (chips) {
-                    kelas = chips[0].value;
+                    selectedKelas = chips[0].value;
                   },
                   allowMultipleSelection: false,
                   chips: kelases
-                      .map((e) => CustomChip(value: e, selected: e == kelas))
+                      .map((e) =>
+                          CustomChip(value: e, selected: e == selectedKelas))
                       .toList()),
             ),
             SizedBox(height: 15),
@@ -158,7 +160,7 @@ class IdentitySettings extends StatelessWidget {
 
                 final Map<String, dynamic> body = {
                   // "no_siswa": api.data.noSiswa,
-                  "kelas": kelas
+                  "kelas": selectedKelas
                 };
 
                 ["nama", "asal_sklh", "no_wa"].asMap().forEach((key, val) {

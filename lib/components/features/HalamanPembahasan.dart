@@ -13,11 +13,8 @@ class HalamanPembahasan extends StatefulWidget {
   static String route = "bahas";
 
   final Args args;
-  Pembahasan session;
 
-  HalamanPembahasan({Key key, this.args}) {
-    session = args.data;
-  }
+  HalamanPembahasan({Key key, this.args});
 
   @override
   _HalamanPembahasanState createState() => _HalamanPembahasanState();
@@ -25,10 +22,12 @@ class HalamanPembahasan extends StatefulWidget {
 
 class _HalamanPembahasanState extends State<HalamanPembahasan> {
   int posisiSoal = 0;
+  Pembahasan session;
 
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
+    session = widget.args.data;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -60,7 +59,7 @@ class _HalamanPembahasanState extends State<HalamanPembahasan> {
                               children: [
                                 SizedBox(height: 50),
                                 KotakPembahasan(
-                                  session: widget.session,
+                                  session: session,
                                   posisiSoal: posisiSoal,
                                 ),
                                 SizedBox(height: 20),
@@ -87,11 +86,9 @@ class _HalamanPembahasanState extends State<HalamanPembahasan> {
                         message:
                             "Jangan sampai tersesat! Pembahasan dan tombol kembali ada di bawah😉",
                         config: "mobilePembahasanInformation"),
-                    SizedBox(height: 10),
                     PembahasanBody(this, mobile: true),
                     SizedBox(height: 10),
-                    KotakPembahasan(
-                        session: widget.session, posisiSoal: posisiSoal),
+                    KotakPembahasan(session: session, posisiSoal: posisiSoal),
                     SizedBox(
                       height: 10,
                     ),
@@ -126,7 +123,7 @@ class PembahasanBody extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final double width = size.width;
     final int posisiSoal = instance.posisiSoal;
-    final Pembahasan session = instance.widget.session;
+    final Pembahasan session = instance.session;
     final bool sudahDijawab = session.pembahasan[posisiSoal].status != 0;
 
     return Container(
@@ -202,16 +199,14 @@ class KotakPembahasan extends StatelessWidget {
 }
 
 class DaftarNomorPembahasan extends StatelessWidget {
-  List<PembahasanSoal> data;
   final _HalamanPembahasanState instance;
 
-  DaftarNomorPembahasan({Key key, this.instance}) {
-    data = instance.widget.session.pembahasan;
-  }
+  DaftarNomorPembahasan({Key key, this.instance});
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [];
+    final data = instance.session.pembahasan;
 
     data.asMap().forEach((k, e) {
       Color color = Color(0xFF666666);

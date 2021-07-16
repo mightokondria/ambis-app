@@ -5,6 +5,7 @@ import 'package:mentoring_id/api/handlers/Tryout.dart';
 import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/components/LoadingAnimation.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/FeatureHeader.dart';
 import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:mentoring_id/reuseable/TryoutList.dart';
 
@@ -158,34 +159,9 @@ class MobileTryoutHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(50.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(bottomRight: Radius.circular(150))),
-      child: Column(
-        children: [
-          Image.asset(
-            "assets/img/msg/tryout-icon.png",
-            width: 150,
-          ),
-          SizedBox(height: 30),
-          Text("Tryout",
-              style: TextStyle(
-                color: Colors.pink,
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-              )),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            "Yuk kerjain tryout!",
-            style: TextStyle(color: Color(0xFF888888), fontSize: 13),
-          ),
-        ],
-      ),
-    );
+    return FeatureHeader.mobile(
+        illustration: "tryout-icon.png",
+        title: "Tryout",
+        description: "Yuk kerjain tryout");
   }
 }

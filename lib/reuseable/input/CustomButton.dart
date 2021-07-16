@@ -12,7 +12,7 @@ class CustomButton extends StatefulWidget {
   final Widget child;
   final double fontSize;
   final EdgeInsetsGeometry padding;
-  CustomButtonStyle style;
+  final CustomButtonStyle style;
 
   CustomButton(
       {this.value,
@@ -22,9 +22,7 @@ class CustomButton extends StatefulWidget {
       this.onTap,
       this.fontSize: 13,
       this.padding,
-      this.style}) {
-    style = (style == null) ? CustomButtonStyle.primary() : style;
-  }
+      this.style});
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -35,6 +33,7 @@ class _CustomButtonState extends State<CustomButton>
   bool tapped = false;
   AnimationController _controller;
   Animation scaleAnimation;
+  CustomButtonStyle style;
 
   @override
   void initState() {
@@ -52,6 +51,7 @@ class _CustomButtonState extends State<CustomButton>
 
   @override
   Widget build(BuildContext context) {
+    style = (widget.style == null) ? CustomButtonStyle.primary() : widget.style;
     scaleAnimation = Tween<double>(begin: 1, end: .95).animate(_controller);
 
     return GestureDetector(
@@ -68,13 +68,13 @@ class _CustomButtonState extends State<CustomButton>
           child: Clickable(
             child: Container(
               width: widget.fill ? double.infinity : null,
-              decoration: (widget.style.color != Colors.transparent)
+              decoration: (style.color != Colors.transparent)
                   ? CustomCard.decoration(
-                      radius: widget.style.radius,
-                      shadow: widget.style.shadow,
+                      radius: style.radius,
+                      shadow: style.shadow,
                       color: widget.enabled
-                          ? widget.style.color
-                          : widget.style.color.withOpacity(.4))
+                          ? style.color
+                          : style.color.withOpacity(.4))
                   : null,
               padding: (widget.padding != null)
                   ? widget.padding
@@ -86,9 +86,9 @@ class _CustomButtonState extends State<CustomButton>
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: widget.fontSize,
-                        color: (widget.style.textColor == null)
+                        color: (style.textColor == null)
                             ? mHeadingText
-                            : widget.style.textColor,
+                            : style.textColor,
                       ),
                     )
                   : widget.child,

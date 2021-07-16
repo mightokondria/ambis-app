@@ -77,7 +77,11 @@ class _IkhtisarNilaiState extends State<IkhtisarNilai> {
         ],
       );
     else
-      child = LineGraph(data: graph, height: 200, gridCount: 5, fill: true);
+      child = LineGraph(
+          data: graph,
+          height: widget.api.screenAdapter.isDesktop ? 300 : 200,
+          gridCount: 5,
+          fill: true);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,52 +168,63 @@ class _TryoutRecommendationState extends State<TryoutRecommendation> {
 
   @override
   Widget build(BuildContext context) {
-    if (data == null) {
+    final isDesktop = widget.api.screenAdapter.isDesktop,
+        padding = EdgeInsets.symmetric(horizontal: isDesktop ? 0 : 28);
+
+    if (!widget.api.conf("forYouTryout"))
+      return SizedBox();
+    else if (data == null) {
       widget.api.tryout.getRecommendation().then((value) => setState(() {
             data = value;
           }));
+      final List<Widget> contentLoadings = [];
+
+      for (int i = 1; i <= (isDesktop ? 3 : 2); i++) {
+        contentLoadings.add(Expanded(
+          child: Row(
+            children: [
+              Expanded(child: ContentLoading()),
+              SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
+        ));
+      }
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28),
+        padding: padding,
         child: Row(
-          children: [
-            Expanded(
-              child: ContentLoading(),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(child: ContentLoading())
-          ],
+          children: contentLoadings,
         ),
       );
     }
+
+    Widget tryouts = Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: data.map((e) => TryoutList(e, widget.api)).toList());
+
+    if (!isDesktop)
+      tryouts = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.only(left: 28, right: 10, top: 10, bottom: 10),
+        child: tryouts,
+      );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
+          padding: padding,
           child: SectionHeader(
-            onTap: () => widget.api
-                .screenChanger(widget.api.screenAdapter.isDesktop ? 2 : 3),
+            onTap: () => widget.api.screenChanger(isDesktop ? 2 : 3),
             title: "For you",
             description: "Rekomendasi tryout untukmu",
           ),
         ),
         SizedBox(height: 10),
-        SingleChildScrollView(
-          padding: EdgeInsets.only(left: 28, right: 10, top: 10, bottom: 10),
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: Row(
-              children: data
-                  .map((e) => Row(children: [
-                        TryoutList(e, widget.api),
-                        SizedBox(width: 10),
-                      ]))
-                  .toList()),
-        )
+        tryouts
       ],
     );
   }
@@ -268,8 +283,13 @@ class _GroupInvitationsState extends State<GroupInvitations> {
             groups = data;
           }));
 
-      return ContentLoading(
-        width: double.infinity,
+      return Column(
+        children: [
+          ContentLoading(
+            width: double.infinity,
+          ),
+          SizedBox(height: 10)
+        ],
       );
     }
 

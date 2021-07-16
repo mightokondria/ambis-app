@@ -345,6 +345,7 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
 
   @override
   void initState() {
+    super.initState();
     kopromController = TextEditingController();
   }
 

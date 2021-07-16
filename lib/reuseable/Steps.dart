@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
-class Steps extends StatelessWidget {
+class Steps extends StatefulWidget {
   final List<String> items;
   final int activeIndex;
-  Color activeColor = mPrimary;
 
   Steps({this.items, this.activeIndex: 0});
+
+  @override
+  _StepsState createState() => _StepsState();
+}
+
+class _StepsState extends State<Steps> {
+  Color activeColor = mPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +23,8 @@ class Steps extends StatelessWidget {
     return LayoutBuilder(builder: (context, boxConstraints) {
       double width = boxConstraints.maxWidth;
 
-      items.asMap().forEach((index, text) {
-        bool active = activeIndex >= index;
+      widget.items.asMap().forEach((index, text) {
+        bool active = widget.activeIndex >= index;
         mappedItems.add(Column(
           children: [
             SizedBox(
@@ -26,7 +32,7 @@ class Steps extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.topCenter,
-              width: (width / items.length) - 20,
+              width: (width / widget.items.length) - 20,
               child: Text(
                 text,
                 textAlign: TextAlign.center,
@@ -51,10 +57,12 @@ class Steps extends StatelessWidget {
               duration: Duration(milliseconds: 500),
               curve: Curves.easeInOutCirc,
               height: height,
-              width: (width * ((activeIndex + 1) / items.length)) -
-                  ((activeIndex != items.length - 1)
-                      ? ((width / items.length) / 2) // WIDTH OF EACH ITEM
-                      : 0),
+              width:
+                  (width * ((widget.activeIndex + 1) / widget.items.length)) -
+                      ((widget.activeIndex != widget.items.length - 1)
+                          ? ((width / widget.items.length) /
+                              2) // WIDTH OF EACH ITEM
+                          : 0),
               decoration: BoxDecoration(color: mPrimary, borderRadius: radius),
             ),
             Container(

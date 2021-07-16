@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Helpers.dart';
-import 'package:mentoring_id/api/models/Invoice.dart';
 
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
-class PendingInvoice extends StatelessWidget {
+class PendingInvoice extends StatefulWidget {
   final API api;
+
+  PendingInvoice({Key key, this.api});
+
+  @override
+  _PendingInvoiceState createState() => _PendingInvoiceState();
+}
+
+class _PendingInvoiceState extends State<PendingInvoice> {
   final scrollController = ScrollController();
 
-  PendingInvoice({Key key, this.api}) : super(key: key) {
-    invoice = api.initialState.pendingInvoice;
-  }
-
-  Invoice invoice;
   Widget contentText(String text, {Color color, bool doubleLineHeight: true}) =>
       SelectableText(text,
           style: TextStyle(
@@ -24,6 +26,8 @@ class PendingInvoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final invoice = widget.api.initialState.pendingInvoice;
+
     return Container(
         color: Colors.white..blue,
         child:

@@ -6,7 +6,7 @@ import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/Information.dart';
 import 'package:mentoring_id/reuseable/ScoreBoard.dart';
-import 'package:mentoring_id/reuseable/input/Clickable.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 abstract class HistoryTryout {
   static String route = "history_tryout";
@@ -48,12 +48,8 @@ abstract class HistoryTryout {
   static Widget history(List<HistoryTryoutSession> sessions,
       {@required API api, @required BuildContext context, bool mobile: false}) {
     final List<Widget> children = sessions
-        .map((data) => GestureDetector(
-              onTap: () => api.nilai.api.nilai.api.nilai.api.nilai
-                  .getNilai(data.session.session),
-              child:
-                  TryoutHistoryElement(session: data, api: api, mobile: mobile),
-            ))
+        .map((data) =>
+            TryoutHistoryElement(session: data, api: api, mobile: mobile))
         .toList();
 
     if (sessions.isNotEmpty)
@@ -121,6 +117,7 @@ class _HistoryTryoutDesktop extends StatelessWidget {
               ],
             ),
           ),
+          HistoryDataInformation(api: data.api),
           SizedBox(height: 30),
           HistoryTryout.history(data.data, api: data.api, context: context)
         ],
@@ -129,18 +126,23 @@ class _HistoryTryoutDesktop extends StatelessWidget {
   }
 }
 
-class _HistoryTryoutMobile extends StatelessWidget {
+class _HistoryTryoutMobile extends StatefulWidget {
   final Args data;
+
+  const _HistoryTryoutMobile({Key key, this.data}) : super(key: key);
+
+  @override
+  __HistoryTryoutMobileState createState() => __HistoryTryoutMobileState();
+}
+
+class __HistoryTryoutMobileState extends State<_HistoryTryoutMobile> {
   List<HistoryTryoutSession> sessions;
   API api;
 
-  _HistoryTryoutMobile({this.data}) {
-    api = data.api;
-    sessions = api.nilai.historia;
-  }
-
   @override
   Widget build(BuildContext context) {
+    api = widget.data.api;
+    sessions = api.nilai.historia;
     // CALCULATING
     final List<double> ikhtisar = HistoryTryout.calculateIkhtisar(sessions);
 
@@ -220,14 +222,28 @@ class IkhtisarHistory extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 15),
-          SomeInfo(
-            message: "Data di atas adalah data tertinggi",
-            config: "historyTryoutInformation",
-            api: api,
-          )
+          SizedBox(height: 5),
+          HistoryDataInformation(api: api)
         ],
       ),
+    );
+  }
+}
+
+class HistoryDataInformation extends StatelessWidget {
+  const HistoryDataInformation({
+    Key key,
+    @required this.api,
+  }) : super(key: key);
+
+  final API api;
+
+  @override
+  Widget build(BuildContext context) {
+    return SomeInfo(
+      message: "Data di atas adalah data tertinggi",
+      config: "historyTryoutInformation",
+      api: api,
     );
   }
 }
@@ -243,7 +259,10 @@ class TryoutHistoryElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Clickable(
+    return CustomButton(
+      onTap: () => api.nilai.getNilai(session.session.session),
+      padding: EdgeInsets.zero,
+      style: CustomButtonStyle.transparent(),
       child: Container(
         constraints:
             mobile ? null : BoxConstraints(minWidth: 180, minHeight: 150),

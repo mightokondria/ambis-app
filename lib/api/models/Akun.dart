@@ -43,7 +43,7 @@ class KelasLanggananModel {
     waktuAktif = json['waktu_aktif'];
     hrgStlhDiskon = json['hrg_stlh_diskon'];
     if (json['menu'] != null) {
-      menu = new List<KelasLanggananMenuModel>();
+      menu = [];
       json['menu'].forEach((v) {
         menu.add(new KelasLanggananMenuModel.fromJson(v));
       });

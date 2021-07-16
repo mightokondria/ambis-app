@@ -25,18 +25,17 @@ abstract class NilaiTryout {
 }
 
 class _NilaiTryoutMobile extends StatelessWidget {
-  NilaiPaket data;
-  API api;
+  final Args args;
 
-  _NilaiTryoutMobile(Args args) {
-    data = args.data;
-    api = publicAPI = args.api;
-    publicSession = data.nilai.session.session;
-  }
+  _NilaiTryoutMobile(this.args);
 
   @override
   Widget build(BuildContext context) {
     final Color mainColor = mPrimary;
+
+    final NilaiPaket data = args.data;
+    final api = publicAPI = args.api;
+    publicSession = data.nilai.session.session;
 
     return Scaffold(
         backgroundColor: mainColor,
@@ -94,18 +93,15 @@ class _NilaiTryoutMobile extends StatelessWidget {
 
 class _NilaiTryoutDesktop extends StatelessWidget {
   final Args args;
-  API api;
-  NilaiPaket data;
 
-  _NilaiTryoutDesktop({Key key, this.args}) {
-    api = publicAPI = args.api;
-    data = args.data;
-
-    publicSession = data.nilai.session.session;
-  }
+  _NilaiTryoutDesktop({this.args});
 
   @override
   Widget build(BuildContext context) {
+    final api = publicAPI = args.api;
+    final NilaiPaket data = args.data;
+    publicSession = data.nilai.session.session;
+
     return Scaffold(
         backgroundColor: mPrimary,
         body: SingleChildScrollView(
@@ -266,7 +262,6 @@ class _NilaiAndPeringkatState extends State<NilaiAndPeringkat> {
           message: "Klik tombol di atas untuk mengganti tingkatan peringkatmu",
           config: "peringkatSwitchGuide",
         ),
-        SizedBox(height: 10),
         Text(
             "Peringkat ${peringkat.peringkat.toInt()} dari ${peringkat.jumlahPeserta} peserta",
             style: TextStyle(color: widget.textColor.withOpacity(.7))),

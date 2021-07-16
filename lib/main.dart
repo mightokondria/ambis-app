@@ -12,6 +12,7 @@ import 'components/Splash.dart';
 import 'components/features/HalamanPengerjaan/HalamanPengerjaanTO.dart';
 import 'components/features/HistoryTryout.dart';
 import 'components/features/NilaiTryout.dart';
+import 'components/features/Rangkuman.dart';
 
 // MENGGOKIL
 
@@ -57,6 +58,8 @@ class MyApp extends StatelessWidget {
             child = HalamanPembahasan(
               args: args,
             );
+          else if (route[1] == Rangkuman.route && isMobile)
+            child = Rangkuman.mobile(args);
 
           if (isMobile) {
             final slideTransition =

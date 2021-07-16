@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/Clickable.dart';
 
-class SizedButton extends StatelessWidget {
-  bool pressed = false;
+class SizedButton extends StatefulWidget {
   final String value;
   final Color color;
   final Color textcolor;
@@ -18,6 +17,13 @@ class SizedButton extends StatelessWidget {
   });
 
   @override
+  _SizedButtonState createState() => _SizedButtonState();
+}
+
+class _SizedButtonState extends State<SizedButton> {
+  bool pressed = false;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
@@ -25,20 +31,20 @@ class SizedButton extends StatelessWidget {
         scale: pressed ? .80 : 1,
         child: Clickable(
           child: Container(
-            width: width,
-            height: height,
+            width: widget.width,
+            height: widget.height,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: color),
+                color: widget.color),
             child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  value,
+                  widget.value,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w200,
-                      color: textcolor),
+                      color: widget.textcolor),
                 )),
           ),
         ),

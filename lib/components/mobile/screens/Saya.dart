@@ -66,7 +66,6 @@ class _SayaState extends State<Saya> {
               ),
               SizedBox(height: 20),
               EmailActivation(api: widget.api),
-              SizedBox(height: 10),
               IdentitySettings(
                   controllers: controllers, kelas: kelas, api: widget.api),
               SizedBox(height: 10),

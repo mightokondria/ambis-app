@@ -6,7 +6,6 @@ import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.d
 class Desktop extends StatefulWidget {
   final API _api;
   final Widget page;
-  SideNavigationBarState navigationBar;
 
   Desktop(this._api, this.page);
 

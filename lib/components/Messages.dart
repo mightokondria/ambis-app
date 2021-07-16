@@ -38,6 +38,4 @@ class Messages {
       ),
     );
   }
-
-  static Widget err404({String message}) {}
 }

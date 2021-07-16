@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
 import 'package:mentoring_id/api/handlers/Nilai.dart';
+import 'package:mentoring_id/api/handlers/Rangkuman.dart';
 // HANDLERS
 import 'package:mentoring_id/api/handlers/Session.dart';
 import 'package:mentoring_id/api/models/InitialData.dart';
@@ -48,8 +49,8 @@ class API {
   Desktop desktop;
   Function(int) screenChanger;
 
-  // String defaultAPI = "https://api.mentoring.web.id/";
-  String defaultAPI = "http://192.168.43.154/";
+  String defaultAPI = "https://api.mentoring.web.id/";
+  // String defaultAPI = "http://192.168.43.154/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -65,6 +66,7 @@ class API {
   InvoiceHandler invoice;
   TryoutHandler tryout;
   NilaiHandler nilai;
+  RangkumanHandler rangkuman;
 
   // CONSTRUCT
   API(this.context);
@@ -128,7 +130,7 @@ class API {
     currentScreen = screen;
 
     // REFRESH THE SCREEN ADAPTER
-    screenAdapter.setState(() {});
+    screenAdapter.update();
   }
   // END SCREEN ADAPTER HELPERS
 
@@ -311,6 +313,7 @@ class API {
     invoice = InvoiceHandler(this);
     tryout = TryoutHandler(this);
     nilai = NilaiHandler(this);
+    rangkuman = RangkumanHandler(this);
   }
 
   initScreenAdapter(
@@ -330,7 +333,7 @@ class API {
   // END INITIALIZERS
 
   Future getInitialData() async {
-    if (data.initialData == null)
+    if (data != null && data.initialData == null)
       await request(
           path: "siswa/get_initial_data",
           method: "POST",

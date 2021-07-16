@@ -26,7 +26,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController scrollController = ScrollController();
     LoginForm forms = LoginForm(api: api, context: context, toggler: toggle);
 
     // return Container(
