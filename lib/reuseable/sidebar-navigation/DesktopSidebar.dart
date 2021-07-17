@@ -47,8 +47,6 @@ class DesktopSidebar extends StatelessWidget {
 
           menuList.sidebarMenuList(
               title: "Settings", activeColor: Colors.blue, index: 6),
-          menuList.sidebarMenuList(
-              title: "Feedback", activeColor: Colors.orange, index: 7),
 
           SizedBox(
             height: sectionSpace,

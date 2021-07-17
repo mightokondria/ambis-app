@@ -70,27 +70,10 @@ class TryoutHandler {
       // "no_siswa": api.data.noSiswa
     }).then((value) async {
       if (value.body == "forbiddenNotSubscribed")
-        return showDialog(
-            context: api.context,
-            builder: (context) {
-              return Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        "assets/img/msg/mascott-sad.png",
-                        width: 100,
-                      ),
-                      SizedBox(height: 10),
-                      Text("Duh! Kamu belum berlangganan kelas ini"),
-                      SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-              );
-            });
+        return api.ui.showShortMessageDialog(
+            title: "Duh!",
+            message: "Kamu belum berlangganan kelas tryout ini",
+            type: "warning");
 
       await api.dataSiswa.changeXP(data.xp);
       kerjakan(data.noPaket, value.body);

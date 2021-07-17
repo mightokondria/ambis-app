@@ -22,7 +22,6 @@ class _DashboardState extends State<Dashboard> {
               child: GroupInvitations(api: widget.api));
         }),
         SizedBox(height: 10),
-        // TODO: ROW DETAILED GRAPH
         IkhtisarNilai(
           api: widget.api,
         ),

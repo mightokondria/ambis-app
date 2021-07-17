@@ -6,9 +6,11 @@ import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/components/Messages.dart';
 import 'package:mentoring_id/constants/color_const.dart';
+import 'package:mentoring_id/reuseable/Banner.dart';
 import 'package:mentoring_id/reuseable/Chip.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/FeatureHeader.dart';
+import 'package:mentoring_id/reuseable/MicroIdentity.dart';
 import 'package:mentoring_id/reuseable/SearchBar.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
@@ -19,6 +21,13 @@ abstract class Rangkuman {
   static Widget mobile(Args data) {
     return _RangkumanWidget(
       data: data,
+    );
+  }
+
+  static Widget desktop(Args data) {
+    return _RangkumanWidget(
+      data: data,
+      mobile: false,
     );
   }
 
@@ -99,14 +108,40 @@ class _RangkumanWidgetState extends State<_RangkumanWidget> {
         ),
       );
 
-    return Container();
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      ScreenBanner(
+          title: "Rangkuman",
+          description: Rangkuman.description,
+          image: "rangkuman.png",
+          mainColor: Colors.green),
+      SizedBox(
+        height: 20,
+      ),
+      mainBody(chips, data, api),
+      SizedBox(
+        height: 20,
+      ),
+    ]);
   }
 
   Widget mainBody(List<CustomChip> chips, List<Mapel> data, API api) {
+    final mapels = ChipGroup(
+      allowMultipleSelection: false,
+      onChange: (chips) {
+        setState(() {
+          category = chips[0].value;
+        });
+      },
+      chips: chips,
+    );
+    final horizontalPadding = widget.mobile ? 20.0 : 0.0;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding:
+              EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 10),
           child: Column(
             children: [
               SearchBar(
@@ -120,20 +155,14 @@ class _RangkumanWidgetState extends State<_RangkumanWidget> {
             ],
           ),
         ),
-        SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: ChipGroup(
-            allowMultipleSelection: false,
-            onChange: (chips) {
-              setState(() {
-                category = chips[0].value;
-              });
-            },
-            chips: chips,
-          ),
-        ),
+        widget.mobile
+            ? SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: mapels,
+              )
+            : mapels,
         SizedBox(height: 10),
         Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +210,7 @@ class MapelList extends StatelessWidget {
               image: AssetImage("assets/img/msg/404.png"),
               title: "Tidak ditemukan",
               content:
-                  "Rangkuman materi dengan kueri pencarian '$filter' tidak ditemukan di mapel ini"),
+                  "Rangkuman materi dengan kata kunci '$filter' tidak ditemukan di mapel ini"),
         ],
       );
     else if (rangkuman.isEmpty) return SizedBox();
@@ -248,7 +277,7 @@ class RangkumanList extends StatelessWidget {
     final width = 250.0;
 
     return CustomButton(
-      onTap: () => api.rangkuman.downloadRangkuman(data.noMateri),
+      onTap: () => api.rangkuman.downloadRangkuman(data),
       fill: false,
       style: CustomButtonStyle.transparent(),
       padding: EdgeInsets.zero,
@@ -292,43 +321,6 @@ class RangkumanList extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MicroIdentityForLists extends StatelessWidget {
-  final Color backgroundColor, textColor;
-  final Widget icon;
-  final String value;
-
-  const MicroIdentityForLists(
-      {Key key,
-      this.backgroundColor: Colors.transparent,
-      this.textColor: const Color(0xFF555555),
-      @required this.icon,
-      @required this.value})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: backgroundColor,
-            ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-            child: Row(children: [
-              icon,
-              SizedBox(width: 10),
-              Text(value,
-                  style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12))
-            ]))
-      ],
     );
   }
 }

@@ -263,6 +263,7 @@ class TryoutHistoryElement extends StatelessWidget {
       onTap: () => api.nilai.getNilai(session.session.session),
       padding: EdgeInsets.zero,
       style: CustomButtonStyle.transparent(),
+      fill: false,
       child: Container(
         constraints:
             mobile ? null : BoxConstraints(minWidth: 180, minHeight: 150),

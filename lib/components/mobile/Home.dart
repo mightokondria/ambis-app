@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Helpers.dart';
+import 'package:mentoring_id/components/features/Info.dart';
 import 'package:mentoring_id/components/mobile/screens/Dashboard.dart';
 import 'package:mentoring_id/components/mobile/screens/Saya.dart';
 import 'package:mentoring_id/components/mobile/screens/Tryout.dart';
@@ -31,13 +32,7 @@ class _HomeState extends State<Home> {
     final color = Color(0xFFF5F5F5);
     List<Widget> child = [
       Dashboard(api: api),
-      Center(
-          child: ElevatedButton(
-        child: Text("History tryout"),
-        onPressed: () {
-          api.nilai.getHistory();
-        },
-      )),
+      Ingfo(mobile: true, api: api),
       TryoutDataScreen(api),
       Saya(
         api: api,

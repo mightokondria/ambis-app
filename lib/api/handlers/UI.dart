@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
+import 'package:mentoring_id/api/models/Bejur.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/dialog/Dialogs.dart';
@@ -13,7 +14,9 @@ class UI {
   Dialogs dialog;
   BuildContext context;
 
-  UI(this.api) {
+  UI(this.api);
+
+  init() {
     context = api.context;
     dialog = Dialogs(api: api, context: context);
   }
@@ -107,7 +110,7 @@ class UI {
   }
 
   showUpdateEmailDialog() {
-    final Widget child = dialog.emailUpdateDialog(api);
+    final Widget child = dialog.emailUpdateDialog();
 
     showModal(
         desktop: child,
@@ -117,7 +120,7 @@ class UI {
   }
 
   showUpdatePasswordDialog() {
-    final Widget child = dialog.passwordUpdateDialog(api);
+    final Widget child = dialog.passwordUpdateDialog();
 
     showModal(
         desktop: child,
@@ -170,5 +173,15 @@ class UI {
       context: context,
       builder: (context) => Center(child: child),
     ).timeout(Duration(seconds: 5), onTimeout: () => api.closeDialog());
+  }
+
+  showBejurDialog(BejurModel data) {
+    final child = dialog.bejurDialog(data);
+
+    showModal(
+        desktop: child,
+        mobile: Wrap(
+          children: [child],
+        ));
   }
 }

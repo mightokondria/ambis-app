@@ -38,7 +38,10 @@ class _TryoutDataScreenState extends State<TryoutDataScreen> {
       });
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      ScreenBanner(),
+      ScreenBanner(
+          title: "Tryout",
+          description: "Yuk kerjain tryout!",
+          image: "tryout-icon.png"),
       SizedBox(
         height: 20,
       ),

@@ -12,10 +12,12 @@ class RangkumanHandler {
 
   RangkumanHandler(this.api);
 
-  Future<void> getRangkumanList() async {
+  Future<void> getRangkumanList({bool mobile: true}) async {
     if (cache == null) {
       cache = [];
-      await api.request(path: "rangkuman/result").then((res) {
+      await api
+          .request(path: "rangkuman/result", animation: mobile)
+          .then((res) {
         final List<dynamic> data = api.safeDecoder(res.body);
 
         data.forEach((element) {
@@ -24,10 +26,14 @@ class RangkumanHandler {
       });
     }
 
-    Navigator.pushNamed(api.context, "/${Rangkuman.route}",
-        arguments: Args(api: api, data: cache));
+    if (mobile)
+      Navigator.pushNamed(api.context, "/${Rangkuman.route}",
+          arguments: Args(api: api, data: cache));
   }
 
-  downloadRangkuman(String noMateri) => launch(
-      "${api.defaultAPI}frontend/rangkuman/download/${api.token}/${api.data.noSiswa}/$noMateri");
+  downloadRangkuman(RangkumanModel materi) {
+    materi.downloads = (int.parse(materi.downloads) + 1).toString();
+    launch(
+        "${api.defaultAPI}frontend/rangkuman/download/${api.token}/${api.data.noSiswa}/${materi.noMateri}");
+  }
 }

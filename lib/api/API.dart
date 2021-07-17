@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:mentoring_id/api/handlers/Bejur.dart';
+import 'package:mentoring_id/api/handlers/Ingfo.dart';
 import 'package:mentoring_id/api/handlers/Invoice.dart';
 import 'package:mentoring_id/api/handlers/Nilai.dart';
 import 'package:mentoring_id/api/handlers/Rangkuman.dart';
@@ -39,6 +41,7 @@ class API {
   // SUCH AS BOOLEAN WHETHER A USER IS LOGGED IN
   InitialState initialState = InitialState(false, true, false);
   InitialScreen initialScreens;
+
   Widget currentScreen;
 
   // LOGGED IN USER DATA
@@ -50,7 +53,7 @@ class API {
   Function(int) screenChanger;
 
   String defaultAPI = "https://api.mentoring.web.id/";
-  // String defaultAPI = "http://192.168.43.154/";
+  // String defaultAPI = "http://localhost/";
   final String suffix = "!==+=!==";
 
   // CACHED VARIABLES
@@ -67,6 +70,8 @@ class API {
   TryoutHandler tryout;
   NilaiHandler nilai;
   RangkumanHandler rangkuman;
+  BejurHandler bejur;
+  IngfoHandler ingfo;
 
   // CONSTRUCT
   API(this.context);
@@ -268,6 +273,8 @@ class API {
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
     await isLoggedIn().then((status) => initialState.isLoggedIn = status);
+    await initHandlers();
+    await initActions();
 
     if (data != null) {
       final InitialData initialData = data.initialData;
@@ -300,6 +307,18 @@ class API {
           showSnackbar(content: Text("Tryout ini belum kamu selesaikan"));
           tryout.kerjakan(activeTryoutSession.nop, value.body);
         });
+
+      // CACHE TRYOUT LISTS
+      await tryout.getTryoutData();
+
+      // CACHE BEDAH JURUSAN
+      await bejur.openBejur(mobile: false);
+
+      // CACHE RANGKUMAN LISTS
+      await rangkuman.getRangkumanList(mobile: false);
+
+      // CACHE INFOS
+      await ingfo.fetch();
     }
 
     return true;
@@ -314,6 +333,8 @@ class API {
     tryout = TryoutHandler(this);
     nilai = NilaiHandler(this);
     rangkuman = RangkumanHandler(this);
+    bejur = BejurHandler(this);
+    ingfo = IngfoHandler(this);
   }
 
   initScreenAdapter(
@@ -321,8 +342,8 @@ class API {
     screenAdapter = adapter;
     initialScreens = initialScreenInstance;
 
-    // INIT ALL HANDLERS
-    initHandlers();
+    // UI HANDLER
+    ui.init();
 
     // INIT ALL FIRST ACTIONS
     initActions();

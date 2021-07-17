@@ -56,7 +56,6 @@ class AppBarCustombyMe extends StatelessWidget implements PreferredSizeWidget {
             ),
             ProfileButton(
               api: api,
-              // TODO FLOATINGPROFILE TOGGLER
               // toggler: () => home.widget.navigationBar.toggleProfile(),
             )
           ],

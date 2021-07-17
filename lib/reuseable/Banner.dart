@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mentoring_id/components/features/Bejur.dart';
 
 class ScreenBanner extends StatelessWidget {
+  final String title, description, image;
+  final Color mainColor;
+
+  const ScreenBanner(
+      {Key key,
+      @required this.title,
+      @required this.description,
+      @required this.image,
+      this.mainColor: Colors.pink})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,14 +39,14 @@ class ScreenBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Tryout",
+                    title,
                     style: TextStyle(
-                        color: Colors.pink,
+                        color: mainColor,
                         fontSize: 40,
                         fontWeight: FontWeight.w800),
                   ),
                   Text(
-                    "Yuk kerjain tryout",
+                    Bejur.description,
                     style: TextStyle(color: Colors.blueGrey),
                   ),
                 ],
@@ -45,7 +56,7 @@ class ScreenBanner extends StatelessWidget {
                 child: Container(
                     margin: EdgeInsets.only(bottom: 20),
                     child: Image.asset(
-                      "assets/img/msg/tryout-icon.png",
+                      "assets/img/msg/$image",
                       width: 250,
                     ))),
           ],

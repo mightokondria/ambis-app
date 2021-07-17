@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mentoring_id/api/API.dart';
+import 'package:mentoring_id/api/models/Bejur.dart';
 import 'package:mentoring_id/class/Helpers.dart';
 import 'package:mentoring_id/class/TryoutTimer.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
@@ -288,13 +291,15 @@ class Dialogs {
     ));
   }
 
-  Widget emailUpdateDialog(API api) => UpdateEmailDialog(
+  Widget emailUpdateDialog() => UpdateEmailDialog(
         api: api,
       );
 
-  Widget passwordUpdateDialog(API api) => UpdatePasswordDialog(
+  Widget passwordUpdateDialog() => UpdatePasswordDialog(
         api: api,
       );
+
+  Widget bejurDialog(BejurModel data) => BejurDialog(api: api, data: data);
 }
 
 class CheckoutDialog extends StatefulWidget {
@@ -857,6 +862,124 @@ class _UpdatePasswordDialogState extends State<UpdatePasswordDialog> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BejurDialog extends StatelessWidget {
+  final API api;
+  final BejurModel data;
+
+  const BejurDialog({Key key, this.api, this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = ScrollController();
+
+    return Center(
+        child: DialogElement(
+      color: Colors.white,
+      api: api,
+      child: Scrollbar(
+        controller: controller,
+        isAlwaysShown: api.screenAdapter.isDesktop,
+        child: SingleChildScrollView(
+          controller: controller,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(data.jurusan,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Color(0xFF555555),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  CustomButton(
+                      style: CustomButtonStyle.transparent(),
+                      padding: EdgeInsets.zero,
+                      onTap: api.closeDialog,
+                      fill: false,
+                      child: Icon(Icons.close, size: 20)),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(children: [LoveBejur(data: data, api: api)]),
+              SizedBox(
+                height: 10,
+              ),
+              Html(
+                data: data.deskripsi,
+                style: {
+                  "*": Style(color: Color(0xFF555555)),
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
+}
+
+class LoveBejur extends StatefulWidget {
+  final BejurModel data;
+  final API api;
+
+  const LoveBejur({
+    Key key,
+    this.data,
+    this.api,
+  }) : super(key: key);
+
+  @override
+  _LoveBejurState createState() => _LoveBejurState();
+}
+
+class _LoveBejurState extends State<LoveBejur> {
+  bool loved;
+
+  @override
+  Widget build(BuildContext context) {
+    if (loved == null) loved = widget.data.loved;
+
+    return CustomButton(
+      onTap: () {
+        final reversed = !loved;
+        setState(() {
+          loved = reversed;
+        });
+        widget.api.bejur.loveBejur(widget.data, reversed);
+      },
+      style: CustomButtonStyle.transparent(),
+      fill: false,
+      padding: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(
+            color: loved
+                ? Colors.red.withOpacity(.15)
+                : Colors.black.withOpacity(.05),
+            borderRadius: BorderRadius.circular(30)),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              "assets/img/icons/hati.svg",
+              color: loved ? Colors.red : Color(0xFF777777),
+              width: 12,
+            ),
+            SizedBox(width: 10),
+            Text(
+              "Suka",
+              style: TextStyle(color: loved ? Colors.red : Color(0xFF777777)),
+            )
+          ],
         ),
       ),
     );

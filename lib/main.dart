@@ -9,6 +9,7 @@ import 'package:mentoring_id/constants/color_const.dart';
 
 import 'class/Helpers.dart';
 import 'components/Splash.dart';
+import 'components/features/Bejur.dart';
 import 'components/features/HalamanPengerjaan/HalamanPengerjaanTO.dart';
 import 'components/features/HistoryTryout.dart';
 import 'components/features/NilaiTryout.dart';
@@ -60,6 +61,8 @@ class MyApp extends StatelessWidget {
             );
           else if (route[1] == Rangkuman.route && isMobile)
             child = Rangkuman.mobile(args);
+          else if (route[1] == Bejur.route && isMobile)
+            child = Bejur.mobile(args);
 
           if (isMobile) {
             final slideTransition =

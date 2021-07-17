@@ -4,12 +4,11 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/desktop/screens/Dashboard.dart';
 import 'package:mentoring_id/components/desktop/screens/Tryout.dart';
-import 'package:mentoring_id/components/desktop/screens/Update.dart';
-import 'package:mentoring_id/components/desktop/screens/bedah_jurusan.dart';
-import 'package:mentoring_id/components/desktop/screens/feedback.dart';
 import 'package:mentoring_id/components/desktop/screens/Pengaturan.dart';
-import 'package:mentoring_id/components/desktop/screens/rangkuman.dart';
+import 'package:mentoring_id/components/features/Bejur.dart';
 import 'package:mentoring_id/components/features/HistoryTryout.dart';
+import 'package:mentoring_id/components/features/Info.dart';
+import 'package:mentoring_id/components/features/Rangkuman.dart';
 import 'package:mentoring_id/reuseable/sidebar-navigation/DesktopSidebar.dart';
 import 'package:mentoring_id/reuseable/sidebar-navigation/FloatingProfile.dart';
 
@@ -99,7 +98,7 @@ class SideNavigationBarState extends State<SideNavigationBar> {
                       }
                       //UPDATE == 1
                       if (selectedIndex == 1) {
-                        return Update();
+                        return Ingfo(mobile: false, api: _api);
                       }
                       //TRYOUT == 2
                       if (selectedIndex == 2) {
@@ -114,21 +113,20 @@ class SideNavigationBarState extends State<SideNavigationBar> {
                       }
                       //RANGKUMAN == 4
                       if (selectedIndex == 4) {
-                        return Rangkuman();
+                        final args =
+                            Args(api: _api, data: _api.rangkuman.cache);
+                        return Rangkuman.desktop(args);
                       }
                       //BEDAH JURUSAN == 5
                       if (selectedIndex == 5) {
-                        return BedahJurusan();
+                        final args = Args(api: _api, data: _api.bejur.cache);
+                        return Bejur.desktop(args);
                       }
                       //PENGATURAN
                       if (selectedIndex == 6) {
                         return Pengaturan(
                           api: widget.api,
                         );
-                      }
-                      //FeedBack
-                      if (selectedIndex == 7) {
-                        return FeedBack();
                       }
 
                       return Container();
