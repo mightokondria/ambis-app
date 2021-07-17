@@ -1,7 +1,6 @@
 // FINALLY LAST FEATURE TO WORK ON😁💪
 
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Ingfo.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
@@ -26,20 +25,23 @@ class _IngfoState extends State<Ingfo> {
     if (widget.mobile)
       return RefreshIndicator(
         onRefresh: api.ingfo.fetch,
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(20),
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              children: data
-                  .map((e) => Column(children: [
-                        IngfoList(api: api, data: e, mobile: true),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ]))
-                  .toList(),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.all(20),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: data
+                    .map((e) => Column(children: [
+                          IngfoList(api: api, data: e, mobile: true),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ]))
+                    .toList(),
+              ),
             ),
           ),
         ),
@@ -122,7 +124,7 @@ class IngfoList extends StatelessWidget {
                     SizedBox(height: 5),
                     Text(
                       "Sumber: ${data.sumber}",
-                      style: TextStyle(color: Color(0xFFCCCCCC), fontSize: 10),
+                      style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 10),
                     ),
                   ],
                 ),

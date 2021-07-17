@@ -7,6 +7,7 @@ import 'package:mentoring_id/api/models/Kategori.dart';
 import 'package:mentoring_id/api/models/Tryout.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/Messages.dart';
+import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
 class TryoutHandler {
   final API api;
@@ -73,6 +74,13 @@ class TryoutHandler {
         return api.ui.showShortMessageDialog(
             title: "Duh!",
             message: "Kamu belum berlangganan kelas tryout ini",
+            additionalChild: CustomButton(
+                value: "langganan",
+                padding: EdgeInsets.symmetric(vertical: 10),
+                onTap: () {
+                  api.closeDialog();
+                  api.dataSiswa.openKelasLanggananMenu();
+                }),
             type: "warning");
 
       await api.dataSiswa.changeXP(data.xp);

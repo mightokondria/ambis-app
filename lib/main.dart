@@ -4,10 +4,13 @@ import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
+import 'package:mentoring_id/components/desktop/PendingInvoice.dart';
+import 'package:mentoring_id/components/mobile/PendingInvoice.dart';
 import 'package:mentoring_id/components/features/HalamanPembahasan.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 
 import 'class/Helpers.dart';
+import 'components/DaftarKelasLangganan.dart';
 import 'components/Splash.dart';
 import 'components/features/Bejur.dart';
 import 'components/features/HalamanPengerjaan/HalamanPengerjaanTO.dart';
@@ -20,6 +23,8 @@ import 'components/features/Rangkuman.dart';
 void main() {
   runApp(MyApp());
 }
+
+API api;
 
 class MyApp extends StatelessWidget {
   @override
@@ -63,6 +68,17 @@ class MyApp extends StatelessWidget {
             child = Rangkuman.mobile(args);
           else if (route[1] == Bejur.route && isMobile)
             child = Bejur.mobile(args);
+          else if (route[1] == DaftarKelasLangganan.route)
+            child = DaftarKelasLangganan(
+              args: args,
+            );
+          else if (route[1] == PendingInvoiceDesktop.route)
+            child = Scaffold(
+                body: SafeArea(
+                    child: isMobile
+                        ? PendingInvoiceMobile(api: args.api)
+                        : PendingInvoiceDesktop(
+                            api: args.api, closeable: true)));
 
           if (isMobile) {
             final slideTransition =
@@ -94,8 +110,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  API api;
-
   @override
   Widget build(BuildContext context) {
     if (api == null) api = API(context);
@@ -107,7 +121,6 @@ class _HomeState extends State<Home> {
       DeviceOrientation.portraitUp,
     ]);
 
-    // return HalamanPengerjaanTO({});
     return FutureBuilder(
       future: api.init(),
       builder: (context, snapshot) {

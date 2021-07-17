@@ -5,29 +5,32 @@ import 'package:mentoring_id/api/models/Invoice.dart';
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
-class PendingInvoice extends StatefulWidget {
+class PendingInvoiceMobile extends StatefulWidget {
   final API api;
 
-  PendingInvoice({Key key, this.api});
+  PendingInvoiceMobile({Key key, this.api});
 
   @override
-  _PendingInvoiceState createState() => _PendingInvoiceState();
+  _PendingInvoiceMobileState createState() => _PendingInvoiceMobileState();
 }
 
-class _PendingInvoiceState extends State<PendingInvoice> {
+class _PendingInvoiceMobileState extends State<PendingInvoiceMobile> {
   @override
   Widget build(BuildContext context) {
     final invoice = widget.api.initialState.pendingInvoice;
-    Helpers.changeStatusBarColor(color: mPrimary, dark: false);
+    Helpers.changeStatusBarColor();
 
     return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Header(),
-            Content(invoice),
-          ],
+      physics: BouncingScrollPhysics(),
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Header(),
+              Content(invoice),
+            ],
+          ),
         ),
       ),
     );

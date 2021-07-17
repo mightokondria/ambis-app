@@ -60,14 +60,14 @@ class ScreenAdapterState extends State<ScreenAdapter> {
                 home: SideNavigationBar(
                   api: api,
                 ),
-                pendingInvoice: PendingInvoice(
+                pendingInvoice: PendingInvoiceDesktop(
                   api: api,
                 ),
                 dataCompletion: DataCompletionPage(api))
             : InitialScreen(api,
                 login: MobileLogin.Login(api: api),
                 home: Home(api),
-                pendingInvoice: MobileInvoice.PendingInvoice(
+                pendingInvoice: MobileInvoice.PendingInvoiceMobile(
                   api: api,
                 ),
                 dataCompletion: Padding(

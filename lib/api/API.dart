@@ -273,7 +273,7 @@ class API {
 
     // CHECK IF A USER IS LOGGED IN IN THIS DEVICE
     await isLoggedIn().then((status) => initialState.isLoggedIn = status);
-    await initHandlers();
+    initHandlers();
     await initActions();
 
     if (data != null) {
@@ -287,6 +287,7 @@ class API {
       //     .then((value) => initialState.pendingInvoice = value);
 
       conf("emailActivated", value: !initialData.emailActivated);
+      conf("hasPendingInvoice", value: initialData.invoice != null);
     }
 
     return initialState;
@@ -335,6 +336,11 @@ class API {
     rangkuman = RangkumanHandler(this);
     bejur = BejurHandler(this);
     ingfo = IngfoHandler(this);
+
+    // BUG FIX
+    // THIS LINE IS TO FIX BUG
+    // WHEN KEYBOARD SHOWS UP, UI RECREATED BUT NOT INITIALIZED
+    if (screenAdapter != null) ui.init();
   }
 
   initScreenAdapter(
@@ -344,9 +350,6 @@ class API {
 
     // UI HANDLER
     ui.init();
-
-    // INIT ALL FIRST ACTIONS
-    initActions();
 
     buildInitialScreen();
   }

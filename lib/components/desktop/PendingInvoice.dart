@@ -4,18 +4,22 @@ import 'package:mentoring_id/class/Helpers.dart';
 
 import 'package:mentoring_id/constants/color_const.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
+import 'package:mentoring_id/reuseable/DesktopCloseButton.dart';
 import 'package:mentoring_id/reuseable/input/CustomButton.dart';
 
-class PendingInvoice extends StatefulWidget {
-  final API api;
+class PendingInvoiceDesktop extends StatefulWidget {
+  static String route = "pending_invoice";
 
-  PendingInvoice({Key key, this.api});
+  final API api;
+  final bool closeable;
+
+  PendingInvoiceDesktop({Key key, this.api, this.closeable: false});
 
   @override
-  _PendingInvoiceState createState() => _PendingInvoiceState();
+  _PendingInvoiceDesktopState createState() => _PendingInvoiceDesktopState();
 }
 
-class _PendingInvoiceState extends State<PendingInvoice> {
+class _PendingInvoiceDesktopState extends State<PendingInvoiceDesktop> {
   final scrollController = ScrollController();
 
   Widget contentText(String text, {Color color, bool doubleLineHeight: true}) =>
@@ -27,127 +31,144 @@ class _PendingInvoiceState extends State<PendingInvoice> {
   @override
   Widget build(BuildContext context) {
     final invoice = widget.api.initialState.pendingInvoice;
+    Widget close = SizedBox();
 
-    return Container(
-        color: Colors.white..blue,
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(
-            padding: EdgeInsets.all(30),
-            width: 400,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(
-                  "assets/img/msg/menunggu-konfirmasi.png",
-                  width: 150,
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Menunggu konfirmasi",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 23),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "Pesananmu sedang menunggu konfirmasi dari admin.",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: Color(0xFF888888),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: CustomPaint(
-              painter: _PendingInvoiceHeader(),
-              child: Center(
-                child: Container(
-                  margin: EdgeInsets.all(100),
-                  decoration: CustomCard.decoration(),
-                  width: 500,
-                  child: Scrollbar(
-                    isAlwaysShown: true,
-                    controller: scrollController,
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 17, horizontal: 25),
-                            decoration: BoxDecoration(
-                                color: mSemiPrimary,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Text(
-                              "Detail pesanan",
-                              style: TextStyle(color: mPrimary, fontSize: 17),
-                            ),
+    if (widget.closeable) {
+      close = Positioned(
+          right: 20,
+          top: 20,
+          child: DesktopCloseButton(api: widget.api, white: true));
+    }
+
+    return Stack(
+      children: [
+        Container(
+            color: Colors.white..blue,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(30),
+                    width: 400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          "assets/img/msg/menunggu-konfirmasi.png",
+                          width: 150,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Menunggu konfirmasi",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Color(0xFF555555),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Pesananmu sedang menunggu konfirmasi dari admin.",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: Color(0xFF888888),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Table(
-                                  children: [
-                                    TableRow(children: [
-                                      contentText("ID Pesanan"),
-                                      contentText(invoice.invoice),
-                                    ]),
-                                    TableRow(children: [
-                                      contentText("Pesanan"),
-                                      contentText(
-                                          "Kelas " + invoice.product.nmAkun),
-                                    ]),
-                                    TableRow(children: [
-                                      contentText("Total Pembayaran"),
-                                      contentText(
-                                          Helpers.moneify(invoice.total)),
-                                    ]),
-                                    TableRow(children: [
-                                      contentText("Methode Pembayaran"),
-                                      contentText(invoice.method.pembayaran),
-                                    ]),
-                                    TableRow(children: [
-                                      contentText("Status"),
-                                      contentText("Menunggu konfirmasi",
-                                          color: mPrimary),
-                                    ]),
-                                  ],
-                                ),
-                                SizedBox(height: 20),
-                                contentText("Lakukan pembayaran ke " +
-                                    invoice.method.rekening +
-                                    " dengan menyertakan ID pesanan di berita transfer"),
-                                SizedBox(height: 10),
-                                contentText(
-                                    "Sudah melakukan pembayaran namun masih belum dikonfirmasi? Ingatkan admin dengan menekan tombol di bawah ini 👇"),
-                                SizedBox(height: 10),
-                                CustomButton(
-                                  value: "remind admin",
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ),
-          )
-        ]));
+                  Expanded(
+                    child: CustomPaint(
+                      painter: _PendingInvoiceHeader(),
+                      child: Center(
+                        child: Container(
+                          margin: EdgeInsets.all(100),
+                          decoration: CustomCard.decoration(),
+                          width: 500,
+                          child: Scrollbar(
+                            isAlwaysShown: true,
+                            controller: scrollController,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 17, horizontal: 25),
+                                    decoration: BoxDecoration(
+                                        color: mSemiPrimary,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Text(
+                                      "Detail pesanan",
+                                      style: TextStyle(
+                                          color: mPrimary, fontSize: 17),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Table(
+                                          children: [
+                                            TableRow(children: [
+                                              contentText("ID Pesanan"),
+                                              contentText(invoice.invoice),
+                                            ]),
+                                            TableRow(children: [
+                                              contentText("Pesanan"),
+                                              contentText("Kelas " +
+                                                  invoice.product.nmAkun),
+                                            ]),
+                                            TableRow(children: [
+                                              contentText("Total Pembayaran"),
+                                              contentText(Helpers.moneify(
+                                                  invoice.total)),
+                                            ]),
+                                            TableRow(children: [
+                                              contentText("Methode Pembayaran"),
+                                              contentText(
+                                                  invoice.method.pembayaran),
+                                            ]),
+                                            TableRow(children: [
+                                              contentText("Status"),
+                                              contentText("Menunggu konfirmasi",
+                                                  color: mPrimary),
+                                            ]),
+                                          ],
+                                        ),
+                                        SizedBox(height: 20),
+                                        contentText("Lakukan pembayaran ke " +
+                                            invoice.method.rekening +
+                                            " dengan menyertakan ID pesanan di berita transfer"),
+                                        SizedBox(height: 10),
+                                        contentText(
+                                            "Sudah melakukan pembayaran namun masih belum dikonfirmasi? Ingatkan admin dengan menekan tombol di bawah ini 👇"),
+                                        SizedBox(height: 10),
+                                        CustomButton(
+                                          value: "remind admin",
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ])),
+        close
+      ],
+    );
   }
 }
 

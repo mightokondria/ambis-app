@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:mentoring_id/api/models/Akun.dart';
 import 'package:mentoring_id/api/models/Siswa.dart';
+import 'package:mentoring_id/class/Args.dart';
+import 'package:mentoring_id/components/DaftarKelasLangganan.dart';
 
 import '../API.dart';
 
@@ -53,4 +56,9 @@ class DataSiswa {
 
     return true;
   }
+
+  openKelasLanggananMenu() => getKelasLangganan().then((value) {
+        Navigator.of(api.context).pushNamed("/${DaftarKelasLangganan.route}",
+            arguments: Args(api: api, data: value));
+      });
 }

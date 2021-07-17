@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mentoring_id/api/API.dart';
 import 'package:mentoring_id/api/models/Siswa.dart';
+import 'package:mentoring_id/class/Args.dart';
+import 'package:mentoring_id/components/desktop/PendingInvoice.dart';
 import 'package:mentoring_id/reuseable/Chip.dart';
 import 'package:mentoring_id/reuseable/CustomCard.dart';
 import 'package:mentoring_id/reuseable/Information.dart';
@@ -251,6 +253,10 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SettingsOption(
+            title: "Kelas langganan",
+            onTap: widget.api.dataSiswa.openKelasLanggananMenu),
+        SizedBox(height: 10),
         SettingsOptionWithSwitch(
           title: "Notifikasi webinar",
           description: "Dapatkan notifikasi webinar melalui email",
@@ -360,11 +366,11 @@ class SettingsOption extends StatelessWidget {
         onTap: onTap,
         child: Clickable(
             child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           child: Container(
             width: double.infinity,
             child: Text(title,
-                textAlign: TextAlign.start,
+                textAlign: TextAlign.left,
                 style: TextStyle(color: color, fontWeight: FontWeight.bold)),
           ),
         )));
@@ -416,5 +422,30 @@ class SettingsOptionWithSwitch extends StatelessWidget {
                         })
                   ],
                 ))));
+  }
+}
+
+class PendingInvoiceNotification extends StatelessWidget {
+  final API api;
+
+  const PendingInvoiceNotification({Key key, this.api}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomButton(
+      onTap: () {
+        Navigator.of(context).pushNamed("/${PendingInvoiceDesktop.route}",
+            arguments: Args(api: api));
+      },
+      style: CustomButtonStyle.transparent(),
+      padding: EdgeInsets.zero,
+      child: SomeInfo(
+        api: api,
+        color: Colors.orange,
+        message:
+            "Kamu masih punya tagihan aktif yang harus diselesaikan. Klik pesan ini untuk detail selengkapnya.",
+        config: "hasPendingInvoice",
+      ),
+    );
   }
 }

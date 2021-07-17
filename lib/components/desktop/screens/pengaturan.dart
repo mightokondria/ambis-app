@@ -61,6 +61,7 @@ class _PengaturanState extends State<Pengaturan> {
           child: Column(
             children: [
               EmailActivation(api: widget.api),
+              PendingInvoiceNotification(api: widget.api),
               IdentitySettings(
                   controllers: controllers, kelas: kelas, api: widget.api),
               SizedBox(height: 20),
