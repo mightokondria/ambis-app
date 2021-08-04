@@ -22,11 +22,17 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final padding = const EdgeInsets.all(15.0);
+    final radius = Radius.circular(10);
+
     Helpers.changeStatusBarColor(color: Colors.white);
 
     onTaps = [
       widget.api.nilai.getHistory,
-      widget.api.rangkuman.getRangkumanList,
+      // TODO UNLOCK RANGKUMAN
+      // widget.api.rangkuman.getRangkumanList,
+      () => widget.api.showSnackbar(
+          content: Text("Fitur rangkuman masih dalam tahap maintenance.")),
       widget.api.bejur.openBejur,
       () => null,
     ];
@@ -34,50 +40,66 @@ class _DashboardState extends State<Dashboard> {
     return SafeArea(
       child: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    MobileDashboardProfile(
-                      api: widget.api,
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        icon(0),
-                        icon(1),
-                        icon(2),
-                        icon(3),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GroupInvitations(api: widget.api),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: IkhtisarNilai(api: widget.api),
-                    ),
-                  ],
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: radius, bottomRight: radius),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10.0, color: Colors.black.withOpacity(.05)),
+                  ]),
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  MobileDashboardProfile(
+                    api: widget.api,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      icon(0),
+                      icon(1),
+                      icon(2),
+                      icon(3),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
-              SizedBox(height: 10),
-              TryoutRecommendation(api: widget.api),
-              SizedBox(height: 20),
-            ],
-          ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: padding,
+                  child: Column(
+                    children: [
+                      GroupInvitations(api: widget.api),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: IkhtisarNilai(api: widget.api),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+                TryoutRecommendation(api: widget.api),
+                SizedBox(height: 20),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -44,7 +44,7 @@ class _SomeInfoState extends State<SomeInfo> {
         (widget.color == Colors.white) ? Colors.black54 : Colors.white;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: shown ? 10.0 : 0),
+      padding: EdgeInsets.only(bottom: shown ? 10.0 : 0),
       child: AnimatedCrossFade(
         crossFadeState:
             shown ? CrossFadeState.showFirst : CrossFadeState.showSecond,

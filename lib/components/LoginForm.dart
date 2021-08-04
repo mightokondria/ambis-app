@@ -60,7 +60,6 @@ class LoginForm {
           children: [
             Text(
               "Masuk",
-              textAlign: TextAlign.center,
               style: TextStyle(
                   color: mHeadingText,
                   fontSize: 30,
@@ -71,7 +70,6 @@ class LoginForm {
             ),
             Text(
               "Masuk untuk melanjutkan",
-              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black38,
               ),
@@ -86,14 +84,10 @@ class LoginForm {
               ),
             ),
             SizedBox(height: 20),
-            InputText(
-              style: InputStyle.grayed,
-              textField: TextFormField(
-                decoration: InputText.inputDecoration(hint: "Password"),
-                obscureText: true,
-                validator: passwordValidator,
-                controller: loginControllers[1],
-              ),
+            PasswordFormField(
+              hint: "Password",
+              controller: loginControllers[1],
+              validator: passwordValidator,
             ),
             SizedBox(height: 10),
             Align(
@@ -182,29 +176,20 @@ class LoginForm {
               ),
             ),
             SizedBox(height: 20),
-            InputText(
-              style: InputStyle.grayed,
-              textField: TextFormField(
-                controller: registerControllers[2],
-                obscureText: true,
-                decoration: InputText.inputDecoration(hint: "Password"),
-                validator: passwordValidator,
-              ),
+            PasswordFormField(
+              hint: "Password",
+              controller: registerControllers[2],
+              validator: passwordValidator,
             ),
             SizedBox(height: 20),
-            InputText(
-              style: InputStyle.grayed,
-              textField: TextFormField(
-                controller: registerControllers[3],
-                obscureText: true,
-                decoration: InputText.inputDecoration(hint: "Ulangi password"),
-                validator: (String val) {
-                  if (val != registerControllers[2].value.text)
-                    return "Password tidak cocok";
+            PasswordFormField(
+              hint: "Ulangi password",
+              validator: (String val) {
+                if (val != registerControllers[2].value.text)
+                  return "Password tidak cocok";
 
-                  return null;
-                },
-              ),
+                return null;
+              },
             ),
             SizedBox(height: 20),
             CustomButton(

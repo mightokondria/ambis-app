@@ -96,6 +96,8 @@ class _IkhtisarNilaiState extends State<IkhtisarNilai> {
         SizedBox(height: 10),
         CustomButton(
           value: "analisis selengkapnya",
+          style: CustomButtonStyle(
+              color: Colors.white, textColor: Color(0xFF666666)),
           onTap: () =>
               api.showSnackbar(content: Text("Beta feature. Coming soon ya😁")),
         ),
@@ -135,6 +137,7 @@ class SectionHeader extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               ),
+              SizedBox(height: 2),
               Text(
                 description,
                 style: TextStyle(color: Color(0xFF888888), fontSize: 13),
@@ -207,6 +210,7 @@ class _TryoutRecommendationState extends State<TryoutRecommendation> {
 
     if (!isDesktop)
       tryouts = SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.only(left: 28, right: 10, top: 10, bottom: 10),
         child: tryouts,

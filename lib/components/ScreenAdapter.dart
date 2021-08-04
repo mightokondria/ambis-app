@@ -6,13 +6,13 @@ import 'package:mentoring_id/components/desktop/Desktop.dart';
 import 'package:mentoring_id/components/desktop/Login.dart';
 import 'package:mentoring_id/components/desktop/PendingInvoice.dart';
 import 'package:mentoring_id/components/desktop/navigation/side_navigation_bar.dart';
-import 'package:mentoring_id/components/mobile/Login.dart' as MobileLogin;
 import 'package:mentoring_id/components/mobile/PendingInvoice.dart'
     as MobileInvoice;
 import 'package:mentoring_id/components/mobile/Mobile.dart';
 
 import 'Disconnected.dart';
 import 'mobile/Home.dart';
+import 'mobile/PreLogin.dart';
 
 class ScreenAdapter extends StatefulWidget {
   final API api;
@@ -65,7 +65,7 @@ class ScreenAdapterState extends State<ScreenAdapter> {
                 ),
                 dataCompletion: DataCompletionPage(api))
             : InitialScreen(api,
-                login: MobileLogin.Login(api: api),
+                login: PreLogin(api: api),
                 home: Home(api),
                 pendingInvoice: MobileInvoice.PendingInvoiceMobile(
                   api: api,

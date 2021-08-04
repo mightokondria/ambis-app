@@ -44,7 +44,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # flutter_launcher_icons: ^0.8.0
+  flutter_launcher_icons: ^0.9.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -55,6 +55,7 @@ flutter:
   assets:
     - assets/img/
     - assets/img/icons/
+    - assets/img/icons/ic/
     - assets/img/navigation/
     - assets/img/mobile/navigation/
     - assets/img/animation/

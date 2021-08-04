@@ -5,6 +5,7 @@ import 'package:mentoring_id/class/Args.dart';
 import 'package:mentoring_id/components/ScreenAdapter.dart';
 import 'package:mentoring_id/components/Disconnected.dart';
 import 'package:mentoring_id/components/desktop/PendingInvoice.dart';
+import 'package:mentoring_id/components/mobile/Login.dart';
 import 'package:mentoring_id/components/mobile/PendingInvoice.dart';
 import 'package:mentoring_id/components/features/HalamanPembahasan.dart';
 import 'package:mentoring_id/constants/color_const.dart';
@@ -33,10 +34,7 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       debugShowCheckedModeBanner: false,
       title: 'Mentoring.id',
-      theme: ThemeData(
-          fontFamily: 'OpenSans',
-          primaryColor: mPrimary,
-          accentColor: mPrimary),
+      theme: ThemeData(primaryColor: mPrimary, accentColor: mPrimary),
       initialRoute: "/",
       onGenerateRoute: (settings) {
         final List<String> route = settings.name.split("/");
@@ -79,6 +77,11 @@ class MyApp extends StatelessWidget {
                         ? PendingInvoiceMobile(api: args.api)
                         : PendingInvoiceDesktop(
                             api: args.api, closeable: true)));
+          else if (route[1] == "login" && isMobile)
+            child = Login(
+              api: args.api,
+              login: args.data,
+            );
 
           if (isMobile) {
             final slideTransition =
@@ -110,6 +113,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool splash = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        splash = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (api == null) api = API(context);
@@ -120,6 +135,17 @@ class _HomeState extends State<Home> {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
     ]);
+
+    if (splash && api == null)
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Image.asset(
+            "assets/img/icons/ic/medium.png",
+            width: 80,
+          ),
+        ),
+      );
 
     return FutureBuilder(
       future: api.init(),

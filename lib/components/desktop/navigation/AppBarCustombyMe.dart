@@ -34,7 +34,7 @@ class AppBarCustombyMe extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 SizedBox(width: 20),
                 Image.asset(
-                  'assets/img/icon.png',
+                  'assets/img/icons/ic/favicon.png',
                   width: 30.5,
                 ),
                 SizedBox(width: 15),

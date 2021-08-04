@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Color(0xFFF5F5F5);
+    final color = Color(0xFFF8F8F8);
     List<Widget> child = [
       Dashboard(api: api),
       Ingfo(mobile: true, api: api),
